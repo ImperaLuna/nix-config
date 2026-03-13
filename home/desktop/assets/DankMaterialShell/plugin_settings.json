@@ -1,0 +1,32 @@
+{
+  "dankHyprlandWindows": {
+    "enabled": false
+  },
+  "calculator": {
+    "enabled": true,
+    "trigger": "",
+    "noTrigger": true,
+    "persistHistoryOnFile": false,
+    "keepLastResults": "10",
+    "calcEngine": "qalc"
+  },
+  "dankNotepadModule": {
+    "enabled": false
+  },
+  "claudeCodeUsage": {
+    "enabled": true
+  },
+  "dankKDEConnect": {
+    "enabled": true,
+    "selectedDeviceId": "c035eb7797044c1280c55c83ae3e3f7d"
+  },
+  "codexBar": {
+    "enabled": true,
+    "refreshInterval": "900000",
+    "codexbarPath": "/home/imperaluna/.local/bin/codexbar-wrapper",
+    "sourceMode": "oauth"
+  },
+  "dankDesktopWeather": {
+    "enabled": true
+  }
+}

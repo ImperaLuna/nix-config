@@ -36,11 +36,11 @@
   let
     system = "x86_64-linux";
   in {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.RyzenShine = nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
-        ./configuration.nix
+        ./hosts/desktop
 
         dms.nixosModules.dank-material-shell
         dms.nixosModules.greeter
@@ -49,7 +49,8 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.imperaluna = import ./home/imperaluna.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; userConfig = ./home/users/imperaluna.nix; };
+          home-manager.users.imperaluna = import ./home;
         }
       ];
     };

@@ -33,6 +33,8 @@ in
       shellInit = ''
         set fish_function_path ${fifc}/share/fish/vendor_functions.d $fish_function_path
         set fish_function_path ${pkgs.fishPlugins.fzf-fish}/share/fish/vendor_functions.d $fish_function_path
+        # Re-prepend user functions so they override plugins
+        set fish_function_path $__fish_config_dir/functions $fish_function_path
         source ${fifc}/share/fish/vendor_conf.d/fifc.fish
 
         # Custom fifc preview rules — registered in shellInit so they run in ALL fish
@@ -99,6 +101,51 @@ in
         set -g fish_pager_color_completion cdd6f4
         set -g fish_pager_color_description 6c7086
       '';
+      functions._fzf_history_delete = ''
+        set -l time_prefix_regex '^.*? │ '
+        while read -lz item
+            set -l cmd (string replace --regex $time_prefix_regex "" -- $item)
+            if test -n "$cmd"
+                builtin history delete --exact --case-sensitive -- $cmd
+            end
+        end
+        builtin history save
+      '';
+      functions._fzf_search_history = ''
+        if test -z "$fish_private_mode"
+            builtin history merge
+        end
+
+        if not set --query fzf_history_time_format
+            set -f fzf_history_time_format "%m-%d %H:%M:%S"
+        end
+
+        set -f time_prefix_regex '^.*? │ '
+        set -f time_fmt $fzf_history_time_format
+
+        set -f commands_selected (
+            builtin history --null --show-time="$fzf_history_time_format │ " |
+            _fzf_wrapper --read0 \
+                --print0 \
+                --multi \
+                --scheme=history \
+                --prompt="History> " \
+                --query=(commandline) \
+                --preview="string replace --regex '$time_prefix_regex' \"\" -- {} | fish_indent --ansi" \
+                --preview-window="bottom:3:wrap" \
+                --header="TAB: select multiple  CTRL-DEL: delete selected" \
+                --bind "ctrl-delete:execute(_fzf_history_delete < {+f})+reload(builtin history merge 2>/dev/null; builtin history --null --show-time=\"$time_fmt │ \")" \
+                $fzf_history_opts |
+            string split0 |
+            string replace --regex $time_prefix_regex ""
+        )
+
+        if test $status -eq 0
+            commandline --replace -- $commands_selected
+        end
+
+        commandline --function repaint
+      '';
       functions._fzf_command_help_preview = ''
         set -l cmd $argv[1]
         set -l mode tldr
@@ -163,9 +210,11 @@ in
         ls = "eza --icons --color=always";
       };
       shellAbbrs = {
-        build = "sudo nixos-rebuild switch --flake ~/nix-config#nixos";
+        rebuild = "sudo nixos-rebuild switch --flake ~/nix-config#(hostname)";
         batn = "cat --style=full --paging=auto";
         gs = "git status";
+        install = "nix shell nixpkgs#";
+        search = "nix search nixpkgs";
       };
     };
   };

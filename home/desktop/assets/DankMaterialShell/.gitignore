@@ -1,0 +1,5 @@
+# DMS manages git-sourced plugins at runtime via .repos/ and symlinks.
+# Only .meta files are tracked to record plugin origins.
+plugins/.repos/
+plugins/calculator/
+plugins/claudeCodeUsage/

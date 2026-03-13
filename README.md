@@ -1,0 +1,144 @@
+# nix-config
+
+Personal NixOS configuration. Modular, multi-host, single source of truth.
+
+## Structure
+
+```
+flake.nix           # entry point — declares inputs, wires hosts together
+hosts/
+  default.nix       # shared config for all hosts (localization, nix settings, fonts)
+  modules/          # reusable NixOS system-level modules
+    hyprland.nix
+    dms.nix
+    virtualisation.nix
+    input-remap.nix
+  desktop/          # RyzenShine desktop machine
+    default.nix
+    hardware-configuration.nix
+home/
+  default.nix       # home-manager entrypoint
+  users/
+    imperaluna.nix  # personal git identity
+  terminal/         # CLI tools (fish, nvim, tmux, etc.)
+  workstation/      # GUI productivity tools (ghostty, zed, obsidian, etc.)
+  gaming/           # gaming (steam, albion)
+  apps/             # general purpose apps (discord, zapzap)
+  desktop/          # DE config files (hypr, quickshell, DankMaterialShell)
+```
+
+## Setting up a new machine
+
+### 1. Install NixOS
+
+Boot the NixOS installer and complete the base installation.
+Generate hardware config:
+
+```bash
+nixos-generate-config --root /mnt
+```
+
+### 2. Clone the repo
+
+Git is not available by default on the NixOS installer. Drop into a temporary shell first:
+
+```bash
+nix-shell -p git
+git clone <repo-url> ~/nix-config
+```
+
+### 3. Create a host
+
+Copy the desktop host as a starting point:
+
+```bash
+cp -r ~/nix-config/hosts/desktop ~/nix-config/hosts/<hostname>
+```
+
+Replace `hardware-configuration.nix` with the one generated in step 1.
+
+In `hosts/<hostname>/default.nix`:
+- Set `networking.hostName = "<hostname>";`
+- Set `users.users.<username>` as needed
+- Enable/disable modules (see below)
+
+### 4. Wire it in flake.nix
+
+Add a new entry to `nixosConfigurations` in `flake.nix`:
+
+```nix
+nixosConfigurations.<hostname> = nixpkgs.lib.nixosSystem {
+  inherit system;
+  specialArgs = { inherit inputs; };
+  modules = [
+    ./hosts/<hostname>
+    dms.nixosModules.dank-material-shell
+    dms.nixosModules.greeter
+    home-manager.nixosModules.home-manager
+    {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = { inherit inputs; userConfig = ./home/users/<user>.nix; };
+      home-manager.users.<username> = import ./home;
+    }
+  ];
+};
+```
+
+### 5. First rebuild
+
+```bash
+sudo nixos-rebuild switch --flake ~/nix-config#<hostname>
+```
+
+---
+
+## Enabling / Disabling features
+
+### System modules — `hosts/<hostname>/default.nix`
+
+| Option | What it does |
+|--------|-------------|
+| `modules.hyprland.enable` | Hyprland compositor + wayland tools |
+| `modules.dms.enable` | DankMaterialShell + greeter |
+| `modules.virtualisation.enable` | libvirtd + virt-manager |
+| `modules.input-remap.enable` | uinput kernel module (needed for albion autorun) |
+| `programs.steam.enable` | Steam with 32-bit support |
+
+### Home modules — `home/default.nix`
+
+This is the main entry point for home-manager. Toggle entire modules here:
+
+| Option | What it does |
+|--------|-------------|
+| `modules.terminal.enable` | CLI tools (fish, nvim, tmux, bat, etc.) |
+| `modules.workstation.enable` | GUI productivity tools (ghostty, zed, obsidian, bitwarden, zen) |
+| `modules.gaming.enable` | Gaming (steam, albion autorun) |
+| `modules.apps.enable` | General purpose apps (discord, zapzap) |
+| `modules.desktop.enable` | DE config files (hypr, quickshell, DankMaterialShell) |
+
+---
+
+## Temporary packages
+
+Add packages to `home/terminal/extras.nix` without creating a module:
+
+```nix
+home.packages = with pkgs; [
+  cowsay
+];
+```
+
+Remove when done.
+
+## Rebuilding
+
+```bash
+rebuild  # fish abbreviation — auto-targets current hostname
+```
+
+Or manually:
+
+```bash
+sudo nixos-rebuild switch --flake ~/nix-config#<hostname>
+```
