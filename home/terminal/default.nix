@@ -68,6 +68,8 @@
       # ── LLM / AI CLI tools ──────────────────────────────────────────────────
       llm_cli_tools.claude-code = true;
       llm_cli_tools.codex       = true;
+      llm_cli_tools.opencode    = true;
+      llm_cli_tools.opencode-desktop = true;
     };
   };
 }
