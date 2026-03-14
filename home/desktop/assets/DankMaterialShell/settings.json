@@ -409,6 +409,14 @@
       "matchType": "regex",
       "action": "default",
       "urgency": "critical"
+    },
+    {
+      "enabled": true,
+      "field": "appName",
+      "pattern": "starship",
+      "matchType": "exact",
+      "action": "mute",
+      "urgency": "default"
     }
   ],
   "osdAlwaysShowValue": false,

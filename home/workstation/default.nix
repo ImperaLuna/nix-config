@@ -6,7 +6,6 @@
     ./zed/zed.nix
     ./obsidian/obsidian.nix
     ./bitwarden/bitwarden.nix
-    ./zen/zen.nix
   ];
 
   options.modules.workstation.enable = lib.mkEnableOption "workstation tools";
@@ -19,7 +18,6 @@
       zed.enable       = true;
       obsidian.enable  = true;
       bitwarden.enable = true;
-      zen.enable       = true;
     };
   };
 }

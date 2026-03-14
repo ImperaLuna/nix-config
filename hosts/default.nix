@@ -27,6 +27,9 @@
   # ===================================================================
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
+    open-sans
+    noto-fonts
+    noto-fonts-color-emoji
   ];
 
   # ===================================================================
@@ -50,10 +53,4 @@
     precedence ::ffff:0:0/96 100
   '';
 
-  # Disable IPv6 at kernel level
-  boot.kernel.sysctl = {
-    "net.ipv6.conf.all.disable_ipv6" = 1;
-    "net.ipv6.conf.default.disable_ipv6" = 1;
-    "net.ipv6.conf.lo.disable_ipv6" = 1;
-  };
 }

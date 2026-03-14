@@ -1,10 +1,15 @@
 { lib, config, pkgs, ... }:
 
 {
+  imports = [
+    ./zen/zen.nix
+  ];
+
   options.modules.desktop.enable = lib.mkEnableOption "desktop environment config";
 
   config = lib.mkIf config.modules.desktop.enable {
     home.packages = with pkgs; [
+      cosmic-files                             # basic file manager
       libqalculate                              # qalc CLI for calculator plugin
       kdePackages.kdeconnect-kde                 # phone connect plugin
       (pkgs.callPackage ./pkgs/codexbar.nix {}) # codexbar CLI for CodexBar plugin
@@ -15,5 +20,7 @@
     xdg.configFile."DankMaterialShell".source =
       config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/nix-config/home/desktop/assets/DankMaterialShell";
+
+    modules.zen.enable = true;
   };
 }

@@ -18,11 +18,11 @@
 
   # ── Enable / disable home modules ─────────────────────────────────────────
   modules = {
-    terminal.enable   = true;
+    terminal.enable    = true;
     workstation.enable = true;
-    gaming.enable     = true;
-    apps.enable       = true;
-    desktop.enable    = true;
+    gaming.enable      = true;
+    apps.enable        = true;
+    desktop.enable     = true;
   };
 
   programs.home-manager.enable = true;
