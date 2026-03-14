@@ -27,6 +27,17 @@
       addresses = true;
     };
   };
+
+  # ===================================================================
+  # PERIPHERALS
+  # ===================================================================
+  services.printing.enable = true; # Turns on printer support (so adding/using printers works)
+  services.ipp-usb.enable = true; # Makes many USB printers/scanners show up automatically
+  hardware.sane.enable = true; # Turns on scanner support
+  services.fwupd.enable = true; # Lets you update firmware for devices (BIOS/docks/etc.)
+  services.udisks2.enable = true; # Lets file managers mount/unmount USB drives
+  services.gvfs.enable = true; # Makes external/network drives show up nicely in GUI apps
+
   # ===================================================================
   # NETWORKING
   # ===================================================================
@@ -56,6 +67,8 @@
       efiSupport = true;
       efiInstallAsRemovable = true;
       maxGenerations = 5;
+      # Machine-specific dual-boot convenience entry for this desktop.
+      # Replace or remove on new hosts because EFI partition UUID/path will differ.
       extraEntries = ''
         /Arch Limine
           protocol: efi
