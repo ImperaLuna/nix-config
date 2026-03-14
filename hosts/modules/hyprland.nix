@@ -10,6 +10,11 @@
       xwayland.enable = true;
     };
 
+    # Keep portals explicit for readability.
+    # Hyprland's NixOS module provides xdg-desktop-portal-hyprland and
+    # xdg-desktop-portal-gtk automatically.
+    xdg.portal.enable = true;
+
     environment.systemPackages = with pkgs; [
       wl-clipboard
       grim
