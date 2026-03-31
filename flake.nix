@@ -35,12 +35,11 @@
   outputs = inputs@{ self, nixpkgs, dms, danksearch, home-manager, llm-agents, zen-browser, ... }:
   let
     system = "x86_64-linux";
-  in {
-    nixosConfigurations.RyzenShine = nixpkgs.lib.nixosSystem {
+    mkHost = hostPath: nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
-        ./hosts/desktop
+        hostPath
 
         dms.nixosModules.dank-material-shell
         dms.nixosModules.greeter
@@ -53,6 +52,11 @@
           home-manager.users.imperaluna = import ./home;
         }
       ];
+    };
+  in {
+    nixosConfigurations = {
+      RyzenShine = mkHost ./hosts/desktop;
+      DuskNova = mkHost ./hosts/laptop;
     };
   };
 }
