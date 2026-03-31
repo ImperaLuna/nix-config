@@ -1,32 +1,14 @@
-{ config, pkgs, lib, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
     ../default.nix
-    ../modules/hyprland.nix
     ./hardware-configuration.nix
-    ../modules/input-remap.nix
-    ../modules/virtualisation.nix
-    ../modules/dms.nix
+    ../modules/remote-access.nix
   ];
 
-  modules.input-remap.enable = true;
-  modules.hyprland.enable = true;
-  modules.virtualisation.enable = true;
-  modules.dms.enable = true;
+  modules.remote-access.enable = true;
 
-  programs.steam.enable = true;
-  programs.kdeconnect.enable = true;
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    publish = {
-      enable = true;
-      addresses = true;
-    };
-  };
   # ===================================================================
   # NETWORKING
   # ===================================================================
@@ -41,7 +23,7 @@
   users.users.imperaluna = {
     isNormalUser = true;
     description = "Rares Brezeanu";
-    extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
   };
 
@@ -70,28 +52,6 @@
         #   module_path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/initramfs-linux.img
       '';
     };
-  };
-
-  # ===================================================================
-  # GPU — open-source driver path for GTX 1060
-  # ===================================================================
-  services.xserver.videoDrivers = [ "nouveau" ];
-  boot.blacklistedKernelModules = [ "nvidia" "nvidia_drm" "nvidia_modeset" "nvidia_uvm" ];
-
-  # GPU acceleration + 32-bit support (required for Steam/games)
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
-
-  # ===================================================================
-  # SESSION ENVIRONMENT
-  # ===================================================================
-  environment.sessionVariables = {
-    TERMINAL = "ghostty";          # launcher uses this for Terminal=true desktop entries
-  #  WLR_NO_HARDWARE_CURSORS = "1";  # fixes invisible cursor on nvidia+wayland
-    NIXOS_OZONE_WL = "1";           # native wayland for electron apps
-    QT_QPA_PLATFORMTHEME = "gtk3";  # Qt apps use GTK theme
   };
 
   # ===================================================================

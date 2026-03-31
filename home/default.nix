@@ -1,4 +1,4 @@
-{ userConfig, ... }:
+{ userConfig, homeProfile ? "desktop", ... }:
 
 {
   imports = [
@@ -17,7 +17,13 @@
   '';
 
   # ── Enable / disable home modules ─────────────────────────────────────────
-  modules = {
+  modules = if homeProfile == "server" then {
+    terminal.enable    = true;
+    workstation.enable = false;
+    gaming.enable      = false;
+    apps.enable        = false;
+    desktop.enable     = false;
+  } else {
     terminal.enable    = true;
     workstation.enable = true;
     gaming.enable      = true;
