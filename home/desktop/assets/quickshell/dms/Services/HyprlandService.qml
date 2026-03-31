@@ -9,8 +9,8 @@ import qs.Common
 Singleton {
     id: root
 
-    readonly property string configDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.ConfigLocation))
-    readonly property string hyprDmsDir: configDir + "/hypr/dms"
+    readonly property string stateDir: Paths.strip(StandardPaths.writableLocation(StandardPaths.GenericStateLocation))
+    readonly property string hyprDmsDir: stateDir + "/DankMaterialShell/hypr/dms"
     readonly property string outputsPath: hyprDmsDir + "/outputs.conf"
     readonly property string layoutPath: hyprDmsDir + "/layout.conf"
     readonly property string cursorPath: hyprDmsDir + "/cursor.conf"

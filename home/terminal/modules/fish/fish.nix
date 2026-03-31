@@ -31,6 +31,14 @@ in
     programs.fish = {
       enable = true;
       shellInit = ''
+        if type -q zeditor
+          set -gx EDITOR zeditor
+          set -gx VISUAL zeditor
+        else if type -q zed
+          set -gx EDITOR zed
+          set -gx VISUAL zed
+        end
+
         set fish_function_path ${fifc}/share/fish/vendor_functions.d $fish_function_path
         set fish_function_path ${pkgs.fishPlugins.fzf-fish}/share/fish/vendor_functions.d $fish_function_path
         # Re-prepend user functions so they override plugins

@@ -97,6 +97,10 @@ quickshell -p shell.qml
 qs -p .              # Shorthand
 qs -v -p shell.qml   # Verbose debugging
 
+# Manual restart sequence for this Nix/Home Manager setup
+pkill -x dms
+dms -c "$HOME/.config/quickshell/dms" run --session -d
+
 # Code formatting and linting
 qmlfmt -t 4 -i 4 -b 250 -w /path/to/file.qml  # Format QML (don't use qmlformat)
 qmllint **/*.qml     # Lint all QML files

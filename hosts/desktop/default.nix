@@ -8,15 +8,22 @@
     ../modules/input-remap.nix
     ../modules/virtualisation.nix
     ../modules/dms.nix
+    ../modules/remote-access.nix
+    ../modules/syncthing.nix
   ];
 
   modules.input-remap.enable = true;
   modules.hyprland.enable = true;
   modules.virtualisation.enable = true;
   modules.dms.enable = true;
+  modules.remote-access.enable = true;
+  modules.syncthing.enable = true;
 
   programs.steam.enable = true;
   programs.kdeconnect.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.login.enableGnomeKeyring = true;
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
   services.avahi = {
@@ -44,6 +51,7 @@
   networking = {
     hostName = "RyzenShine";
     networkmanager.enable = true;
+    enableIPv6 = false;
   };
 
   # ===================================================================
@@ -105,6 +113,13 @@
   # ===================================================================
   # AUDIO
   # ===================================================================
+  # Disable USB autosuspend for the SteelSeries Arctis Nova 5X dongle to
+  # prevent the 2-3 second audio dropout caused by the kernel suspending the
+  # USB device and it re-enumerating.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1038", ATTR{idProduct}=="2253", ATTR{power/autosuspend}="-1"
+  '';
+
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
