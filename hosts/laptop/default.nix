@@ -15,6 +15,15 @@
   networking = {
     hostName = "DuskNova";
     networkmanager.enable = true;
+    interfaces.wlp2s0 = {
+      useDHCP = false;
+      ipv4.addresses = [{
+        address = "192.168.68.109";
+        prefixLength = 24;
+      }];
+    };
+    defaultGateway = "192.168.68.1";
+    nameservers = [ "192.168.68.1" ];
   };
 
   # ===================================================================

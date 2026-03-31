@@ -39,12 +39,14 @@ in
       ++ lib.optional cfg.opencode-desktop opencodeDesktopFixed;
 
     xdg.configFile."opencode/package.json" = lib.mkIf cfg.opencode {
+      force = true;
       text = builtins.toJSON {
         dependencies = opencodeCliPlugins;
       };
     };
 
     xdg.configFile."opencode/opencode.json" = lib.mkIf cfg.opencode {
+      force = true;
       text = builtins.toJSON {
         "$schema" = "https://opencode.ai/config.json";
         plugin = [ "opencode-claude-auth" ];
@@ -52,12 +54,14 @@ in
     };
 
     xdg.configFile."opencode-desktop/opencode/package.json" = lib.mkIf cfg.opencode-desktop {
+      force = true;
       text = builtins.toJSON {
         dependencies = opencodeDesktopPlugins;
       };
     };
 
     xdg.configFile."opencode-desktop/opencode/opencode.json" = lib.mkIf cfg.opencode-desktop {
+      force = true;
       text = builtins.toJSON {
         "$schema" = "https://opencode.ai/config.json";
         plugin = [ ];
