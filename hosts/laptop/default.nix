@@ -5,9 +5,11 @@
     ../default.nix
     ./hardware-configuration.nix
     ../modules/remote-access.nix
+    ../modules/homelab.nix
   ];
 
   modules.remote-access.enable = true;
+  modules.homelab.enable = true;
 
   # ===================================================================
   # NETWORKING
@@ -32,7 +34,7 @@
   users.users.imperaluna = {
     isNormalUser = true;
     description = "Rares Brezeanu";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.fish;
   };
 
