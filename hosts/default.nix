@@ -46,14 +46,18 @@
   programs.fish.enable = true;
   environment.systemPackages = with pkgs; [
     bind
+    iputils
+    iw
+    ndisc6
+    tcpdump
   ];
 
   # ===================================================================
   # NETWORKING
   # ===================================================================
-  # Prefer IPv4 over IPv6 for getaddrinfo (fixes apps that don't handle IPv6 well)
-  environment.etc."gai.conf".text = ''
-    precedence ::ffff:0:0/96 100
-  '';
+  # Temporarily disable the IPv4 preference override.
+  # environment.etc."gai.conf".text = ''
+  #   precedence ::ffff:0:0/96 100
+  # '';
 
 }

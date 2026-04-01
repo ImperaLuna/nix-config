@@ -1,6 +1,43 @@
-{ stdenvNoCC, fetchurl, makeDesktopItem, copyDesktopItems, lib }:
+{
+  alsa-lib,
+  atk,
+  autoPatchelfHook,
+  cairo,
+  copyDesktopItems,
+  dbus,
+  expat,
+  fetchurl,
+  fontconfig,
+  freetype,
+  gdk-pixbuf,
+  gsettings-desktop-schemas,
+  glib,
+  gtk3,
+  harfbuzz,
+  lib,
+  libGL,
+  libxkbcommon,
+  libx11,
+  libxau,
+  libxcb,
+  libxcomposite,
+  libxcursor,
+  libxdamage,
+  libxext,
+  libxfixes,
+  libxi,
+  libxinerama,
+  libxrandr,
+  libxrender,
+  libxtst,
+  makeBinaryWrapper,
+  makeDesktopItem,
+  pango,
+  stdenv,
+  zlib,
+}:
 
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenv.mkDerivation (finalAttrs: {
   pname = "qupath";
   version = "0.7.0";
 
@@ -12,7 +49,83 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   sourceRoot = "QuPath";
   dontBuild = true;
 
-  nativeBuildInputs = [ copyDesktopItems ];
+  nativeBuildInputs = [
+    autoPatchelfHook
+    copyDesktopItems
+    makeBinaryWrapper
+  ];
+
+  buildInputs = [
+    alsa-lib
+    atk
+    cairo
+    dbus
+    expat
+    fontconfig
+    freetype
+    gdk-pixbuf
+    gsettings-desktop-schemas
+    glib
+    gtk3
+    harfbuzz
+    libGL
+    libxkbcommon
+    libx11
+    libxau
+    libxcb
+    libxcomposite
+    libxcursor
+    libxdamage
+    libxext
+    libxfixes
+    libxi
+    libxinerama
+    libxrandr
+    libxrender
+    libxtst
+    pango
+    stdenv.cc.cc.lib
+    zlib
+  ];
+
+  preFixup = ''
+    addAutoPatchelfSearchPath "$out/opt/QuPath/lib"
+    addAutoPatchelfSearchPath "$out/opt/QuPath/lib/runtime/lib"
+    addAutoPatchelfSearchPath "$out/opt/QuPath/lib/runtime/lib/server"
+  '';
+
+  qupathRuntimeLibraryPath = lib.makeLibraryPath [
+    alsa-lib
+    atk
+    cairo
+    dbus
+    expat
+    fontconfig
+    freetype
+    gdk-pixbuf
+    gsettings-desktop-schemas
+    glib
+    gtk3
+    harfbuzz
+    libGL
+    libxkbcommon
+    libx11
+    libxau
+    libxcb
+    libxcomposite
+    libxcursor
+    libxdamage
+    libxext
+    libxfixes
+    libxi
+    libxinerama
+    libxrandr
+    libxrender
+    libxtst
+    pango
+    stdenv.cc.cc.lib
+    zlib
+  ];
 
   desktopItems = [
     (makeDesktopItem {
@@ -31,7 +144,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
     mkdir -p "$out/opt" "$out/bin" "$out/share/icons/hicolor/512x512/apps"
     cp -r . "$out/opt/QuPath"
-    ln -s "$out/opt/QuPath/bin/QuPath" "$out/bin/qupath"
+    makeWrapper "$out/opt/QuPath/bin/QuPath" "$out/bin/qupath" \
+      --prefix LD_LIBRARY_PATH : "$out/opt/QuPath/lib:$out/opt/QuPath/lib/runtime/lib:$out/opt/QuPath/lib/runtime/lib/server:${finalAttrs.qupathRuntimeLibraryPath}" \
+      --prefix XDG_DATA_DIRS : "$out/share:${gsettings-desktop-schemas}/share/gsettings-schemas/${gsettings-desktop-schemas.name}:${gtk3}/share/gsettings-schemas/${gtk3.name}:${gtk3}/share:${gdk-pixbuf}/share:${glib}/share"
     install -Dm644 "$out/opt/QuPath/lib/QuPath.png" "$out/share/icons/hicolor/512x512/apps/qupath.png"
 
     runHook postInstall
