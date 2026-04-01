@@ -206,6 +206,13 @@ in
         rm -f "$FZF_COMMAND_HELP_MODE_FILE"
         commandline --function repaint
       '';
+      functions.ssh = ''
+        if test "$TERM" = "xterm-ghostty"
+            env TERM=xterm-256color ssh $argv
+        else
+            command ssh $argv
+        end
+      '';
       functions.fish_user_key_bindings = ''
         for mode in default insert
           bind --mode $mode \t _fifc
