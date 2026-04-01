@@ -44,6 +44,9 @@
   # PROGRAMS
   # ===================================================================
   programs.fish.enable = true;
+  environment.systemPackages = with pkgs; [
+    bind
+  ];
 
   # ===================================================================
   # NETWORKING
