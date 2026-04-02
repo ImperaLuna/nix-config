@@ -1,6 +1,7 @@
 { pkgs, lib, config, ... }:
 
 let
+  rebuildFlakePath = "~/homelab/nix-config";
   fifc = pkgs.fishPlugins.fifc.overrideAttrs (_: {
     src = pkgs.fetchFromGitHub {
       owner = "gazorby";
@@ -31,6 +32,10 @@ in
     programs.fish = {
       enable = true;
       shellInit = ''
+        if test -f ~/.kube/config
+          set -gx KUBECONFIG ~/.kube/config
+        end
+
         if type -q zeditor
           set -gx EDITOR zeditor
           set -gx VISUAL zeditor
@@ -225,7 +230,9 @@ in
         ls = "eza --icons --color=always";
       };
       shellAbbrs = {
-        rebuild = "sudo nixos-rebuild switch --flake ~/nix-config#(hostname)";
+        rebuild = "sudo nixos-rebuild switch --flake ${rebuildFlakePath}#(hostname)";
+        devup = "kubectl scale deployment -n homelab-dev --replicas=1 --all";
+        devdown = "kubectl scale deployment -n homelab-dev --replicas=0 --all";
         batn = "cat --style=full --paging=auto";
         gs = "git status";
         install = "nix shell nixpkgs#";

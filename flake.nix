@@ -35,7 +35,7 @@
   outputs = inputs@{ self, nixpkgs, dms, danksearch, home-manager, llm-agents, zen-browser, ... }:
   let
     system = "x86_64-linux";
-    mkHost = { hostPath, homeProfile ? "desktop" }: nixpkgs.lib.nixosSystem {
+    mkHost = { hostPath, username, userConfig, homeProfile ? "desktop" }: nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
@@ -50,9 +50,9 @@
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = {
             inherit inputs homeProfile;
-            userConfig = ./home/users/imperaluna.nix;
+            inherit userConfig;
           };
-          home-manager.users.imperaluna = import ./home;
+          home-manager.users.${username} = import ./home;
         }
       ];
     };
@@ -60,10 +60,14 @@
     nixosConfigurations = {
       RyzenShine = mkHost {
         hostPath = ./hosts/desktop;
+        username = "imperaluna";
+        userConfig = ./home/users/imperaluna.nix;
         homeProfile = "desktop";
       };
       DuskNova = mkHost {
         hostPath = ./hosts/laptop;
+        username = "dusknova";
+        userConfig = ./home/users/imperaluna.nix;
         homeProfile = "server";
       };
     };
