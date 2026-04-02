@@ -3,6 +3,7 @@
 {
   imports = [
     ./ghostty/ghostty.nix
+    ./headlamp/headlamp.nix
     ./python/python.nix
     ./zed/zed.nix
     ./obsidian/obsidian.nix
@@ -14,6 +15,7 @@
   config = lib.mkIf config.modules.workstation.enable {
     modules = {
       ghostty.enable   = true;
+      headlamp.enable  = true;
       python.enable    = true;
       zed.enable       = true;
       obsidian.enable  = true;
