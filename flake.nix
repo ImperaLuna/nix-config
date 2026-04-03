@@ -7,6 +7,7 @@
   };
 
   inputs = {
+    flake-parts.follows = "llm-agents/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     llm-agents.url = "github:numtide/llm-agents.nix";
 
@@ -32,44 +33,58 @@
 
   };
 
-  outputs = inputs@{ self, nixpkgs, dms, danksearch, home-manager, llm-agents, zen-browser, ... }:
-  let
-    system = "x86_64-linux";
-    mkHost = { hostPath, username, userConfig, homeProfile ? "desktop" }: nixpkgs.lib.nixosSystem {
-      inherit system;
-      specialArgs = { inherit inputs; };
-      modules = [
-        hostPath
-
-        dms.nixosModules.dank-material-shell
-        dms.nixosModules.greeter
-
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = {
-            inherit inputs homeProfile;
-            inherit userConfig;
-          };
-          home-manager.users.${username} = import ./home;
-        }
+  outputs = inputs@{ flake-parts, nixpkgs, dms, home-manager, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } ({ config, ... }: {
+      imports = [
+        inputs.flake-parts.flakeModules.modules
+        ./modules/terminal
       ];
-    };
-  in {
-    nixosConfigurations = {
-      RyzenShine = mkHost {
-        hostPath = ./hosts/desktop;
-        username = "imperaluna";
-        userConfig = ./home/users/imperaluna.nix;
-        homeProfile = "desktop";
-      };
-      DuskNova = mkHost {
-        hostPath = ./hosts/laptop;
-        username = "dusknova";
-        userConfig = ./home/users/imperaluna.nix;
-        homeProfile = "server";
-      };
-    };
-  };
+
+      systems = [ "x86_64-linux" ];
+
+      flake =
+        let
+          system = "x86_64-linux";
+          mkHost = { hostPath, username, userConfig, homeProfile ? "desktop" }:
+            nixpkgs.lib.nixosSystem {
+              inherit system;
+              specialArgs = { inherit inputs; };
+              modules = [
+                hostPath
+
+                dms.nixosModules.dank-material-shell
+                dms.nixosModules.greeter
+
+                home-manager.nixosModules.home-manager
+                {
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.sharedModules = [
+                    config.flake.modules.homeManager.terminal-role-default
+                  ];
+                  home-manager.extraSpecialArgs = {
+                    inherit inputs homeProfile;
+                    inherit userConfig;
+                  };
+                  home-manager.users.${username} = import ./home;
+                }
+              ];
+            };
+        in {
+          nixosConfigurations = {
+            RyzenShine = mkHost {
+              hostPath = ./hosts/desktop;
+              username = "imperaluna";
+              userConfig = ./home/users/imperaluna.nix;
+              homeProfile = "desktop";
+            };
+            DuskNova = mkHost {
+              hostPath = ./hosts/laptop;
+              username = "dusknova";
+              userConfig = ./home/users/imperaluna.nix;
+              homeProfile = "server";
+            };
+          };
+        };
+    });
 }

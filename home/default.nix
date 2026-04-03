@@ -3,7 +3,6 @@
 {
   imports = [
     userConfig
-    ./terminal
     ./workstation
     ./gaming
     ./apps
@@ -18,14 +17,12 @@
 
   # ── Enable / disable home modules ─────────────────────────────────────────
   modules = if homeProfile == "server" then {
-    terminal.enable    = true;
     workstation.enable = false;
     gaming.enable      = false;
     apps.enable        = false;
     desktop.enable     = false;
     qupath.enable      = true;
   } else {
-    terminal.enable    = true;
     workstation.enable = true;
     gaming.enable      = true;
     apps.enable        = true;

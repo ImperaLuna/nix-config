@@ -259,6 +259,10 @@
       "inputs": {
         "danksearch": "danksearch",
         "dms": "dms",
+        "flake-parts": [
+          "llm-agents",
+          "flake-parts"
+        ],
         "home-manager": "home-manager",
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs_2",
