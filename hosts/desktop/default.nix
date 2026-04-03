@@ -54,6 +54,11 @@
     enableIPv6 = false;
   };
 
+  # Force IPv4 preference so apps don't try IPv6 first and time out
+  environment.etc."gai.conf".text = ''
+    precedence ::ffff:0:0/96  100
+  '';
+
   # ===================================================================
   # USERS
   # ===================================================================
