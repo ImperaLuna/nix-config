@@ -87,12 +87,13 @@ in
   networking = {
     hostName = "DuskNova";
     networkmanager.enable = true;
+    enableIPv6 = false;
     wireless.enable = lib.mkForce false;
   };
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 1;
+    "net.ipv6.conf.all.forwarding" = 0;
   };
   boot.kernelParams = [ "consoleblank=300" ];
   boot.tmp.cleanOnBoot = true;

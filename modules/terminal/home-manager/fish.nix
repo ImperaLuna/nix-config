@@ -125,9 +125,19 @@ in
     functions._fzf_history_delete = ''
       set -l time_prefix_regex '^.*? │ '
       while read -lz item
-          set -l cmd (string replace --regex $time_prefix_regex "" -- $item)
-          if test -n "$cmd"
-              builtin history delete --exact --case-sensitive -- $cmd
+          # fzf only passes the first visible line of each item via {+f},
+          # so strip the timestamp prefix to get the command's first line,
+          # then find the full entry in history (handles multiline commands).
+          set -l first_line (string split -- \n $item)[1]
+          set -l cmd_start (string replace --regex $time_prefix_regex "" -- $first_line)
+          if test -z "$cmd_start"
+              continue
+          end
+          builtin history --null | while read -lz entry
+              if test (string split -- \n $entry)[1] = $cmd_start
+                  builtin history delete --exact --case-sensitive -- $entry
+                  break
+              end
           end
       end
       builtin history save

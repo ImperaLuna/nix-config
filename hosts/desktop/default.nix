@@ -51,8 +51,7 @@
   networking = {
     hostName = "RyzenShine";
     networkmanager.enable = true;
-    # Temporarily stop forcing IPv4-only networking.
-    # enableIPv6 = false;
+    enableIPv6 = false;
   };
 
   # ===================================================================
