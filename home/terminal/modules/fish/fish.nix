@@ -1,14 +1,7 @@
 { pkgs, lib, config, ... }:
 
 let
-  fifc = pkgs.fishPlugins.fifc.overrideAttrs (_: {
-    src = pkgs.fetchFromGitHub {
-      owner = "gazorby";
-      repo = "fifc";
-      rev = "a01650cd432becdc6e36feeff5e8d657bd7ee84a";
-      hash = "sha256-Ynb0Yd5EMoz7tXwqF8NNKqCGbzTZn/CwLsZRQXIAVp4=";
-    };
-  });
+  fifc = pkgs.fishPlugins.fifc;
 
   fish-abbreviation-tips = pkgs.fishPlugins.buildFishPlugin {
     pname = "fish-abbreviation-tips";
