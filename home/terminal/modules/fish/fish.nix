@@ -1,7 +1,6 @@
 { pkgs, lib, config, ... }:
 
 let
-  rebuildFlakePath = "~/homelab/nix-config";
   fifc = pkgs.fishPlugins.fifc.overrideAttrs (_: {
     src = pkgs.fetchFromGitHub {
       owner = "gazorby";
@@ -218,6 +217,23 @@ in
             command ssh $argv
         end
       '';
+      functions.rebuild = ''
+        set -l flakePath
+
+        for candidate in ~/nix-config ~/homelab/nix-config
+          if test -f "$candidate/flake.nix"
+            set flakePath "$candidate"
+            break
+          end
+        end
+
+        if test -z "$flakePath"
+          echo "rebuild: no flake found at ~/nix-config or ~/homelab/nix-config" >&2
+          return 1
+        end
+
+        sudo nixos-rebuild switch --flake "$flakePath#"(hostname) $argv
+      '';
       functions.fish_user_key_bindings = ''
         for mode in default insert
           bind --mode $mode \t _fifc
@@ -230,7 +246,6 @@ in
         ls = "eza --icons --color=always";
       };
       shellAbbrs = {
-        rebuild = "sudo nixos-rebuild switch --flake ${rebuildFlakePath}#(hostname)";
         devup = "kubectl scale deployment -n homelab-dev --replicas=1 --all";
         devdown = "kubectl scale deployment -n homelab-dev --replicas=0 --all";
         batn = "cat --style=full --paging=auto";
