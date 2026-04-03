@@ -54,6 +54,14 @@ in
             -n 'test -d "$fifc_candidate"' \
             -p 'eza --tree --level=2 --color=always --icons "$fifc_candidate"' \
             -O 1
+        # Register the generic directory preview first. Fish ignores `set list[2]`
+        # on an empty list, so the cd-specific rule must be inserted after slot 1
+        # exists or it silently never gets stored.
+        fifc \
+            -n 'string match -qr "^cd\s" $fifc_commandline' \
+            -s _fifc_source_cd_directories \
+            -p 'eza --tree --level=2 --color=always --icons "$fifc_candidate"' \
+            -O 2
       '';
       interactiveShellInit = lib.mkBefore ''
         set -g fish_greeting

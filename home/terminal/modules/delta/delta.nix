@@ -10,7 +10,6 @@
       options = {
         features = "catppuccin-mocha";
         navigate = true;
-        side-by-side = true;
       };
     };
 

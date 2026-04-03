@@ -55,6 +55,13 @@ in
           -n 'test -d "$fifc_candidate"' \
           -p 'eza --tree --level=2 --color=always --icons "$fifc_candidate"' \
           -O 1
+      # Fish ignores `set list[2]` on an empty list, so the cd-specific rule
+      # must be inserted after slot 1 exists or it never gets stored.
+      fifc \
+          -n 'string match -qr "^cd\\s" -- $fifc_commandline; or test "$fifc_commandline" = cd' \
+          -s _fifc_source_cd_directories \
+          -p 'eza --tree --level=2 --color=always --icons "$fifc_candidate"' \
+          -O 2
     '';
     interactiveShellInit = lib.mkBefore ''
       set -g fish_greeting
@@ -66,6 +73,13 @@ in
       set fish_function_path ${fish-abbreviation-tips}/share/fish/vendor_functions.d $fish_function_path
       source ${fish-abbreviation-tips}/share/fish/vendor_conf.d/abbr_tips.fish
       emit abbr_tips_install
+
+      for mode in default insert
+        bind --erase --preset --mode $mode \t 2>/dev/null
+        bind --mode $mode \t _tab_complete_or_cd_menu
+        bind --mode $mode ctrl-/ _fzf_search_commands_tldr
+        bind --mode $mode ctrl-_ _fzf_search_commands_tldr
+      end
 
       # FZF configuration
       set -gx fzf_preview_dir_cmd eza --tree --level=2 --icons --color=always
@@ -112,6 +126,95 @@ in
           | string unescape \
           | uniq \
           | awk -F '\t' '{ print $1 }'
+    '';
+    functions._tab_complete_or_cd_menu = ''
+      set -l line (commandline --cut-at-cursor)
+      set -l token (commandline --current-token)
+
+      if string match -qr '^\S+$' -- "$line"
+          _fzf_search_commands_tldr
+          return
+      end
+
+      if not string match -qr '^cd(\s|$)' -- "$line"
+          _fifc
+          return
+      end
+
+      set -l path (_fifc_expand_tilde "$token")
+      set -l base_dir .
+      set -l prefix
+
+      if string match --quiet -- '*/' "$token"; or test -d "$path"
+          set base_dir "$path"
+      else if test -n "$path"
+          set base_dir (path dirname -- "$path")
+          set prefix (path basename -- "$path")
+      end
+
+      test -d "$base_dir"; or return
+
+      set -l candidates
+      if type -q fd
+          set candidates (
+              fd --max-depth 1 --type d "^$prefix" "$base_dir" 2>/dev/null \
+                  | string replace --regex '^\\./' ""
+          )
+      else
+          for dir in (find "$base_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+              set -l trimmed (string replace --regex '^\\./' "" -- "$dir")
+              set -l name (path basename -- "$trimmed")
+              string match --quiet -- "$prefix*" -- "$name"; and set -a candidates "$trimmed"
+          end
+      end
+
+      if test (count $candidates) -eq 0
+          commandline --function complete
+          return
+      end
+
+      set -l selected (
+          printf '%s\n' $candidates \
+              | fzf \
+                  --select-1 \
+                  --exit-0 \
+                  --reverse \
+                  --ansi \
+                  --query "$prefix" \
+                  --preview 'eza --tree --level=2 --color=always --icons {}'
+      )
+
+      if test -n "$selected"
+          commandline --replace --current-token -- "$selected"
+          commandline --function repaint
+      end
+    '';
+    functions._fifc_source_cd_directories = ''
+      set -l token (string unescape -- $fifc_token)
+      set -l path (_fifc_expand_tilde "$token")
+      set -l base_dir .
+      set -l prefix
+
+      if string match --quiet -- '*/' "$token"; or test -d "$path"
+          set base_dir "$path"
+      else if test -n "$path"
+          set base_dir (path dirname -- "$path")
+          set prefix (path basename -- "$path")
+      end
+
+      test -d "$base_dir"; or return
+
+      if type -q fd
+          fd --max-depth 1 --type d "^$prefix" "$base_dir" 2>/dev/null \
+              | string replace --regex '^\\./' ""
+      else
+          find "$base_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null \
+              | while read -l dir
+                    set -l trimmed (string replace --regex '^\\./' "" -- "$dir")
+                    set -l name (path basename -- "$trimmed")
+                    string match --quiet -- "$prefix*" -- "$name"; and echo "$trimmed"
+                end
+      end
     '';
     functions._fifc_preview_cmd = ''
       if type -q tldr
@@ -252,13 +355,6 @@ in
       end
 
       sudo nixos-rebuild switch --flake "$flakePath#"(hostname) $argv
-    '';
-    functions.fish_user_key_bindings = ''
-      for mode in default insert
-        bind --mode $mode \t _fifc
-        bind --mode $mode ctrl-/ _fzf_search_commands_tldr
-        bind --mode $mode ctrl-_ _fzf_search_commands_tldr
-      end
     '';
     shellAliases = {
       cat = "bat";
