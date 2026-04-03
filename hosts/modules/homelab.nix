@@ -88,6 +88,8 @@
     environment.systemPackages = with pkgs; [
       kubectl
       kustomize
+      kubeseal
+      openssl
     ];
   };
 }
