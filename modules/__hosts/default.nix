@@ -9,12 +9,18 @@ let
     homeProfile ? "desktop",
     extraSystemModules ? [ ],
   }:
+    let
+      homeStackModule =
+        if homeProfile == "server"
+        then config.flake.nixosModules.home-lab
+        else config.flake.nixosModules.home-desktop;
+    in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
         hostPath
-        config.flake.nixosModules.home-stack
+        homeStackModule
         {
           home-manager.extraSpecialArgs = {
             inherit inputs homeProfile;

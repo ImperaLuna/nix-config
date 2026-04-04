@@ -1,7 +1,7 @@
 { inputs, self, ... }:
 
 {
-  flake.nixosModules.home-stack = { ... }: {
+  flake.nixosModules.home-desktop = { ... }: {
     imports = [ inputs.home-manager.nixosModules.home-manager ];
 
     home-manager.useGlobalPkgs = true;
@@ -13,6 +13,18 @@
       self.modules.homeManager.basic-desktop
       self.modules.homeManager.desktop
       self.modules.homeManager.workstation
+      self.modules.homeManager.python
+      self.modules.homeManager.experimental
+    ];
+  };
+
+  flake.nixosModules.home-lab = { ... }: {
+    imports = [ inputs.home-manager.nixosModules.home-manager ];
+
+    home-manager.useGlobalPkgs = true;
+    home-manager.useUserPackages = true;
+    home-manager.sharedModules = [
+      self.modules.homeManager.terminal
       self.modules.homeManager.python
       self.modules.homeManager.experimental
     ];

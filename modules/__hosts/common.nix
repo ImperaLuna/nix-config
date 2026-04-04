@@ -20,8 +20,8 @@
     cores = 0;
     keep-outputs = true;
     keep-derivations = true;
-    auto-optimise-store = true;
   };
+  nix.optimise.automatic = true;
   nix.gc = {
     automatic = true;
     dates = "weekly";
