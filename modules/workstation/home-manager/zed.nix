@@ -1,18 +1,28 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, ... }:
+
+let
+  cfg = config.modules.zed;
+in
 
 {
-  options.modules.zed.enable = lib.mkEnableOption "zed";
+  options.modules.zed.manageSettings = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Whether this module manages Zed user settings and desktop entry overrides.";
+  };
 
-  config = lib.mkIf config.modules.zed.enable {
+  config = {
     programs.zed-editor = {
       enable = true;
-      userSettings = {
+      userSettings = lib.mkIf cfg.manageSettings {
+        base_keymap = "VSCode";
+        theme = "Ayu Dark";
         autosave = "on_focus_change";
         vim_mode = true;
       };
     };
 
-    xdg.desktopEntries."dev.zed.Zed" = {
+    xdg.desktopEntries."dev.zed.Zed" = lib.mkIf cfg.manageSettings {
       name = "Zed";
       genericName = "Text Editor";
       comment = "A high-performance, multiplayer code editor.";

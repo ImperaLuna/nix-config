@@ -2,6 +2,16 @@
 
 Personal NixOS configuration. Modular, multi-host, single source of truth.
 
+## Important: Managed App Settings
+
+This repo is opinionated and personal-first. Many modules manage application config files declaratively.
+
+If you copy this config and apply it, Home Manager may replace your existing app settings with the versions defined here.
+
+- This is expected behavior for declarative config.
+- It is not a full system wipe, but it can overwrite app-level preferences.
+- Review modules before enabling them if you want to keep local app settings.
+
 ## Structure
 
 ```
