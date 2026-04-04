@@ -72,10 +72,9 @@ let
 in
 {
   imports = [
-    ../default.nix
-    ./hardware-configuration.nix
-    ../modules/remote-access.nix
-    ../modules/homelab.nix
+    ../common.nix
+    ../../../hosts/modules/remote-access.nix
+    ../../../hosts/modules/homelab.nix
   ];
 
   modules.remote-access.enable = true;

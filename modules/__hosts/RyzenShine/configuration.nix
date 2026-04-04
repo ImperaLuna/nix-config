@@ -1,15 +1,14 @@
-{ config, pkgs, lib, inputs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
-    ../default.nix
-    ../modules/hyprland.nix
-    ./hardware-configuration.nix
-    ../modules/input-remap.nix
-    ../modules/virtualisation.nix
-    ../modules/dms.nix
-    ../modules/remote-access.nix
-    ../modules/syncthing.nix
+    ../common.nix
+    ../../../hosts/modules/hyprland.nix
+    ../../../hosts/modules/input-remap.nix
+    ../../../hosts/modules/virtualisation.nix
+    ../../../hosts/modules/dms.nix
+    ../../../hosts/modules/remote-access.nix
+    ../../../hosts/modules/syncthing.nix
   ];
 
   modules.input-remap.enable = true;
@@ -96,7 +95,6 @@
       '';
     };
   };
-
 
   # ===================================================================
   # GPU — nvidia proprietary driver

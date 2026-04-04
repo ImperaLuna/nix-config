@@ -30,9 +30,10 @@
 
   };
 
-  outputs = inputs@{ flake-parts, nixpkgs, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } ({ config, ... }: {
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } ({ ... }: {
       imports = [
+        ./modules/__hosts/default.nix
         ./modules/parts.nix
         ./modules/home-stack.nix
         ./modules/_experimental/default.nix
@@ -40,53 +41,5 @@
         ./modules/terminal/default.nix
         ./modules/workstation/default.nix
       ];
-
-      flake =
-        let
-          mkHost = {
-            system,
-            hostPath,
-            username,
-            userConfig,
-            homeProfile ? "desktop",
-            extraSystemModules ? [ ],
-          }:
-            nixpkgs.lib.nixosSystem {
-              inherit system;
-              specialArgs = { inherit inputs; };
-              modules = [
-                hostPath
-
-                config.flake.nixosModules.home-stack
-                {
-                  home-manager.extraSpecialArgs = {
-                    inherit inputs homeProfile;
-                    inherit userConfig;
-                  };
-                  home-manager.users.${username} = import ./home;
-                }
-              ] ++ extraSystemModules;
-            };
-        in {
-          nixosConfigurations = {
-            RyzenShine = mkHost {
-              system = "x86_64-linux";
-              hostPath = ./hosts/desktop;
-              username = "imperaluna";
-              userConfig = ./home/users/imperaluna.nix;
-              homeProfile = "desktop";
-              extraSystemModules = [
-                config.flake.nixosModules.system-stack-desktop
-              ];
-            };
-            DuskNova = mkHost {
-              system = "x86_64-linux";
-              hostPath = ./hosts/laptop;
-              username = "dusknova";
-              userConfig = ./home/users/imperaluna.nix;
-              homeProfile = "server";
-            };
-          };
-        };
     });
 }

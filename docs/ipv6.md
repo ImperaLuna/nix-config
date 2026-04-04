@@ -9,8 +9,8 @@ networking.enableIPv6 = false;
 ```
 
 Located in:
-- `hosts/laptop/default.nix`
-- `hosts/desktop/default.nix`
+- `modules/__hosts/DuskNova/configuration.nix`
+- `modules/__hosts/RyzenShine/configuration.nix`
 
 ## IPv4 Preference (gai.conf)
 
