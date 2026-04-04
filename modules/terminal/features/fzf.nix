@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.terminal-feature-fzf = {
-    imports = [ ../home-manager/fzf.nix ];
+  flake.modules.homeManager.terminal-feature-fzf = { pkgs, ... }: {
+    home.packages = [ pkgs.fzf ];
   };
 }

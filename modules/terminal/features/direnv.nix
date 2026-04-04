@@ -2,6 +2,9 @@
 
 {
   flake.modules.homeManager.terminal-feature-direnv = {
-    imports = [ ../home-manager/direnv.nix ];
+    programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
   };
 }

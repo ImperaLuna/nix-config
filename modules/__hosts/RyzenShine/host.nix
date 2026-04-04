@@ -5,9 +5,10 @@
     system = "x86_64-linux";
     hostPath = ./.;
     username = "imperaluna";
-    userConfig = ../../../home/users/imperaluna.nix;
+    userConfig = ../../../modules/credentials/imperaluna;
     homeProfile = "desktop";
     extraSystemModules = [
+      config.flake.nixosModules._systems-role-desktop
       config.flake.nixosModules.system-stack-desktop
     ];
   };

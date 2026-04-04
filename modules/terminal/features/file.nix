@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.terminal-feature-file = {
-    imports = [ ../home-manager/file.nix ];
+  flake.modules.homeManager.terminal-feature-file = { pkgs, ... }: {
+    home.packages = [ pkgs.file ];
   };
 }

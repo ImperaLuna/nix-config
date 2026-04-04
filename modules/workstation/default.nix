@@ -1,14 +1,13 @@
-{ inputs, config, ... }:
+{ config, ... }:
 
 {
-  imports = [
-    (inputs.import-tree ./features)
-  ];
+  imports = import ../_lib/import-feature-tree.nix ./features;
 
-  flake.modules.homeManager.workstation-role-default = {
+  flake.modules.homeManager.workstation = {
     imports = [
-      config.flake.modules.homeManager.workstation-feature-ghostty
+      config.flake.modules.homeManager.workstation-feature-headlamp
       config.flake.modules.homeManager.workstation-feature-zed
+      config.flake.modules.homeManager.workstation-feature-opencode-desktop
     ];
   };
 }

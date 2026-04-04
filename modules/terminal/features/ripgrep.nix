@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.terminal-feature-ripgrep = {
-    imports = [ ../home-manager/ripgrep.nix ];
+  flake.modules.homeManager.terminal-feature-ripgrep = { pkgs, ... }: {
+    home.packages = [ pkgs.ripgrep ];
   };
 }

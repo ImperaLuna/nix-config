@@ -2,6 +2,10 @@
 
 {
   flake.modules.homeManager.terminal-feature-zoxide = {
-    imports = [ ../home-manager/zoxide.nix ];
+    programs.zoxide = {
+      enable = true;
+      enableFishIntegration = true;
+      options = [ "--cmd" "cd" ];
+    };
   };
 }

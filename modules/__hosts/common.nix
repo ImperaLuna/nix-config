@@ -14,13 +14,19 @@
   # SYSTEM CONFIGURATION
   # ===================================================================
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    max-jobs = "auto";
+    cores = 0;
+    keep-outputs = true;
+    keep-derivations = true;
+    auto-optimise-store = true;
+  };
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
-  nix.optimise.automatic = true;
 
   # ===================================================================
   # FONTS

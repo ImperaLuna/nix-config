@@ -37,9 +37,15 @@
         ./modules/parts.nix
         ./modules/home-stack.nix
         ./modules/_experimental/default.nix
+        ./modules/_systems/default.nix
         ./modules/system-stack.nix
         ./modules/terminal/default.nix
+        ./modules/apps/default.nix
+        ./modules/gaming/default.nix
+        ./modules/basic-desktop/default.nix
+        ./modules/desktop/default.nix
         ./modules/workstation/default.nix
+        ./modules/python/default.nix
       ];
     });
 }

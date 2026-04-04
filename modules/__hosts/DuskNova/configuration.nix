@@ -73,12 +73,7 @@ in
 {
   imports = [
     ../common.nix
-    ../../../hosts/modules/remote-access.nix
-    ../../../hosts/modules/homelab.nix
   ];
-
-  modules.remote-access.enable = true;
-  modules.homelab.enable = true;
 
   # ===================================================================
   # NETWORKING

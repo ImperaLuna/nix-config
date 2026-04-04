@@ -20,7 +20,7 @@ let
             inherit inputs homeProfile;
             inherit userConfig;
           };
-          home-manager.users.${username} = import ../../home;
+          home-manager.users.${username} = import ../../modules/home.nix;
         }
       ] ++ extraSystemModules;
     };
@@ -28,5 +28,5 @@ in
 {
   flake.nixosConfigurations =
     (import ./RyzenShine/host.nix { inherit mkHost config; })
-    // (import ./DuskNova/host.nix { inherit mkHost; });
+    // (import ./DuskNova/host.nix { inherit mkHost config; });
 }

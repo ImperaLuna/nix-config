@@ -3,20 +3,7 @@
 {
   imports = [
     ../common.nix
-    ../../../hosts/modules/hyprland.nix
-    ../../../hosts/modules/input-remap.nix
-    ../../../hosts/modules/virtualisation.nix
-    ../../../hosts/modules/dms.nix
-    ../../../hosts/modules/remote-access.nix
-    ../../../hosts/modules/syncthing.nix
   ];
-
-  modules.input-remap.enable = true;
-  modules.hyprland.enable = true;
-  modules.virtualisation.enable = true;
-  modules.dms.enable = true;
-  modules.remote-access.enable = true;
-  modules.syncthing.enable = true;
 
   programs.steam.enable = true;
   programs.kdeconnect.enable = true;

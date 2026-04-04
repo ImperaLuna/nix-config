@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.terminal-feature-witr = {
-    imports = [ ../home-manager/witr.nix ];
+  flake.modules.homeManager.terminal-feature-witr = { pkgs, ... }: {
+    home.packages = [ pkgs.witr ];
   };
 }
