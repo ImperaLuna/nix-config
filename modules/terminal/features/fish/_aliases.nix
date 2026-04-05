@@ -72,14 +72,19 @@
       end
 
       set -l hmAttr "nixosConfigurations.\"$hostName\".config.home-manager.users.$USER.home.activationPackage"
-      set -l activationPkg (nix build "$flakePath#$hmAttr" --no-link --print-out-paths $argv)
+      set -l activationPkg (nix build "path:$flakePath#$hmAttr" --no-link --print-out-paths $argv)
 
       if test -z "$activationPkg"
         echo "homeswitch: failed to build activation package for $USER@$hostName" >&2
         return 1
       end
 
-      "$activationPkg"/activate
+      if pgrep -x zen >/dev/null; or pgrep -x zen-beta >/dev/null
+        echo "homeswitch: Zen is running; close it first so declarative spaces/pins can be applied." >&2
+        return 1
+      end
+
+      env HOME_MANAGER_BACKUP_EXT=hm-backup HOME_MANAGER_BACKUP_OVERWRITE=1 "$activationPkg"/activate
     '';
   };
 }

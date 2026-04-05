@@ -17,14 +17,16 @@ In short: `host -> role -> feature`.
 
 - Hosts are defined in `modules/__hosts/default.nix`.
 - Each host folder (`modules/__hosts/RyzenShine`, `modules/__hosts/DuskNova`) has
-- :
   - `host.nix` (which roles/stacks this host uses)
   - `configuration.nix` (host-specific config)
   - `hardware.nix` (generated hardware config)
-- Home Manager stack is in `modules/home-stack.nix`.
+- Home Manager stacks are in `modules/home-stack.nix`:
+  - `home-desktop` for desktop hosts
+  - `home-lab` for server/lab hosts
 - System roles are in `modules/_systems/default.nix`.
-- Terminal HM role is in `modules/terminal/default.nix`.
-- Workstation HM role is in `modules/workstation/default.nix`.
+- Home Manager domain roles are in `modules/*/default.nix` (for example
+  `modules/terminal/default.nix`, `modules/desktop/default.nix`,
+  `modules/workstation/default.nix`).
 
 ## Where to enable/disable features
 
@@ -34,7 +36,7 @@ Disable `yazi` from the terminal role:
 
 ```nix
 # modules/terminal/default.nix
-flake.modules.homeManager.terminal-role-default = {
+flake.modules.homeManager.terminal = {
   imports = [
     # ...
     # config.flake.modules.homeManager.terminal-feature-yazi
@@ -43,7 +45,7 @@ flake.modules.homeManager.terminal-role-default = {
 };
 ```
 
-That removes `yazi` from every host using `terminal-role-default`.
+That removes `yazi` from every host using the `terminal` HM role.
 
 ## Configuration approaches
 
@@ -52,7 +54,7 @@ This config uses two approaches, depending on what each app supports.
 ### 1) Wrapped package (config baked in)
 
 For tools that support config flags, this repo uses
-[`nix-wrapper-modules`](https://birdeehub.github.io/nix-wrapper-modules/md/getting-started.html) to
+[`nix-wrapper-modules`](https://birdeehub.github.io/nix-wrapper-modules/) to
 build a configured package.
 
 Example: tmux
@@ -71,14 +73,14 @@ Limitations:
 
 - only works cleanly for tools that support config via args/flags
 - not every app has a ready-made wrapper module
-  ([wrapper list](https://birdeehub.github.io/nix-wrapper-modules/wrapperModules/))
+  ([wrapper list](https://birdeehub.github.io/nix-wrapper-modules/))
 
 ### 2) Home Manager writes config files
 
 For apps that read config from fixed paths (like `~/.config/...`) and do not
 have a config flag, Home Manager manages the file directly.
 
-Example: Zed (`modules/workstation/home-manager/zed.nix`)
+Example: Zed (`modules/workstation/features/zed.nix`)
 
 ```nix
 modules.zed.manageSettings = false;

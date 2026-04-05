@@ -22,6 +22,7 @@ let
         hostPath
         homeStackModule
         {
+          home-manager.backupFileExtension = "hm-backup";
           home-manager.extraSpecialArgs = {
             inherit inputs homeProfile;
             inherit userConfig;
