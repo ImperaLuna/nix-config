@@ -81,7 +81,7 @@ in
   networking = {
     hostName = "DuskNova";
     networkmanager.enable = true;
-    enableIPv6 = false;
+    enableIPv6 = true;
     wireless.enable = lib.mkForce false;
   };
 
@@ -92,6 +92,9 @@ in
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.disable_ipv6" = 0;
+    "net.ipv6.conf.default.disable_ipv6" = 1;
+    "net.ipv6.conf.lo.disable_ipv6" = 0;
     "net.ipv6.conf.all.forwarding" = 0;
   };
   boot.kernelParams = [ "consoleblank=300" ];
