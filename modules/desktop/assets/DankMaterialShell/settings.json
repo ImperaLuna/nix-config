@@ -233,7 +233,7 @@
   "dankLauncherV2UnloadOnClose": false,
   "useAutoLocation": true,
   "weatherEnabled": true,
-  "networkPreference": "wifi",
+  "networkPreference": "ethernet",
   "iconTheme": "Adwaita",
   "cursorSettings": {
     "theme": "System Default",

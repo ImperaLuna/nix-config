@@ -2,26 +2,18 @@
 
 {
   flake.modules.homeManager.basic-desktop-feature-zen = { pkgs, ... }: {
-    imports = [ inputs.zen-browser.homeModules.beta ];
+    home.packages = [
+      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ];
 
-    programs.zen-browser = {
-      enable = true;
-      setAsDefaultBrowser = true;
-
-      policies = {
-        DisableAppUpdate = true;
-        DisableTelemetry = true;
-        DisableFirefoxStudies = true;
-        DisablePocket = true;
-        DontCheckDefaultBrowser = true;
-      };
-
-      profiles.default = {
-        extensions.packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
-          ublock-origin
-          bitwarden
-        ];
-      } // (import ./_profiles.nix);
+    xdg.desktopEntries."zen-beta" = {
+      name = "Zen Browser (Beta)";
+      exec = "zen-beta --name zen-beta %U";
+      icon = "zen-browser";
+      categories = [ "Network" "WebBrowser" ];
+      mimeType = [ "text/html" "text/xml" "application/xhtml+xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
+      startupNotify = true;
+      settings.StartupWMClass = "zen-beta";
     };
   };
 }
