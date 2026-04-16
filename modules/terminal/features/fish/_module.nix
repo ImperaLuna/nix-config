@@ -60,7 +60,7 @@ in
           case insert
             printf '\e]12;#FD7014\a'
           case default
-            printf '\e]12;#00ADB5\a'
+            printf '\e]12;#FD7014\a'
           case replace_one replace
             printf '\e]12;#D62828\a'
           case visual
