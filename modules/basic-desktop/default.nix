@@ -6,6 +6,7 @@
   flake.modules.homeManager.basic-desktop = {
     imports = [
       config.flake.modules.homeManager.basic-desktop-feature-ghostty
+      config.flake.modules.homeManager.basic-desktop-feature-wezterm
       config.flake.modules.homeManager.basic-desktop-feature-bitwarden
       config.flake.modules.homeManager.basic-desktop-feature-obsidian
       config.flake.modules.homeManager.basic-desktop-feature-onlyoffice

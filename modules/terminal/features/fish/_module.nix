@@ -49,9 +49,33 @@ in
 
     interactiveShellInit = lib.mkBefore ''
       set -g fish_greeting
+      fish_vi_key_bindings
+      function fish_mode_prompt; end
+      set fish_cursor_default block
+      set fish_cursor_insert line
+      set fish_cursor_replace_one underscore
+      set fish_cursor_visual block
+      function _vi_cursor_color --on-variable fish_bind_mode
+        switch $fish_bind_mode
+          case insert
+            printf '\e]12;#FD7014\a'
+          case default
+            printf '\e]12;#00ADB5\a'
+          case replace_one replace
+            printf '\e]12;#D62828\a'
+          case visual
+            printf '\e]12;#412B6B\a'
+        end
+      end
       source ${pkgs.fishPlugins.fzf-fish}/share/fish/vendor_conf.d/fzf.fish
       set fish_function_path ${pkgs.fishPlugins.sponge}/share/fish/vendor_functions.d $fish_function_path
       source ${pkgs.fishPlugins.sponge}/share/fish/vendor_conf.d/sponge.fish
+
+
+      set fish_cursor_default block
+      set fish_cursor_insert line
+      set fish_cursor_replace_one underscore
+      set fish_cursor_visual block
 
       for mode in default insert
         bind --erase --preset --mode $mode \t 2>/dev/null
