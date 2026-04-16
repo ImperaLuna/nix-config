@@ -8,9 +8,13 @@ return {
     },
   },
   {
+    "roerohan/orng.nvim",
+    priority = 1000,
+  },
+  {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "orng",
     },
   },
 }

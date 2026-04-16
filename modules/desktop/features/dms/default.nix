@@ -6,12 +6,12 @@
       cosmic-files
       libqalculate
       kdePackages.kdeconnect-kde
-      (pkgs.callPackage ../pkgs/codexbar.nix { })
+      (pkgs.callPackage ../../pkgs/codexbar.nix { })
     ];
 
-    xdg.configFile."quickshell".source = ../assets/quickshell;
+    xdg.configFile."quickshell".source = ./assets/quickshell;
     xdg.configFile."DankMaterialShell".source =
       config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/nix-config/modules/desktop/assets/DankMaterialShell";
+        "${config.home.homeDirectory}/nix-config/modules/desktop/features/dms/assets/DankMaterialShell";
   };
 }

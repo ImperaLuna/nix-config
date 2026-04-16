@@ -168,6 +168,22 @@
         "url": "https://git.outfoxxed.me/quickshell/quickshell"
       }
     },
+    "qylock": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775748092,
+        "narHash": "sha256-7L0FzaLGH9q8ZSmMAfb/Slo1bgJrZhoo/dcCBUzMpcg=",
+        "owner": "Darkkal44",
+        "repo": "qylock",
+        "rev": "321866e176ee3fbf2b501da6055ec82d21222485",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Darkkal44",
+        "repo": "qylock",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "danksearch": "danksearch",
@@ -177,6 +193,7 @@
         "import-tree": "import-tree",
         "nix-wrapper-modules": "nix-wrapper-modules",
         "nixpkgs": "nixpkgs",
+        "qylock": "qylock",
         "zen-browser": "zen-browser"
       }
     },

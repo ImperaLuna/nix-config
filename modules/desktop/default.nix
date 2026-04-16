@@ -7,6 +7,7 @@
     imports = [
       config.flake.modules.homeManager.desktop-feature-hyprland
       config.flake.modules.homeManager.desktop-feature-dms
+      config.flake.modules.homeManager.desktop-feature-qylock
     ];
   };
 }

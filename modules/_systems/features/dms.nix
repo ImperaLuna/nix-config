@@ -12,7 +12,7 @@ in
     enable = true;
     quickshell.package = patchedQuickshell;
     greeter = {
-      enable = true;
+      enable = false;
       compositor.name = "hyprland";
       quickshell.package = patchedQuickshell;
     };

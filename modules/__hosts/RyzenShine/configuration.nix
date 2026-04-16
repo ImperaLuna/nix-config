@@ -1,5 +1,18 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
+let
+  qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
+    pname = "qylock-sddm-theme";
+    version = "unstable-2026-04-09";
+    src = inputs.qylock;
+    dontBuild = true;
+
+    installPhase = ''
+      mkdir -p "$out/share/sddm/themes/qylock"
+      cp -r themes/forest/* "$out/share/sddm/themes/qylock/"
+    '';
+  };
+in
 {
   imports = [
     ../common.nix
@@ -8,7 +21,7 @@
   programs.steam.enable = true;
   programs.kdeconnect.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
@@ -87,6 +100,18 @@
   # GPU — nvidia proprietary driver
   # ===================================================================
   services.xserver.videoDrivers = [ "nvidia" ];
+  services.displayManager.defaultSession = "hyprland-uwsm";
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    theme = "${qylockSddmTheme}/share/sddm/themes/qylock";
+    extraPackages = with pkgs.qt6; [
+      qt5compat
+      qtdeclarative
+      qtmultimedia
+      qtsvg
+    ];
+  };
 
   hardware.nvidia = {
     modesetting.enable = true;
@@ -129,6 +154,10 @@
     NIXOS_OZONE_WL = "1";           # native wayland for electron apps
     QT_QPA_PLATFORMTHEME = "gtk3";  # Qt apps use GTK theme
   };
+
+  environment.systemPackages = [
+    qylockSddmTheme
+  ];
 
   # ===================================================================
   # FIREWALL
