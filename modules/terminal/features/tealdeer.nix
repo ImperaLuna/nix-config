@@ -10,18 +10,6 @@
           auto_update = true;
           auto_update_interval_hours = 24;
         };
-
-        style.command_name.foreground.rgb = {
-          r = 253;
-          g = 112;
-          b = 20;
-        };
-
-        style.example_code.foreground.rgb = {
-          r = 253;
-          g = 112;
-          b = 20;
-        };
       };
     };
   };

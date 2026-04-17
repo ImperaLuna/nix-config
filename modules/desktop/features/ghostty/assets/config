@@ -27,9 +27,18 @@ clipboard-trim-trailing-spaces = true
 keybind = shift+enter=text:\n
 
 # Tabs
-keybind = ctrl+t=new_tab
-keybind = ctrl+r=prompt_surface_title
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+r=prompt_surface_title
 keybind = ctrl+q=close_surface
+keybind = ctrl+shift+one=goto_tab:1
+keybind = ctrl+shift+two=goto_tab:2
+keybind = ctrl+shift+three=goto_tab:3
+keybind = ctrl+shift+four=goto_tab:4
+keybind = ctrl+shift+five=goto_tab:5
+keybind = ctrl+shift+six=goto_tab:6
+keybind = ctrl+shift+seven=goto_tab:7
+keybind = ctrl+shift+eight=goto_tab:8
+keybind = ctrl+shift+nine=goto_tab:9
 
 
 # Splits
@@ -55,6 +64,7 @@ gtk-wide-tabs = false
 # Theme
 theme = Carbonfox
 
-# Cursor trail shader
+# Shaders
 custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl
-custom-shader-animation = true
+custom-shader = ~/.config/ghostty/shaders/sparks-from-fire.glsl
+custom-shader-animation = always

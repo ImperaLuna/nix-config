@@ -26,7 +26,6 @@
       config.flake.modules.homeManager.terminal-feature-lazygit
 
       # Terminal apps and monitoring
-      config.flake.modules.homeManager.terminal-feature-tmux
       config.flake.modules.homeManager.terminal-feature-btop
       config.flake.modules.homeManager.terminal-feature-witr
 

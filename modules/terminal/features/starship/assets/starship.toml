@@ -153,8 +153,8 @@ disabled = false
 success_symbol = '[❯](bold fg:orange)'
 error_symbol = '[❯](bold fg:purple)'
 vimcmd_symbol = '[❮](bold fg:orange)'
-vimcmd_replace_one_symbol = '[❮](bold fg:red)'
-vimcmd_replace_symbol = '[❮](bold fg:red)'
+vimcmd_replace_one_symbol = '[❮](bold fg:pink)'
+vimcmd_replace_symbol = '[❮](bold fg:pink)'
 vimcmd_visual_symbol = '[❮](bold fg:purple)'
 
 [cmd_duration]
@@ -173,4 +173,5 @@ purple = "#412B6B"
 dark   = "#222831"
 white  = "#EEEEEE"
 black  = "#11111b"
+pink   = "#ff7eb6"
 red  = "#D62828"

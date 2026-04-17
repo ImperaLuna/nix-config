@@ -1,4 +1,5 @@
 { ... }:
+let theme = import ../../../_lib/theme.nix; in
 
 {
   programs.fish.functions = {
@@ -190,7 +191,7 @@
           | _fzf_wrapper \
               --query "$token" \
               --exact \
-              --color 'prompt:#FD7014,header:#FD7014,border:#FD7014,label:#FD7014' \
+              --color 'prompt:${theme.primary},header:${theme.secondary},border:${theme.primary},label:${theme.primary}' \
               --delimiter '\t' \
               --nth '1' \
               --with-nth '1' \
