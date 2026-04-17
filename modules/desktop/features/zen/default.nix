@@ -1,7 +1,7 @@
 { inputs, ... }:
 
 {
-  flake.modules.homeManager.basic-desktop-feature-zen = { pkgs, ... }: {
+  flake.modules.homeManager.desktop-feature-zen = { pkgs, ... }: {
     home.packages = [
       inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];

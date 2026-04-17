@@ -81,7 +81,6 @@ in
         bind --erase --preset --mode $mode \t 2>/dev/null
         bind --mode $mode \t _tab_complete_or_cd_menu
         bind --mode $mode ctrl-/ _fzf_search_commands_tldr
-        bind --mode $mode ctrl-_ _fzf_search_commands_tldr
       end
 
       set -gx fzf_preview_dir_cmd eza --tree --level=2 --icons --color=always

@@ -12,7 +12,7 @@
       set -l line (commandline --cut-at-cursor)
       set -l token (commandline --current-token)
 
-      if string match -qr '^\S+$' -- "$line"
+      if test -z (string trim -- "$line"); or string match -qr '^\S+$' -- "$line"
           _fzf_search_commands_tldr
           return
       end
@@ -190,6 +190,7 @@
           | _fzf_wrapper \
               --query "$token" \
               --exact \
+              --color 'prompt:#FD7014,header:#FD7014,border:#FD7014,label:#FD7014' \
               --delimiter '\t' \
               --nth '1' \
               --with-nth '1' \

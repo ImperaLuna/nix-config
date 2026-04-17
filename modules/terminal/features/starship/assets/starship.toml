@@ -31,6 +31,7 @@ palette = 'colors'
 [os]
 disabled = false
 style = "bg:orange fg:black"
+format = '[$symbol]($style)'
 
 [os.symbols]
 Windows = ""
@@ -58,7 +59,7 @@ RedHatEnterprise = "󱄛"
 show_always = true
 style_user = "bg:orange fg:black"
 style_root = "bg:orange fg:black"
-format = '[ $user ]($style)'
+format = '[$user ]($style)'
 
 [directory]
 style = "bg:cream fg:black"

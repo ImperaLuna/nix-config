@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.basic-desktop-feature-bitwarden = { pkgs, ... }: {
+  flake.modules.homeManager.desktop-feature-bitwarden = { pkgs, ... }: {
     home.packages = [ pkgs.bitwarden-desktop ];
 
     xdg.desktopEntries.bitwarden = {

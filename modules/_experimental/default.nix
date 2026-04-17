@@ -9,5 +9,6 @@
 
       # (pkgs.callPackage ./pkgs/qupath.nix { })
     ];
+
   };
 }

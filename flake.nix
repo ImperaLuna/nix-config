@@ -48,7 +48,6 @@
         ./modules/terminal/default.nix
         ./modules/apps/default.nix
         ./modules/gaming/default.nix
-        ./modules/basic-desktop/default.nix
         ./modules/desktop/default.nix
         ./modules/workstation/default.nix
         ./modules/python/default.nix

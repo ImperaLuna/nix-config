@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.basic-desktop-feature-obsidian = { pkgs, ... }: {
+  flake.modules.homeManager.desktop-feature-obsidian = { pkgs, ... }: {
     home.packages = [ pkgs.obsidian ];
 
     xdg.desktopEntries.obsidian = {
