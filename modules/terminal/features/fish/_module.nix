@@ -53,10 +53,6 @@ in
       set -g fish_greeting
       fish_vi_key_bindings
       function fish_mode_prompt; end
-      set fish_cursor_default block
-      set fish_cursor_insert line
-      set fish_cursor_replace_one underscore
-      set fish_cursor_visual block
       function _vi_cursor_color --on-variable fish_bind_mode
         switch $fish_bind_mode
           case insert
@@ -66,18 +62,12 @@ in
           case replace_one replace
             printf '\e]12;${theme.error}\a'
           case visual
-            printf '\e]12;${theme.secondary}\a'
+            printf '\e]12;${theme.primary}\a'
         end
       end
       source ${pkgs.fishPlugins.fzf-fish}/share/fish/vendor_conf.d/fzf.fish
       set fish_function_path ${pkgs.fishPlugins.sponge}/share/fish/vendor_functions.d $fish_function_path
       source ${pkgs.fishPlugins.sponge}/share/fish/vendor_conf.d/sponge.fish
-
-
-      set fish_cursor_default block
-      set fish_cursor_insert line
-      set fish_cursor_replace_one underscore
-      set fish_cursor_visual block
 
       for mode in default insert
         bind --erase --preset --mode $mode \t 2>/dev/null
@@ -91,31 +81,31 @@ in
       set -gx FZF_DEFAULT_OPTS "\
       --layout=reverse \
       --color=bg+:${theme.bgAlt},bg:${theme.bg},spinner:${theme.info},hl:${theme.primary} \
-      --color=fg:${theme.fg},header:${theme.secondary},info:${theme.fg},pointer:${theme.primary} \
-      --color=marker:${theme.secondary},fg+:${theme.fg},prompt:${theme.primary},hl+:${theme.primary} \
+      --color=fg:${theme.fg},header:${theme.primary},info:${theme.fg},pointer:${theme.primary} \
+      --color=marker:${theme.primary},fg+:${theme.fg},prompt:${theme.primary},hl+:${theme.primary} \
       --color=selected-bg:${theme.bgAlt} \
       --color=border:${theme.bgAlt},label:${theme.fg}"
 
       set -g fish_color_normal ${builtins.substring 1 6 theme.fg}
-      set -g fish_color_command ${builtins.substring 1 6 theme.secondary}
+      set -g fish_color_command ${builtins.substring 1 6 theme.primary}
       set -g fish_color_param ${builtins.substring 1 6 theme.fg}
-      set -g fish_color_keyword ${builtins.substring 1 6 theme.secondary}
+      set -g fish_color_keyword ${builtins.substring 1 6 theme.primary}
       set -g fish_color_quote ${builtins.substring 1 6 theme.success}
       set -g fish_color_redirection ${builtins.substring 1 6 theme.primary}
       set -g fish_color_end ${builtins.substring 1 6 theme.warning}
-      set -g fish_color_comment ${builtins.substring 1 6 theme.fgAlt}
+      set -g fish_color_comment ${builtins.substring 1 6 theme.fgDim}
       set -g fish_color_error ${builtins.substring 1 6 theme.error}
       set -g fish_color_gray ${builtins.substring 1 6 theme.fgAlt}
-      set -g fish_color_selection --background=${builtins.substring 1 6 theme.bgAlt}
-      set -g fish_color_search_match --background=${builtins.substring 1 6 theme.bgAlt}
+      set -g fish_color_selection ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
+      set -g fish_color_search_match ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
       set -g fish_color_option ${builtins.substring 1 6 theme.success}
       set -g fish_color_operator ${builtins.substring 1 6 theme.primary}
       set -g fish_color_escape ${builtins.substring 1 6 theme.info}
-      set -g fish_color_autosuggestion ${builtins.substring 1 6 theme.fgAlt}
+      set -g fish_color_autosuggestion ${builtins.substring 1 6 theme.fgDim}
       set -g fish_color_cancel ${builtins.substring 1 6 theme.error}
       set -g fish_color_cwd ${builtins.substring 1 6 theme.primary}
       set -g fish_color_user ${builtins.substring 1 6 theme.info}
-      set -g fish_color_host ${builtins.substring 1 6 theme.secondary}
+      set -g fish_color_host ${builtins.substring 1 6 theme.primary}
       set -g fish_color_host_remote ${builtins.substring 1 6 theme.success}
       set -g fish_color_status ${builtins.substring 1 6 theme.error}
       set -g fish_pager_color_progress ${builtins.substring 1 6 theme.fgAlt}

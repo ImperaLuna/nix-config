@@ -2,6 +2,10 @@
 
 {
   virtualisation.libvirtd.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
   programs.virt-manager.enable = true;
 
   system.activationScripts.usrbinsh = ''

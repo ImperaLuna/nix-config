@@ -6,7 +6,8 @@
 
   # ── Foregrounds ───────────────────────────────────────────────────────────
   fg        = "#F5E7C6";  # primary text (warm cream)
-  fgAlt     = "#525252";  # dimmed text, comments, inactive elements
+  fgAlt     = "#525252";  # dimmed text, inactive elements
+  fgDim     = "#9A9A9A";  # visible-but-muted: comments, autosuggestions
 
   # ── Accents ───────────────────────────────────────────────────────────────
   primary   = "#FD7014";  # orange — main accent, keywords, highlights

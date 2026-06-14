@@ -6,10 +6,10 @@ $os\
 $username\
 [](bg:cream fg:orange)\
 $directory\
-[](bg:teal fg:cream)\
+[](bg:secondary fg:cream)\
 $git_branch\
 $git_status\
-[](fg:teal bg:purple)\
+[](fg:secondary bg:purple)\
 $c\
 $rust\
 $golang\
@@ -76,12 +76,12 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = ""
-style = "bg:teal"
-format = '[[ $symbol $branch ](fg:black bg:teal)]($style)'
+style = "bg:secondary"
+format = '[[ $symbol $branch ](fg:black bg:secondary)]($style)'
 
 [git_status]
-style = "bg:teal"
-format = '[[($all_status$ahead_behind )](fg:black bg:teal)]($style)'
+style = "bg:secondary"
+format = '[[($all_status$ahead_behind )](fg:black bg:secondary)]($style)'
 
 [nodejs]
 symbol = ""
@@ -168,7 +168,7 @@ min_time_to_notify = 45000
 [palettes.colors]
 orange = "#FD7014"
 cream  = "#F5E7C6"
-teal   = "#00ADB5"
+secondary   = "#be95ff"
 purple = "#412B6B"
 dark   = "#222831"
 white  = "#EEEEEE"

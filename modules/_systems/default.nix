@@ -6,7 +6,7 @@
       ./features/hyprland.nix
       ./features/input-remap.nix
       ./features/virtualisation.nix
-      ./features/dms.nix
+      ./features/nothingless.nix
       ./features/remote-access.nix
       ./features/syncthing.nix
     ];

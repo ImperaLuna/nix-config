@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, config, ... }:
 
 let
   qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
@@ -9,7 +9,7 @@ let
 
     installPhase = ''
       mkdir -p "$out/share/sddm/themes/qylock"
-      cp -r themes/forest/* "$out/share/sddm/themes/qylock/"
+      cp -r themes/pixel-dusk-city/* "$out/share/sddm/themes/qylock/"
     '';
   };
 in
@@ -19,7 +19,6 @@ in
   ];
 
   programs.steam.enable = true;
-  programs.kdeconnect.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
@@ -50,13 +49,7 @@ in
   networking = {
     hostName = "RyzenShine";
     networkmanager.enable = true;
-    enableIPv6 = false;
   };
-
-  # Force IPv4 preference so apps don't try IPv6 first and time out
-  environment.etc."gai.conf".text = ''
-    precedence ::ffff:0:0/96  100
-  '';
 
   # ===================================================================
   # USERS
@@ -96,6 +89,10 @@ in
     };
   };
 
+  # DELAY_INIT quirk for SteelSeries Arctis Nova 5X (1038:2253) — 6.18.x regression
+  # where the USB audio control interface times out during enumeration.
+  boot.kernelParams = [ "usbcore.quirks=1038:2253:0x40" ];
+
   # ===================================================================
   # GPU — nvidia proprietary driver
   # ===================================================================
@@ -115,8 +112,9 @@ in
 
   hardware.nvidia = {
     modesetting.enable = true;
-    nvidiaSettings = true;
+    nvidiaSettings = false;
     open = false;
+    package = config.boot.kernelPackages.nvidiaPackages.dc_590;
   };
 
   # GPU acceleration + 32-bit support (required for Steam/games)

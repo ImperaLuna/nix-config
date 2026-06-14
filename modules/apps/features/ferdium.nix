@@ -13,11 +13,13 @@
         ${lib.getExe pkgs.jq} '
           .autoLaunchOnStart = false |
           .autoLaunchInBackground = false |
-          .startMinimized = true |
+          .startMinimized = false |
           .minimizeToSystemTray = true |
           .closeToSystemTray = true |
           .enableSystemTray = true |
-          .runInBackground = true
+          .runInBackground = true |
+          .hibernationStrategy = 2592000 |
+          .wakeUpHibernationStrategy = 2592000
         ' "$settings_file" > "$tmp_file"
         mv "$tmp_file" "$settings_file"
       else
@@ -25,11 +27,13 @@
 {
   "autoLaunchOnStart": false,
   "autoLaunchInBackground": false,
-  "startMinimized": true,
+  "startMinimized": false,
   "minimizeToSystemTray": true,
   "closeToSystemTray": true,
   "enableSystemTray": true,
-  "runInBackground": true
+  "runInBackground": true,
+  "hibernationStrategy": 2592000,
+  "wakeUpHibernationStrategy": 2592000
 }
 EOF
       fi

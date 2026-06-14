@@ -18,4 +18,4 @@ geometry="$(slurp)"
 
 grim -g "${geometry}" "${outfile}"
 wl-copy < "${outfile}"
-dms -c "$HOME/.config/quickshell/dms" notify "Screenshot saved" "$(basename "${outfile}") copied to clipboard" --file "${outfile}" --icon "${outfile}" --app "Screenshot" --timeout 3500
+notify-send -a "Screenshot" -i "${outfile}" "Screenshot saved" "$(basename "${outfile}") copied to clipboard" || true

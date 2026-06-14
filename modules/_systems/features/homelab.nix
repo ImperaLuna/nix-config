@@ -36,7 +36,7 @@
       server = {
         interface = [ "0.0.0.0@5335" ];
         do-ip4 = true;
-        do-ip6 = false;
+        do-ip6 = true;
         do-udp = true;
         do-tcp = true;
         hide-identity = true;

@@ -13,21 +13,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    danksearch = {
-      url = "github:AvengeMedia/danksearch";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    # set a dynamic SDDM lockscreen
+    # check out https://github.com/Darkkal44/qylock for more information
     qylock = {
       url = "github:Darkkal44/qylock";
       flake = false;
     };
 
+
+    # Browser package consumed by modules/desktop/features/zen.
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,13 +38,11 @@
         ./modules/home-stack.nix
         ./modules/_experimental/default.nix
         ./modules/_systems/default.nix
-        ./modules/system-stack.nix
         ./modules/terminal/default.nix
         ./modules/apps/default.nix
         ./modules/gaming/default.nix
         ./modules/desktop/default.nix
         ./modules/workstation/default.nix
-        ./modules/python/default.nix
       ];
     });
 }

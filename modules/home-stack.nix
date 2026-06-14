@@ -12,7 +12,6 @@
       self.modules.homeManager.gaming
       self.modules.homeManager.desktop
       self.modules.homeManager.workstation
-      self.modules.homeManager.python
       self.modules.homeManager.experimental
     ];
   };
@@ -24,7 +23,6 @@
     home-manager.useUserPackages = true;
     home-manager.sharedModules = [
       self.modules.homeManager.terminal
-      self.modules.homeManager.python
       self.modules.homeManager.experimental
     ];
   };

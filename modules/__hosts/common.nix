@@ -14,6 +14,7 @@
   # SYSTEM CONFIGURATION
   # ===================================================================
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     max-jobs = "auto";
@@ -58,11 +59,4 @@
     tcpdump
   ];
 
-  # ===================================================================
-  # NETWORKING
-  # ===================================================================
-  # Temporarily disable the IPv4 preference override.
-  # environment.etc."gai.conf".text = ''
-  #   precedence ::ffff:0:0/96 100
-  # '';
 }

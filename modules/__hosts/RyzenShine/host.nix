@@ -9,7 +9,6 @@
     homeProfile = "desktop";
     extraSystemModules = [
       config.flake.nixosModules._systems-role-desktop
-      config.flake.nixosModules.system-stack-desktop
     ];
   };
 }

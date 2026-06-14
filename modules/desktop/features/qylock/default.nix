@@ -70,6 +70,6 @@
       home.file.".local/share/qylock/themes".source =
         "${inputs.qylock}/themes";
 
-      xdg.configFile."qylock/theme".text = "random\n";
+      xdg.configFile."qylock/theme".text = "pixel-dusk-city\n";
     };
 }

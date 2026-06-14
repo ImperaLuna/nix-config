@@ -85,17 +85,8 @@ in
     wireless.enable = lib.mkForce false;
   };
 
-  # Force IPv4 preference so apps don't try IPv6 first and time out
-  environment.etc."gai.conf".text = ''
-    precedence ::ffff:0:0/96  100
-  '';
-
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.disable_ipv6" = 0;
-    "net.ipv6.conf.default.disable_ipv6" = 1;
-    "net.ipv6.conf.lo.disable_ipv6" = 0;
-    "net.ipv6.conf.all.forwarding" = 0;
   };
   boot.kernelParams = [ "consoleblank=300" ];
   boot.tmp.cleanOnBoot = true;
@@ -142,7 +133,7 @@ in
   users.users.dusknova = {
     isNormalUser = true;
     description = "Rares Brezeanu";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
   };
 
