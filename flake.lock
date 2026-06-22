@@ -112,16 +112,15 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1782159110,
-        "narHash": "sha256-bxKOmGqmVa2wqrhGMoD/oMoiBLFFjx8V9iPy3tCJxpA=",
-        "ref": "feat/ai-usage-bar",
-        "rev": "7d4536b5e85e45525ce60a9b9e48244b8804fd2b",
-        "revCount": 37,
+        "lastModified": 1782159429,
+        "narHash": "sha256-o7jlnhTdZeewC5rf9FnTl3H4kvlu25LxSjQLTXfxTYo=",
+        "ref": "refs/heads/main",
+        "rev": "1882baa414fbf6080ed23673011c62bb1706a99a",
+        "revCount": 61,
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       },
       "original": {
-        "ref": "feat/ai-usage-bar",
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       }
