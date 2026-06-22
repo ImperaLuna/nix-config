@@ -25,11 +25,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782051614,
-        "narHash": "sha256-xBRAhYLEXcjp8hM2tkkTTLb6PWU7VDxDoogl25g7Ezs=",
+        "lastModified": 1782154529,
+        "narHash": "sha256-mVdyS2SxbPGNHTJX4n4EUMT/S2BPyZJ/ZR2UhkJcSF4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "d1ccd0721ec599866622665f3651e19e6e2d4c6a",
+        "rev": "af11a877f238208676b596a5b6c3f3d8dcf5a86b",
         "type": "github"
       },
       "original": {
@@ -60,11 +60,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780661205,
-        "narHash": "sha256-3F5DixT3Gk91lBI9E+TGMm0ko5HrRbDiL23di16TJGA=",
+        "lastModified": 1782135443,
+        "narHash": "sha256-vAmbArdCyjqpVW+37aCy/PMBOLIqukUXLQuEKLwUhA4=",
         "owner": "BirdeeHub",
         "repo": "nix-wrapper-modules",
-        "rev": "8dd304c3582ddd339217e1cc5fb53f50acb63c2d",
+        "rev": "6e7f66fa2cdf4d63162580b438f7fcf87c28a46f",
         "type": "github"
       },
       "original": {
@@ -112,15 +112,16 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1782076695,
-        "narHash": "sha256-ing/lLitHyLDDd9CC0mUoyv5gx2gRPAIZF+htKgGwrY=",
-        "ref": "refs/heads/main",
-        "rev": "4f784e3fab5f260a021e2779a4e166dd2758ca7a",
-        "revCount": 30,
+        "lastModified": 1782159110,
+        "narHash": "sha256-bxKOmGqmVa2wqrhGMoD/oMoiBLFFjx8V9iPy3tCJxpA=",
+        "ref": "feat/ai-usage-bar",
+        "rev": "7d4536b5e85e45525ce60a9b9e48244b8804fd2b",
+        "revCount": 37,
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       },
       "original": {
+        "ref": "feat/ai-usage-bar",
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       }
@@ -185,11 +186,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782012261,
-        "narHash": "sha256-3uA/FtAVbmBIL3kUs6ZDUtf/ZKjLmHljDQZWSKuJwx0=",
+        "lastModified": 1782144240,
+        "narHash": "sha256-RgCWSv7AJZCwPhCzz+J0lvwp1WBz9ouvCnnlmvu0xfw=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "6593c895a25b4bf166f596987f2cfabc63a86c0d",
+        "rev": "d1693556428967f8b4eef128feb090421ddcaf15",
         "type": "github"
       },
       "original": {
