@@ -9,10 +9,9 @@
     # flag, so the portal picker never appears when trying to share a window.
     xdg.desktopEntries.discord = {
       name = "Discord";
-      exec = "Discord --enable-features=WebRTCPipeWireCapturer %U";
+      exec = "Discord --enable-features=WebRTCPipeWireCapturer";
       icon = "discord";
-      mimeType = [ "x-scheme-handler/discord" ];
-      categories = [ "Network" "InstantMessaging" ];
+      settings.StartupWMClass = "discord";
     };
   };
 }

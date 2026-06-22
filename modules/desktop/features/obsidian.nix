@@ -6,11 +6,9 @@
 
     xdg.desktopEntries.obsidian = {
       name = "Obsidian";
-      comment = "Knowledge base";
-      exec = "obsidian %u";
+      exec = "obsidian";
       icon = "obsidian";
-      categories = [ "Office" ];
-      mimeType = [ "x-scheme-handler/obsidian" ];
+      settings.StartupWMClass = "obsidian";
     };
   };
 }
