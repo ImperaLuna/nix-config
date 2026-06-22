@@ -21,7 +21,7 @@
     };
 
     nova = {
-      url = "git+ssh://git@github.com/ImperaLuna/Nova.git?ref=feat/ai-usage-bar";
+      url = "git+ssh://git@github.com/ImperaLuna/Nova.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
