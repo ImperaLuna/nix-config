@@ -13,7 +13,7 @@
         ${lib.getExe pkgs.jq} '
           .autoLaunchOnStart = false |
           .autoLaunchInBackground = false |
-          .startMinimized = false |
+          .startMinimized = true |
           .minimizeToSystemTray = true |
           .closeToSystemTray = true |
           .enableSystemTray = true |
@@ -27,7 +27,7 @@
 {
   "autoLaunchOnStart": false,
   "autoLaunchInBackground": false,
-  "startMinimized": false,
+  "startMinimized": true,
   "minimizeToSystemTray": true,
   "closeToSystemTray": true,
   "enableSystemTray": true,

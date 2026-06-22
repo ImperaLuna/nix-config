@@ -40,7 +40,7 @@ layout {
 
 spawn-at-startup "nova"
 spawn-at-startup "env" "ELECTRON_OZONE_PLATFORM_HINT=x11" "ferdium"
-spawn-at-startup "Discord" "--enable-features=WebRTCPipeWireCapturer"
+spawn-at-startup "Discord" "--enable-features=WebRTCPipeWireCapturer" "--start-minimized"
 spawn-at-startup "swaybg" "-i" "/home/imperaluna/Pictures/Wallpapers/wallhaven-3z3y2d.jpg" "-m" "fill"
 
 hotkey-overlay {

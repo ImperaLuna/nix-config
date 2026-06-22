@@ -25,11 +25,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782159472,
-        "narHash": "sha256-S+/v+BWz9c8IbGhRM8L4UUVC5j2oZuAHj1b5XlkBjyw=",
+        "lastModified": 1782166451,
+        "narHash": "sha256-SA7LyrayyZBvtzZnesnSLV7haciFuVLeZaX2hd5v4j4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "351959fcdbe5cadec1c3434d7abd14dff31af2d5",
+        "rev": "471a1d2f840eb7fcbdfd541d99c13a64096f46db",
         "type": "github"
       },
       "original": {
@@ -112,16 +112,15 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1782159879,
-        "narHash": "sha256-5Yn0KczFaSNc/IkJiDZyItb4tkq3qnHuacTgFlZ2ZeE=",
-        "ref": "feat/ai-usage-bar",
-        "rev": "60ac79ccf34a4475c049699757f1e53422dd4d2d",
-        "revCount": 38,
+        "lastModified": 1782166097,
+        "narHash": "sha256-I+fOCVUYYLxkx/fr/0iAIUKeO540WFjDwmWiSVV5C3o=",
+        "ref": "refs/heads/main",
+        "rev": "cd32dddc73588a9e66f22a3ded2a907a1885f83c",
+        "revCount": 76,
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       },
       "original": {
-        "ref": "feat/ai-usage-bar",
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       }
