@@ -4,8 +4,6 @@ with pkgs; [
   kitty
   tmux
 
-  fuzzel
-
   networkmanagerapplet
   blueman
   pavucontrol

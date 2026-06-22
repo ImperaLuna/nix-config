@@ -20,6 +20,10 @@
       flake = false;
     };
 
+    nova = {
+      url = "git+ssh://git@github.com/ImperaLuna/Nova.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Browser package consumed by modules/desktop/features/zen.
     zen-browser = {
@@ -30,19 +34,22 @@
 
   };
 
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } ({ ... }: {
-      imports = [
-        ./modules/__hosts/default.nix
-        ./modules/parts.nix
-        ./modules/home-stack.nix
-        ./modules/_experimental/default.nix
-        ./modules/_systems/default.nix
-        ./modules/terminal/default.nix
-        ./modules/apps/default.nix
-        ./modules/gaming/default.nix
-        ./modules/desktop/default.nix
-        ./modules/workstation/default.nix
-      ];
-    });
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      { ... }: {
+        imports = [
+          ./modules/__hosts/default.nix
+          ./modules/parts.nix
+          ./modules/home-stack.nix
+          ./modules/_experimental/default.nix
+          ./modules/_systems/default.nix
+          ./modules/terminal/default.nix
+          ./modules/apps/default.nix
+          ./modules/gaming/default.nix
+          ./modules/desktop/default.nix
+          ./modules/workstation/default.nix
+        ];
+      }
+    );
 }

@@ -21,5 +21,18 @@
     in
     {
       home.packages = [ opencodeDesktopFixed ];
+
+      xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
+        "$schema" = "https://opencode.ai/config.json";
+        permission = {
+          edit = "allow";
+          bash = {
+            "*" = "allow";
+            "rm *" = "ask";
+            "sudo *" = "ask";
+          };
+          external_directory = "allow";
+        };
+      };
     };
 }

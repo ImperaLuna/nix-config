@@ -12,15 +12,16 @@
         vimAlias = true;
         wrapRc = false;
       };
+      nvimLauncher = pkgs.writeShellScriptBin "nvim-launch" ''
+        exec ${pkgs.ghostty}/bin/ghostty -e ${nvim}/bin/nvim "$@"
+      '';
     in
     {
       home.packages = [
         pkgs.nodejs
         pkgs.gcc
-        # Avoid Home Manager's programs.neovim module here. Upstream currently
-        # breaks on the empty-plugin case, while this setup manages Neovim via
-        # XDG config files and does not use HM plugin declarations.
         nvim
+        nvimLauncher
       ];
 
       home.sessionVariables = {
@@ -41,7 +42,7 @@
       xdg.desktopEntries.nvim = {
         name = "Neovim";
         genericName = "Text Editor";
-        exec = "ghostty -e nvim %F";
+        exec = "nvim-launch %F";
         icon = "nvim";
         categories = [ "Utility" "TextEditor" "Development" ];
         mimeType = [
@@ -54,16 +55,5 @@
         startupNotify = true;
       };
 
-      home.file.".local/share/applications/nvim.desktop".text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Neovim
-        GenericName=Text Editor
-        Exec=ghostty -e nvim %F
-        Icon=nvim
-        Categories=Utility;TextEditor;Development;
-        MimeType=text/plain;text/markdown;text/x-nix;application/json;application/x-shellscript;
-        StartupNotify=true
-      '';
     };
 }

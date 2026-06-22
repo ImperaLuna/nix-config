@@ -1,5 +1,5 @@
 [app]
-overall = { bg = "#1e1e2e" }
+overall = { bg = "#161616" }
 
 [mgr]
 cwd = { fg = "#94e2d5" }
@@ -12,9 +12,9 @@ marker_cut      = { fg = "#f38ba8", bg = "#f38ba8" }
 marker_marked   = { fg = "#94e2d5", bg = "#94e2d5" }
 marker_selected = { fg = "#cba6f7", bg = "#cba6f7" }
 
-count_copied   = { fg = "#1e1e2e", bg = "#a6e3a1" }
-count_cut      = { fg = "#1e1e2e", bg = "#f38ba8" }
-count_selected = { fg = "#1e1e2e", bg = "#cba6f7" }
+count_copied   = { fg = "#161616", bg = "#a6e3a1" }
+count_cut      = { fg = "#161616", bg = "#f38ba8" }
+count_selected = { fg = "#161616", bg = "#cba6f7" }
 
 border_symbol = "│"
 border_style  = { fg = "#7f849c" }
@@ -22,23 +22,23 @@ border_style  = { fg = "#7f849c" }
 syntect_theme = "~/.config/yazi/Catppuccin-mocha.tmTheme"
 
 [tabs]
-active   = { fg = "#1e1e2e", bg = "#cdd6f4", bold = true }
+active   = { fg = "#161616", bg = "#cdd6f4", bold = true }
 inactive = { fg = "#cdd6f4", bg = "#45475a" }
 
 [mode]
-normal_main = { fg = "#1e1e2e", bg = "#cba6f7", bold = true }
+normal_main = { fg = "#161616", bg = "#cba6f7", bold = true }
 normal_alt  = { fg = "#cba6f7", bg = "#313244"}
 
-select_main = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
+select_main = { fg = "#161616", bg = "#a6e3a1", bold = true }
 select_alt  = { fg = "#a6e3a1", bg = "#313244"}
 
-unset_main  = { fg = "#1e1e2e", bg = "#f2cdcd", bold = true }
+unset_main  = { fg = "#161616", bg = "#f2cdcd", bold = true }
 unset_alt   = { fg = "#f2cdcd", bg = "#313244"}
 
 [indicator]
-parent = { fg = "#1e1e2e", bg = "#cdd6f4" }
-current = { fg = "#1e1e2e", bg = "#cba6f7" }
-preview = { fg = "#1e1e2e", bg = "#cdd6f4" }
+parent = { fg = "#161616", bg = "#cdd6f4" }
+current = { fg = "#161616", bg = "#cba6f7" }
+preview = { fg = "#161616", bg = "#cdd6f4" }
 
 [status]
 sep_left  = { open = "", close = "" }
@@ -243,7 +243,7 @@ files = [
   { name = "PrusaSlicerGcodeViewer.ini", text = "", fg = "#fab387" },
   { name = "PrusaSlicer.ini", text = "", fg = "#fab387" },
   { name = "procfile", text = "", fg = "#7f849c" },
-  { name = "mpv.conf", text = "", fg = "#1e1e2e" },
+  { name = "mpv.conf", text = "", fg = "#161616" },
   { name = ".prettierrc.json5", text = "", fg = "#89b4fa" },
   { name = "i3status.conf", text = "", fg = "#f5e0dc" },
   { name = "prettier.config.mjs", text = "", fg = "#89b4fa" },

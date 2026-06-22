@@ -1,6 +1,8 @@
 # Font
 font-family = JetBrainsMono Nerd Font
 font-size = 13
+font-thicken = true
+font-thicken-strength = 64
 
 # Window
 window-decoration = false
@@ -63,6 +65,9 @@ gtk-wide-tabs = false
 
 # Theme
 theme = Carbonfox
+background = 161616
+minimum-contrast = 1.25
+faint-opacity = 0.8
 
 # Shaders
 custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl

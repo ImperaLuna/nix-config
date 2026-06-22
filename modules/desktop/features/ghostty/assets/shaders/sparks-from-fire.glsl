@@ -6,6 +6,7 @@
 #define SMOKE_INTENSITY_MULTIPLIER 0.75
 #define PARTICLES_ALPHA_MOD 0.9
 #define SMOKE_ALPHA_MOD 0.6
+#define BACKGROUND_BLEND 0.72
 #define LAYERS_COUNT 15
 
 #define VEC3_1 (vec3(1.0))
@@ -231,9 +232,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     vec2 termUV = fragCoord.xy / iResolution.xy;
     vec4 terminalColor = texture(iChannel0, termUV);
-    // Make a mask that is 1.0 where the terminal content is not black
+    // Keep the original broad dark-area mask so the shader remains visible,
+    // but never let it darken terminal pixels and erase dim glyph strokes.
     float mask = 1.0 - step(0.5, dot(terminalColor.rgb, VEC3_1));
-    vec3 blendedColor = mix(terminalColor.rgb, col, mask);
+    vec3 shaderColor = mix(terminalColor.rgb, col, BACKGROUND_BLEND);
+    vec3 blendedColor = mix(terminalColor.rgb, max(shaderColor, terminalColor.rgb), mask);
 
     fragColor = vec4(blendedColor, terminalColor.a);
 }
