@@ -25,11 +25,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782166451,
-        "narHash": "sha256-SA7LyrayyZBvtzZnesnSLV7haciFuVLeZaX2hd5v4j4=",
+        "lastModified": 1782220169,
+        "narHash": "sha256-NxykfEdGQjop9m49Bk61pXpAduH8ICHgXC1N3Ph3Jp0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "471a1d2f840eb7fcbdfd541d99c13a64096f46db",
+        "rev": "4b0b9474749820afac53ea30d4ccfef60aba5ce6",
         "type": "github"
       },
       "original": {
@@ -112,16 +112,15 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1782204913,
-        "narHash": "sha256-JKPPxedTdVTBKJOqpxLJHHzQ72E8JJTPZHV3AFSgu/s=",
-        "ref": "fix/refactor-tray-launcher",
-        "rev": "a68f117d4b0d180634ea26e86db991fd5c6f5707",
-        "revCount": 86,
+        "lastModified": 1782199301,
+        "narHash": "sha256-rqkwJ0aBuEripztIU5+Aui5qFmPXLcbIlxnMP86JRB0=",
+        "ref": "refs/heads/main",
+        "rev": "d5e2952abe4bf5f68fed0bf0656e01342e52097c",
+        "revCount": 83,
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       },
       "original": {
-        "ref": "fix/refactor-tray-launcher",
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       }
