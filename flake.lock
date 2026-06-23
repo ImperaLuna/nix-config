@@ -112,15 +112,16 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1782166097,
-        "narHash": "sha256-I+fOCVUYYLxkx/fr/0iAIUKeO540WFjDwmWiSVV5C3o=",
-        "ref": "refs/heads/main",
-        "rev": "cd32dddc73588a9e66f22a3ded2a907a1885f83c",
-        "revCount": 76,
+        "lastModified": 1782204913,
+        "narHash": "sha256-JKPPxedTdVTBKJOqpxLJHHzQ72E8JJTPZHV3AFSgu/s=",
+        "ref": "fix/refactor-tray-launcher",
+        "rev": "a68f117d4b0d180634ea26e86db991fd5c6f5707",
+        "revCount": 86,
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       },
       "original": {
+        "ref": "fix/refactor-tray-launcher",
         "type": "git",
         "url": "ssh://git@github.com/ImperaLuna/Nova.git"
       }

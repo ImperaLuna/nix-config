@@ -21,7 +21,7 @@
     };
 
     nova = {
-      url = "git+ssh://git@github.com/ImperaLuna/Nova.git";
+      url = "git+ssh://git@github.com/ImperaLuna/Nova.git?ref=fix/refactor-tray-launcher";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
