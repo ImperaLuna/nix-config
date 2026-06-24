@@ -39,6 +39,9 @@ play = [
     { run = "mediainfo %s1; echo 'Press enter to exit'; read _", block = true, desc = "Show media info", for = "unix" },
     { run = "mediainfo %s1 & pause", block = true, desc = "Show media info", for = "windows" },
 ]
+view = [
+    { run = "loupe %s1", desc = "Loupe", for = "linux", orphan = true },
+]
 open = [
     { run = "xdg-open %s1",    desc = "Open", for = "linux" },
     { run = "open %s",         desc = "Open", for = "macos" },
@@ -67,7 +70,7 @@ rules = [
     # Text
     { mime = "text/*", use = [ "edit", "reveal" ] },
     # Image
-    { mime = "image/*", use = [ "open", "reveal" ] },
+    { mime = "image/*", use = [ "view", "open", "reveal" ] },
     # Media
     { mime = "{audio,video}/*", use = [ "play", "reveal" ] },
     # Archive

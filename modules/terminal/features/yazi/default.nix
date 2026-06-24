@@ -17,6 +17,7 @@
         jq
         resvg
         imagemagick
+        loupe
       ];
 
       xdg.configFile."yazi/yazi.toml".source = ./assets/yazi.toml;

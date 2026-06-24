@@ -15,6 +15,7 @@
       config.flake.modules.homeManager.desktop-feature-obsidian
       config.flake.modules.homeManager.desktop-feature-onlyoffice
       config.flake.modules.homeManager.desktop-feature-zen
+      config.flake.modules.homeManager.desktop-feature-voxtype
     ];
   };
 }
