@@ -12,6 +12,7 @@
         yaziLauncher
         yazi
         ffmpeg
+        mpv
         p7zip
         poppler
         jq
