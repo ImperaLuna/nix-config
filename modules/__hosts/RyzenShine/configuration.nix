@@ -10,6 +10,10 @@ let
     installPhase = ''
       mkdir -p "$out/share/sddm/themes/qylock"
       cp -r themes/pixel-dusk-city/* "$out/share/sddm/themes/qylock/"
+      chmod -R u+w "$out/share/sddm/themes/qylock"
+      substituteInPlace "$out/share/sddm/themes/qylock/Main.qml" \
+        --replace-fail 'property string uName:  model.realName || model.name || ""' \
+                       'property string uName:  model.name || ""'
     '';
   };
 in

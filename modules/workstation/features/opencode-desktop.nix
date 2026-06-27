@@ -34,5 +34,10 @@
           external_directory = "allow";
         };
       };
+
+      xdg.configFile."opencode/tui.json".text = builtins.toJSON {
+        "$schema" = "https://opencode.ai/tui.json";
+        keybinds.input_submit = "return,kpenter";
+      };
     };
 }

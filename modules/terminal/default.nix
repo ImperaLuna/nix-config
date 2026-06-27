@@ -23,6 +23,7 @@
 
       # Git and diffs
       config.flake.modules.homeManager.terminal-feature-delta
+      config.flake.modules.homeManager.terminal-feature-gh
       config.flake.modules.homeManager.terminal-feature-lazygit
 
       # Terminal apps and monitoring

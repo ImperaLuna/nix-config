@@ -31,7 +31,6 @@ keybind = shift+enter=text:\n
 # Tabs
 keybind = ctrl+shift+t=new_tab
 keybind = ctrl+shift+r=prompt_surface_title
-keybind = ctrl+q=close_surface
 keybind = ctrl+shift+one=goto_tab:1
 keybind = ctrl+shift+two=goto_tab:2
 keybind = ctrl+shift+three=goto_tab:3
@@ -50,6 +49,7 @@ keybind = ctrl+arrow_left=goto_split:left
 keybind = ctrl+arrow_right=goto_split:right
 keybind = ctrl+arrow_up=goto_split:up
 keybind = ctrl+arrow_down=goto_split:down
+keybind = ctrl+q=close_surface
 
 # Font size (moved from ctrl+=/-)
 keybind = ctrl+page_up=increase_font_size:1
