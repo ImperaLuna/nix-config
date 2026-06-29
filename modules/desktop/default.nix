@@ -6,6 +6,7 @@
   flake.modules.homeManager.desktop = {
     imports = [
       config.flake.modules.homeManager.desktop-feature-gtk
+      config.flake.modules.homeManager.desktop-feature-cursor
       config.flake.modules.homeManager.desktop-feature-hyprland
       config.flake.modules.homeManager.desktop-feature-niri
       config.flake.modules.homeManager.desktop-feature-nova
