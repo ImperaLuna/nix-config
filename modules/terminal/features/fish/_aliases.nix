@@ -31,7 +31,7 @@
         return 1
       end
 
-      sudo nixos-rebuild switch --flake "$flakePath#"(hostname) $argv
+      sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" nixos-rebuild switch --flake "$flakePath#"(hostname) $argv
     '';
 
     functions.upgrade = ''
@@ -52,7 +52,7 @@
       nix flake update --flake "$flakePath" $argv
       or return $status
 
-      sudo nixos-rebuild switch --flake "$flakePath#"(hostname)
+      sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" nixos-rebuild switch --flake "$flakePath#"(hostname)
     '';
 
     functions.homeswitch = ''
