@@ -27,7 +27,6 @@
 
   environment.systemPackages = with pkgs; [
     xwayland-satellite
-    gamescope
   ];
 
   services.upower.enable = true;
