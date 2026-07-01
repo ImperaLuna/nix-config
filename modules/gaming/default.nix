@@ -6,13 +6,11 @@
   flake.modules.homeManager.gaming = { pkgs, ... }:
     let
       steamLauncher = pkgs.writeShellScript "steam-launch" ''
-        steam_args=(-system-composer)
-
         if [ "$#" -gt 0 ]; then
-          exec /run/current-system/sw/bin/steam "''${steam_args[@]}" "$@"
+          exec /run/current-system/sw/bin/steam "$@"
         fi
 
-        exec /run/current-system/sw/bin/steam "''${steam_args[@]}" steam://open/main
+        exec /run/current-system/sw/bin/steam steam://open/main
       '';
     in
     {
