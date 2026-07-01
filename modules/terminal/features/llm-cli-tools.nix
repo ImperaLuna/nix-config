@@ -5,11 +5,11 @@
     let
       omp = pkgs.stdenvNoCC.mkDerivation rec {
         pname = "omp";
-        version = "16.2.4";
+        version = "16.2.12";
 
         src = pkgs.fetchurl {
           url = "https://github.com/can1357/oh-my-pi/releases/download/v${version}/omp-linux-x64";
-          hash = "sha256-iwDDrVmv156UpuyNKzAFmLJl10LmovjeHQhcD36K1xc=";
+          hash = "sha256-QiZQzoEwTU+6vHt+o8yEC3GOzFep+wCucWYL7Acmd7I=";
         };
 
         dontUnpack = true;
