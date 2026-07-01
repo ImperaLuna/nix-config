@@ -70,6 +70,14 @@ window-rule {
     default-floating-position x=10 y=10 relative-to="bottom-right"
 }
 
+// Steam game and launcher windows usually appear as steam_app_<id> through
+// xwayland-satellite. Give them focus when they open so OTP/browser launchers
+// can receive keyboard input without a Super-drag refocus dance.
+window-rule {
+    match app-id=r#"^steam_app_\d+$"#
+    open-focused true
+}
+
 
 window-rule {
     match app-id=r#"^org\.keepassxc\.KeePassXC$"#
