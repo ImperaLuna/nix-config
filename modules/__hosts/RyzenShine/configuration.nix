@@ -130,10 +130,14 @@ in
   # ===================================================================
   # AUDIO
   # ===================================================================
-  # Disable USB autosuspend for the SteelSeries Arctis Nova 5X dongle to
-  # prevent the 2-3 second audio dropout caused by the kernel suspending the
-  # USB device and it re-enumerating.
+  # Udev rules for USB peripherals.
   services.udev.extraRules = ''
+    # Allow Keychron Launcher/Chrome WebHID to open the K2 HE hidraw interfaces.
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0e20", MODE="0660", GROUP="users", TAG+="uaccess"
+
+    # Disable USB autosuspend for the SteelSeries Arctis Nova 5X dongle to
+    # prevent the 2-3 second audio dropout caused by the kernel suspending the
+    # USB device and it re-enumerating.
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1038", ATTR{idProduct}=="2253", ATTR{power/autosuspend}="-1"
   '';
 
