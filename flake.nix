@@ -37,6 +37,17 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    # Experimental shells for quick Home Manager package testing.
+    dank-material-shell = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =

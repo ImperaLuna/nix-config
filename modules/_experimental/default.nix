@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   # Temporary/experimental packages live here.
@@ -11,6 +11,8 @@
     home.packages = [
       # pkgs.alacritty
       pkgs.google-chrome
+      inputs.dank-material-shell.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli
 
       # (pkgs.callPackage ./pkgs/qupath.nix { })
     ];
