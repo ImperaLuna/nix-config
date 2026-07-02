@@ -10,6 +10,7 @@
 
     home.packages = [
       # pkgs.alacritty
+      pkgs.google-chrome
 
       # (pkgs.callPackage ./pkgs/qupath.nix { })
     ];
