@@ -56,17 +56,24 @@
         exec xdg-open "$app_url"
       '';
     };
+
+    stremioIcon = pkgs.runCommand "stremio-icon" { } ''
+      install -Dm644 \
+        ${pkgs.stremio-linux-shell}/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg \
+        $out/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg
+    '';
   in
   {
     home.packages = [
       stremioWeb
+      stremioIcon
     ];
 
     xdg.desktopEntries."com.stremio.Stremio" = {
       name = "Stremio";
       comment = "Freedom To Stream";
       exec = "stremio %U";
-      icon = "${pkgs.stremio-linux-shell}/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg";
+      icon = "com.stremio.Stremio";
       categories = [
         "Utility"
         "AudioVideo"
