@@ -36,6 +36,26 @@
         "type": "github"
       }
     },
+    "herdr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783108051,
+        "narHash": "sha256-sazl+76S6W25rcxj/Wot5nIQbr5nrDP49x0rXQmWRUY=",
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "rev": "d5521e3d250498df4af552fff83fce3d5ef33810",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -185,6 +205,7 @@
         "caelestia-shell": "caelestia-shell",
         "dank-material-shell": "dank-material-shell",
         "flake-parts": "flake-parts",
+        "herdr": "herdr",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "nix-wrapper-modules": "nix-wrapper-modules",
