@@ -4,8 +4,8 @@
   programs.git = {
     enable = true;
     settings = {
-      user.name = "ImperaLuna";
-      user.email = "rares.brezeanu.dev@gmail.com";
+      user.name = "Rares Brezeanu";
+      user.email = "c_Rares.Brezeanu@viasat.com";
       init.defaultBranch = "main";
       pull.rebase = false;
     };

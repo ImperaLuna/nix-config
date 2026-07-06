@@ -6,12 +6,17 @@
     homeDirectory = "/home/rbrezeanu";
     userConfig = ../../../modules/credentials/rbrezeanu;
     extraModules = [
-      ({ lib, ... }: {
+      ({ lib, pkgs, ... }: {
         home.sessionVariables = {
           HM_CONFIG_NAME = "Windows";
           EDITOR = "nvim";
           VISUAL = "nvim";
         };
+
+        home.packages = [
+          pkgs.awscli2
+          pkgs.docker
+        ];
 
         programs.fish.shellInit = lib.mkAfter ''
           # WSL imports Windows PATH entries verbatim. Some installers add an

@@ -35,7 +35,7 @@ format = '[$symbol]($style)'
 
 [os.symbols]
 Windows = ""
-Ubuntu = "󰕈"
+Ubuntu = "󰕈 "
 SUSE = ""
 Raspbian = "󰐿"
 Mint = "󰣭"
