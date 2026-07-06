@@ -16,10 +16,12 @@ In short: `host -> role -> feature`.
 ## How wiring flows
 
 - Hosts are defined in `modules/__hosts/default.nix`.
-- Each host folder (`modules/__hosts/RyzenShine`, `modules/__hosts/DuskNova`) has
+- Each NixOS host folder (`modules/__hosts/RyzenShine`, `modules/__hosts/DuskNova`) has
   - `host.nix` (which roles/stacks this host uses)
   - `configuration.nix` (host-specific config)
   - `hardware.nix` (generated hardware config)
+- Home Manager-only hosts, such as WSL, can also live under `modules/__hosts/`
+  with just a `host.nix`.
 - Home Manager stacks are in `modules/home-stack.nix`:
   - `home-desktop` for desktop hosts
   - `home-lab` for server/lab hosts

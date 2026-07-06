@@ -58,6 +58,7 @@
     functions.homeswitch = ''
       set -l flakePath
       set -l hostName (hostname)
+      set -l configName
 
       for candidate in ~/nix-config ~/homelab/nix-config
         if test -f "$candidate/flake.nix"
@@ -71,11 +72,23 @@
         return 1
       end
 
-      set -l hmAttr "nixosConfigurations.\"$hostName\".config.home-manager.users.$USER.home.activationPackage"
+      if set -q HM_CONFIG_NAME
+        set configName "$HM_CONFIG_NAME"
+      else
+        set configName "$hostName"
+      end
+
+      set -l hmAttr
+      if nix eval "path:$flakePath#homeConfigurations.\"$configName\".activationPackage.drvPath" >/dev/null 2>&1
+        set hmAttr "homeConfigurations.\"$configName\".activationPackage"
+      else
+        set hmAttr "nixosConfigurations.\"$hostName\".config.home-manager.users.$USER.home.activationPackage"
+      end
+
       set -l activationPkg (nix build "path:$flakePath#$hmAttr" --no-link --print-out-paths $argv)
 
       if test -z "$activationPkg"
-        echo "homeswitch: failed to build activation package for $USER@$hostName" >&2
+        echo "homeswitch: failed to build activation package for $USER using $hmAttr" >&2
         return 1
       end
 

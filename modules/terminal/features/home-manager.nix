@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.terminal-feature-home-manager = { pkgs, ... }: {
-    home.packages = [ pkgs.home-manager ];
+  flake.modules.homeManager.terminal-feature-home-manager = { ... }: {
+    programs.home-manager.enable = true;
   };
 }
