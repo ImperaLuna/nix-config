@@ -13,7 +13,6 @@
       pkgs.google-chrome
       inputs.dank-material-shell.packages.${pkgs.stdenv.hostPlatform.system}.default
       inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli
-      inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
 
       # (pkgs.callPackage ./pkgs/qupath.nix { })
     ];

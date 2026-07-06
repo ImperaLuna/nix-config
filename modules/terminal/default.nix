@@ -29,6 +29,7 @@
       # Terminal apps and monitoring
       config.flake.modules.homeManager.terminal-feature-btop
       config.flake.modules.homeManager.terminal-feature-witr
+      config.flake.modules.homeManager.terminal-feature-herdr
 
       # Editor and file manager
       config.flake.modules.homeManager.terminal-feature-nvim
