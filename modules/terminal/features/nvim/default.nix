@@ -1,38 +1,51 @@
-{ ... }:
+{ inputs, ... }:
 
+let
+  theme = import ../../../_lib/theme.nix;
+in
 {
-  flake.modules.homeManager.terminal-feature-nvim = { pkgs, ... }:
+  flake.modules.homeManager.terminal-feature-nvim = { config, pkgs, ... }:
     let
-      nvim = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
-        withPython3 = true;
-        withNodeJs = false;
-        withRuby = false;
-        withPerl = false;
-        viAlias = true;
-        vimAlias = true;
-        wrapRc = false;
-      };
       nvimLauncher = pkgs.writeShellScriptBin "nvim-launch" ''
-        exec ${pkgs.ghostty}/bin/ghostty -e ${nvim}/bin/nvim "$@"
+        exec ${pkgs.ghostty}/bin/ghostty -e ${config.programs.nixvim.build.package}/bin/nvim "$@"
       '';
     in
     {
-      home.packages = [
-        nvim
-        nvimLauncher
-      ];
+      imports = [ inputs.nixvim.homeModules.nixvim ];
+
+      programs.nixvim = {
+        enable = true;
+        package = pkgs.neovim-unwrapped;
+        viAlias = true;
+        vimAlias = true;
+        withPython3 = true;
+        withRuby = false;
+
+        globals = {
+          mapleader = " ";
+          maplocalleader = "\\";
+        };
+
+        opts = {
+          number = true;
+          relativenumber = true;
+          signcolumn = "yes";
+          termguicolors = true;
+          timeoutlen = 400;
+          updatetime = 250;
+        };
+
+        extraConfigLua = ''
+          local palette = vim.json.decode([[${builtins.toJSON theme}]])
+        '' + builtins.readFile ./assets/carbox-fox.lua;
+      };
+
+      home.packages = [ nvimLauncher ];
 
       home.sessionVariables = {
         EDITOR = "nvim";
         VISUAL = "nvim";
       };
-
-      home.shellAliases = {
-        vi = "nvim";
-        vim = "nvim";
-      };
-
-      xdg.configFile."nvim/init.lua".source = ./assets/init.lua;
 
       xdg.desktopEntries.nvim = {
         name = "Neovim";
