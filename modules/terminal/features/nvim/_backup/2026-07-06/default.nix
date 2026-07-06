@@ -18,6 +18,8 @@
     in
     {
       home.packages = [
+        pkgs.nodejs
+        pkgs.gcc
         nvim
         nvimLauncher
       ];
@@ -33,6 +35,9 @@
       };
 
       xdg.configFile."nvim/init.lua".source = ./assets/init.lua;
+      xdg.configFile."nvim/lazyvim.json".source = ./assets/lazyvim.json;
+      xdg.configFile."nvim/lua/plugins/colorscheme.lua".source =
+        ./assets/lua/plugins/colorscheme.lua;
 
       xdg.desktopEntries.nvim = {
         name = "Neovim";
