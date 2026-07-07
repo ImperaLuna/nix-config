@@ -1,8 +1,5 @@
 { inputs, ... }:
 
-let
-  theme = import ../../../_lib/theme.nix;
-in
 {
   flake.modules.homeManager.terminal-feature-nvim = { config, pkgs, ... }:
     let
@@ -11,36 +8,15 @@ in
       '';
     in
     {
-      imports = [ inputs.nixvim.homeModules.nixvim ];
+      imports = [
+        inputs.nixvim.homeModules.nixvim
+        ./_config.nix
+      ];
 
-      programs.nixvim = {
-        enable = true;
-        package = pkgs.neovim-unwrapped;
-        viAlias = true;
-        vimAlias = true;
-        withPython3 = true;
-        withRuby = false;
-
-        globals = {
-          mapleader = " ";
-          maplocalleader = "\\";
-        };
-
-        opts = {
-          number = true;
-          relativenumber = true;
-          signcolumn = "yes";
-          termguicolors = true;
-          timeoutlen = 400;
-          updatetime = 250;
-        };
-
-        extraConfigLua = ''
-          local palette = vim.json.decode([[${builtins.toJSON theme}]])
-        '' + builtins.readFile ./assets/carbox-fox.lua;
-      };
-
-      home.packages = [ nvimLauncher ];
+      home.packages = [
+        config.programs.nixvim.build.package
+        nvimLauncher
+      ];
 
       home.sessionVariables = {
         EDITOR = "nvim";

@@ -1,7 +1,7 @@
 # Carbonfox — color palette
 {
   # ── Backgrounds ───────────────────────────────────────────────────────────
-  bg        = "#222831";  # main background
+  bg        = "#1D1D1D";  # main background
   bgAlt     = "#393E46";  # secondary background, borders, selection
 
   # ── Foregrounds ───────────────────────────────────────────────────────────

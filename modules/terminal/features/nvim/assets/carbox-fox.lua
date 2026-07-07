@@ -33,3 +33,18 @@ set(0, "DiagnosticError", { fg = palette.error })
 set(0, "DiagnosticWarn", { fg = palette.warning })
 set(0, "DiagnosticInfo", { fg = palette.info })
 set(0, "DiagnosticHint", { fg = palette.success })
+
+set(0, "GitSignsAdd", { fg = palette.primary })
+set(0, "GitSignsChange", { fg = palette.secondary })
+set(0, "GitSignsDelete", { fg = palette.error })
+set(0, "GitSignsCurrentLineBlame", { fg = palette.fgDim, italic = true })
+
+set(0, "DiffAdd", { fg = palette.primary, bg = palette.bgAlt })
+set(0, "DiffChange", { fg = palette.secondary, bg = palette.bgAlt })
+set(0, "DiffDelete", { fg = palette.error, bg = palette.bgAlt })
+set(0, "DiffText", { fg = palette.bg, bg = palette.primary, bold = true })
+
+set(0, "NeogitDiffAddHighlight", { fg = palette.primary, bg = palette.bgAlt })
+set(0, "NeogitDiffDeleteHighlight", { fg = palette.error, bg = palette.bgAlt })
+set(0, "NeogitHunkHeader", { fg = palette.primary, bg = palette.bgAlt })
+set(0, "NeogitHunkHeaderHighlight", { fg = palette.bg, bg = palette.primary, bold = true })

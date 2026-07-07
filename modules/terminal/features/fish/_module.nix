@@ -80,10 +80,10 @@ in
       set fzf_history_time_format %d-%m-%y
       set -gx FZF_DEFAULT_OPTS "\
       --layout=reverse \
-      --color=bg+:${theme.bgAlt},bg:${theme.bg},spinner:${theme.info},hl:${theme.primary} \
-      --color=fg:${theme.fg},header:${theme.primary},info:${theme.fg},pointer:${theme.primary} \
-      --color=marker:${theme.primary},fg+:${theme.fg},prompt:${theme.primary},hl+:${theme.primary} \
-      --color=selected-bg:${theme.bgAlt} \
+      --color=bg:${theme.bg},bg+:${theme.primary},spinner:${theme.info},hl:${theme.primary} \
+      --color=fg:${theme.fg},fg+:${theme.bg},header:${theme.primary},info:${theme.fg},pointer:${theme.bg} \
+      --color=marker:${theme.bg},prompt:${theme.primary},hl+:${theme.bg} \
+      --color=selected-bg:${theme.primary} \
       --color=border:${theme.bgAlt},label:${theme.fg}"
 
       set -g fish_color_normal ${builtins.substring 1 6 theme.fg}
@@ -112,6 +112,10 @@ in
       set -g fish_pager_color_prefix ${builtins.substring 1 6 theme.primary}
       set -g fish_pager_color_completion ${builtins.substring 1 6 theme.fg}
       set -g fish_pager_color_description ${builtins.substring 1 6 theme.fgAlt}
+      set -g fish_pager_color_selected_background --background=${builtins.substring 1 6 theme.primary}
+      set -g fish_pager_color_selected_prefix ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
+      set -g fish_pager_color_selected_completion ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
+      set -g fish_pager_color_selected_description ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
     '';
   };
 }

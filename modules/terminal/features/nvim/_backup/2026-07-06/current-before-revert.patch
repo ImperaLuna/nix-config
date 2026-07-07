@@ -1,0 +1,809 @@
+diff --git a/modules/_lib/themes/carbonfox.nix b/modules/_lib/themes/carbonfox.nix
+index b48a299..8c5be6c 100644
+--- a/modules/_lib/themes/carbonfox.nix
++++ b/modules/_lib/themes/carbonfox.nix
+@@ -1,7 +1,7 @@
+ # Carbonfox — color palette
+ {
+   # ── Backgrounds ───────────────────────────────────────────────────────────
+-  bg        = "#222831";  # main background
++  bg        = "#1D1D1D";  # main background
+   bgAlt     = "#393E46";  # secondary background, borders, selection
+ 
+   # ── Foregrounds ───────────────────────────────────────────────────────────
+diff --git a/modules/terminal/features/fish/_module.nix b/modules/terminal/features/fish/_module.nix
+index 8dbd40b..017a313 100644
+--- a/modules/terminal/features/fish/_module.nix
++++ b/modules/terminal/features/fish/_module.nix
+@@ -80,10 +80,10 @@ in
+       set fzf_history_time_format %d-%m-%y
+       set -gx FZF_DEFAULT_OPTS "\
+       --layout=reverse \
+-      --color=bg+:${theme.bgAlt},bg:${theme.bg},spinner:${theme.info},hl:${theme.primary} \
+-      --color=fg:${theme.fg},header:${theme.primary},info:${theme.fg},pointer:${theme.primary} \
+-      --color=marker:${theme.primary},fg+:${theme.fg},prompt:${theme.primary},hl+:${theme.primary} \
+-      --color=selected-bg:${theme.bgAlt} \
++      --color=bg:${theme.bg},bg+:${theme.primary},spinner:${theme.info},hl:${theme.primary} \
++      --color=fg:${theme.fg},fg+:${theme.bg},header:${theme.primary},info:${theme.fg},pointer:${theme.bg} \
++      --color=marker:${theme.bg},prompt:${theme.primary},hl+:${theme.bg} \
++      --color=selected-bg:${theme.primary} \
+       --color=border:${theme.bgAlt},label:${theme.fg}"
+ 
+       set -g fish_color_normal ${builtins.substring 1 6 theme.fg}
+@@ -112,6 +112,10 @@ in
+       set -g fish_pager_color_prefix ${builtins.substring 1 6 theme.primary}
+       set -g fish_pager_color_completion ${builtins.substring 1 6 theme.fg}
+       set -g fish_pager_color_description ${builtins.substring 1 6 theme.fgAlt}
++      set -g fish_pager_color_selected_background --background=${builtins.substring 1 6 theme.primary}
++      set -g fish_pager_color_selected_prefix ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
++      set -g fish_pager_color_selected_completion ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
++      set -g fish_pager_color_selected_description ${builtins.substring 1 6 theme.bg} --background=${builtins.substring 1 6 theme.primary}
+     '';
+   };
+ }
+diff --git a/modules/terminal/features/nvim/_config.nix b/modules/terminal/features/nvim/_config.nix
+new file mode 100644
+index 0000000..f7c8759
+--- /dev/null
++++ b/modules/terminal/features/nvim/_config.nix
+@@ -0,0 +1,20 @@
++{ pkgs, ... }:
++
++{
++  imports = [
++    ./_keymaps.nix
++    ./_lsp.nix
++    ./_opts.nix
++    ./_plugins
++    ./_theme.nix
++  ];
++
++  programs.nixvim = {
++    enable = true;
++    package = pkgs.neovim-unwrapped;
++    viAlias = true;
++    vimAlias = true;
++    withPython3 = true;
++    withRuby = false;
++  };
++}
+diff --git a/modules/terminal/features/nvim/_keymaps.nix b/modules/terminal/features/nvim/_keymaps.nix
+new file mode 100644
+index 0000000..d6fd510
+--- /dev/null
++++ b/modules/terminal/features/nvim/_keymaps.nix
+@@ -0,0 +1,239 @@
++{ ... }:
++
++{
++  programs.nixvim = {
++    globals = {
++      mapleader = " ";
++      maplocalleader = "\\";
++    };
++
++    keymaps = [
++      {
++        mode = "n";
++        key = "<leader>f";
++        action = "<cmd>lua Snacks.picker.files()<CR>";
++        options.desc = "Find Files";
++      }
++      {
++        mode = "n";
++        key = "<leader>s";
++        action = "<cmd>lua Snacks.picker.grep()<CR>";
++        options.desc = "Search Text";
++      }
++      {
++        mode = "n";
++        key = "<leader>b";
++        action = "<cmd>lua Snacks.picker.buffers()<CR>";
++        options.desc = "Buffers";
++      }
++      {
++        mode = "n";
++        key = "gd";
++        action = "<cmd>lua Snacks.picker.lsp_definitions()<CR>";
++        options.desc = "Goto Definition";
++      }
++      {
++        mode = "n";
++        key = "K";
++        action = "<cmd>lua vim.lsp.buf.hover()<CR>";
++        options.desc = "Hover";
++      }
++      {
++        mode = "n";
++        key = "<leader>rn";
++        action = "<cmd>lua vim.lsp.buf.rename()<CR>";
++        options.desc = "Rename Symbol";
++      }
++      {
++        mode = "n";
++        key = "<leader>ca";
++        action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
++        options.desc = "Code Action";
++      }
++      {
++        mode = "n";
++        key = "<leader>cf";
++        action = "<cmd>lua require('conform').format({ lsp_format = 'fallback' })<CR>";
++        options.desc = "Format Buffer";
++      }
++      {
++        mode = "n";
++        key = "<leader>cl";
++        action = "<cmd>lua require('lint').try_lint()<CR>";
++        options.desc = "Run Lint";
++      }
++      {
++        mode = "n";
++        key = "<leader>ct";
++        action = "<cmd>TodoQuickFix cwd=%:p:h<CR>";
++        options.desc = "Todo Quickfix";
++      }
++      {
++        mode = "n";
++        key = "]t";
++        action = "<cmd>lua require('todo-comments').jump_next()<CR>";
++        options.desc = "Next Todo Comment";
++      }
++      {
++        mode = "n";
++        key = "[t";
++        action = "<cmd>lua require('todo-comments').jump_prev()<CR>";
++        options.desc = "Previous Todo Comment";
++      }
++      {
++        mode = "n";
++        key = "<leader>e";
++        action = "<cmd>lua vim.diagnostic.open_float()<CR>";
++        options.desc = "Line Diagnostic";
++      }
++      {
++        mode = "n";
++        key = "<leader>g";
++        action = "<cmd>lua require('neogit').open()<CR>";
++        options.desc = "Neogit";
++      }
++      {
++        mode = "n";
++        key = "]h";
++        action = "<cmd>Gitsigns next_hunk<CR>";
++        options.desc = "Next Git Hunk";
++      }
++      {
++        mode = "n";
++        key = "[h";
++        action = "<cmd>Gitsigns prev_hunk<CR>";
++        options.desc = "Previous Git Hunk";
++      }
++      {
++        mode = "n";
++        key = "<leader>gp";
++        action = "<cmd>Gitsigns preview_hunk<CR>";
++        options.desc = "Preview Git Hunk";
++      }
++      {
++        mode = "n";
++        key = "<leader>gw";
++        action = "<cmd>Gitsigns toggle_word_diff<CR>";
++        options.desc = "Toggle Git Word Diff";
++      }
++      {
++        mode = "n";
++        key = "H";
++        action = "<cmd>bprevious<CR>";
++        options.desc = "Previous Buffer";
++      }
++      {
++        mode = "n";
++        key = "L";
++        action = "<cmd>bnext<CR>";
++        options.desc = "Next Buffer";
++      }
++      {
++        mode = "x";
++        key = "p";
++        action = "\"_dP";
++        options.desc = "Paste Without Yanking Selection";
++      }
++      {
++        mode = "i";
++        key = "<C-v>";
++        action = "<C-r>+";
++        options.desc = "Paste Clipboard";
++      }
++      {
++        mode = "c";
++        key = "<C-v>";
++        action = "<C-r>+";
++        options.desc = "Paste Clipboard";
++      }
++      {
++        mode = "n";
++        key = "<C-a>";
++        action = "ggVG";
++        options.desc = "Select All";
++      }
++      {
++        mode = "i";
++        key = "<C-a>";
++        action = "<Esc>ggVG";
++        options.desc = "Select All";
++      }
++      {
++        mode = [
++          "x"
++          "o"
++        ];
++        key = "af";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@function.outer', 'textobjects')<CR>";
++        options.desc = "Select Around Function";
++      }
++      {
++        mode = [
++          "x"
++          "o"
++        ];
++        key = "if";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@function.inner', 'textobjects')<CR>";
++        options.desc = "Select Inside Function";
++      }
++      {
++        mode = [
++          "x"
++          "o"
++        ];
++        key = "ac";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@class.outer', 'textobjects')<CR>";
++        options.desc = "Select Around Class";
++      }
++      {
++        mode = [
++          "x"
++          "o"
++        ];
++        key = "ic";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@class.inner', 'textobjects')<CR>";
++        options.desc = "Select Inside Class";
++      }
++      {
++        mode = [
++          "n"
++          "x"
++          "o"
++        ];
++        key = "]f";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_next_start('@function.outer', 'textobjects')<CR>";
++        options.desc = "Next Function";
++      }
++      {
++        mode = [
++          "n"
++          "x"
++          "o"
++        ];
++        key = "[f";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_previous_start('@function.outer', 'textobjects')<CR>";
++        options.desc = "Previous Function";
++      }
++      {
++        mode = [
++          "n"
++          "x"
++          "o"
++        ];
++        key = "]c";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_next_start('@class.outer', 'textobjects')<CR>";
++        options.desc = "Next Class";
++      }
++      {
++        mode = [
++          "n"
++          "x"
++          "o"
++        ];
++        key = "[c";
++        action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_previous_start('@class.outer', 'textobjects')<CR>";
++        options.desc = "Previous Class";
++      }
++    ];
++  };
++}
+diff --git a/modules/terminal/features/nvim/_lsp.nix b/modules/terminal/features/nvim/_lsp.nix
+new file mode 100644
+index 0000000..781a403
+--- /dev/null
++++ b/modules/terminal/features/nvim/_lsp.nix
+@@ -0,0 +1,26 @@
++{ ... }:
++
++{
++  programs.nixvim = {
++    diagnostic.settings = {
++      virtual_text = {
++        prefix = "●";
++        spacing = 2;
++        source = "if_many";
++      };
++      signs = true;
++      underline = true;
++      update_in_insert = false;
++      severity_sort = true;
++      float = {
++        border = "rounded";
++        source = "if_many";
++      };
++    };
++
++    plugins.lsp = {
++      enable = true;
++      servers.ty.enable = true;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_opts.nix b/modules/terminal/features/nvim/_opts.nix
+new file mode 100644
+index 0000000..628ce4f
+--- /dev/null
++++ b/modules/terminal/features/nvim/_opts.nix
+@@ -0,0 +1,19 @@
++{ ... }:
++
++{
++  programs.nixvim.opts = {
++    number = true;
++    relativenumber = true;
++    ignorecase = true;
++    smartcase = true;
++    signcolumn = "yes";
++    clipboard = "unnamedplus";
++    expandtab = true;
++    shiftwidth = 4;
++    softtabstop = 4;
++    tabstop = 4;
++    termguicolors = true;
++    timeoutlen = 1000;
++    updatetime = 250;
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/bufferline.nix b/modules/terminal/features/nvim/_plugins/bufferline.nix
+new file mode 100644
+index 0000000..91294a7
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/bufferline.nix
+@@ -0,0 +1,13 @@
++{
++  programs.nixvim.plugins.bufferline = {
++    enable = true;
++    settings.options = {
++      mode = "buffers";
++      always_show_bufferline = true;
++      diagnostics = "nvim_lsp";
++      separator_style = "thin";
++      show_buffer_close_icons = true;
++      show_close_icon = false;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/conform.nix b/modules/terminal/features/nvim/_plugins/conform.nix
+new file mode 100644
+index 0000000..7044f20
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/conform.nix
+@@ -0,0 +1,15 @@
++{
++  programs.nixvim.plugins.conform-nvim = {
++    enable = true;
++    autoInstall.enable = true;
++    settings = {
++      formatters_by_ft.python = [ "ruff_format" ];
++      default_format_opts = {
++        lsp_format = "fallback";
++        timeout_ms = 1000;
++      };
++      notify_on_error = true;
++      notify_no_formatters = false;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/default.nix b/modules/terminal/features/nvim/_plugins/default.nix
+new file mode 100644
+index 0000000..97c3320
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/default.nix
+@@ -0,0 +1,18 @@
++{
++  imports = [
++    ./bufferline.nix
++    ./conform.nix
++    ./diffview.nix
++    ./gitsigns.nix
++    ./lint.nix
++    ./lualine.nix
++    ./mini.nix
++    ./neogit.nix
++    ./noice.nix
++    ./snacks.nix
++    ./treesitter.nix
++    ./todo-comments.nix
++    ./treesitter-textobjects.nix
++    ./which-key.nix
++  ];
++}
+diff --git a/modules/terminal/features/nvim/_plugins/diffview.nix b/modules/terminal/features/nvim/_plugins/diffview.nix
+new file mode 100644
+index 0000000..976a2dd
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/diffview.nix
+@@ -0,0 +1,3 @@
++{
++  programs.nixvim.plugins.diffview.enable = true;
++}
+diff --git a/modules/terminal/features/nvim/_plugins/gitsigns.nix b/modules/terminal/features/nvim/_plugins/gitsigns.nix
+new file mode 100644
+index 0000000..656b6f1
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/gitsigns.nix
+@@ -0,0 +1,20 @@
++{
++  programs.nixvim.plugins.gitsigns = {
++    enable = true;
++    settings = {
++      signcolumn = true;
++      numhl = true;
++      linehl = false;
++      word_diff = false;
++      current_line_blame = true;
++      signs = {
++        add.text = "▎";
++        change.text = "▎";
++        delete.text = "";
++        topdelete.text = "";
++        changedelete.text = "▎";
++        untracked.text = "▎";
++      };
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/lint.nix b/modules/terminal/features/nvim/_plugins/lint.nix
+new file mode 100644
+index 0000000..7481529
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/lint.nix
+@@ -0,0 +1,7 @@
++{
++  programs.nixvim.plugins.lint = {
++    enable = true;
++    autoInstall.enable = true;
++    lintersByFt.python = [ "ruff" ];
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/lualine.nix b/modules/terminal/features/nvim/_plugins/lualine.nix
+new file mode 100644
+index 0000000..3babcca
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/lualine.nix
+@@ -0,0 +1,76 @@
++let
++  theme = import ../../../../_lib/theme.nix;
++  modeTheme = accent: {
++    a = {
++      fg = theme.bg;
++      bg = accent;
++      gui = "bold";
++    };
++    b = {
++      fg = theme.fg;
++      bg = "NONE";
++    };
++    c = {
++      fg = theme.fgDim;
++      bg = "NONE";
++    };
++  };
++in
++{
++  programs.nixvim.plugins.lualine = {
++    enable = true;
++    settings = {
++      options = {
++        theme = {
++          normal = modeTheme theme.primary;
++          insert = modeTheme theme.success;
++          visual = modeTheme theme.secondary;
++          replace = modeTheme theme.error;
++          command = modeTheme theme.info;
++          inactive = {
++            a = {
++              fg = theme.fgDim;
++              bg = "NONE";
++            };
++            b = {
++              fg = theme.fgAlt;
++              bg = "NONE";
++            };
++            c = {
++              fg = theme.fgAlt;
++              bg = "NONE";
++            };
++          };
++        };
++        globalstatus = true;
++        component_separators = {
++          left = "";
++          right = "";
++        };
++        section_separators = {
++          left = "";
++          right = "";
++        };
++      };
++      sections = {
++        lualine_a = [ "mode" ];
++        lualine_b = [
++          "branch"
++          "diff"
++        ];
++        lualine_c = [
++          {
++            __unkeyed-1 = "filename";
++            path = 1;
++          }
++        ];
++        lualine_x = [
++          "diagnostics"
++          "filetype"
++        ];
++        lualine_y = [ "progress" ];
++        lualine_z = [ "location" ];
++      };
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/mini.nix b/modules/terminal/features/nvim/_plugins/mini.nix
+new file mode 100644
+index 0000000..df79373
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/mini.nix
+@@ -0,0 +1,6 @@
++{
++  programs.nixvim.plugins.mini = {
++    enable = true;
++    modules.pairs = { };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/neogit.nix b/modules/terminal/features/nvim/_plugins/neogit.nix
+new file mode 100644
+index 0000000..34cddb5
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/neogit.nix
+@@ -0,0 +1,9 @@
++{
++  programs.nixvim.plugins.neogit = {
++    enable = true;
++    settings = {
++      kind = "floating";
++      integrations.diffview = true;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/noice.nix b/modules/terminal/features/nvim/_plugins/noice.nix
+new file mode 100644
+index 0000000..ca73231
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/noice.nix
+@@ -0,0 +1,18 @@
++{
++  programs.nixvim.plugins.noice = {
++    enable = true;
++    settings = {
++      cmdline = {
++        enabled = true;
++        view = "cmdline_popup";
++      };
++      popupmenu.enabled = true;
++      views.cmdline_popup.position = {
++        row = "25%";
++        col = "50%";
++      };
++      messages.enabled = false;
++      notify.enabled = false;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/snacks.nix b/modules/terminal/features/nvim/_plugins/snacks.nix
+new file mode 100644
+index 0000000..3504575
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/snacks.nix
+@@ -0,0 +1,10 @@
++{
++  programs.nixvim.plugins.snacks = {
++    enable = true;
++    settings = {
++      picker.enabled = true;
++      notifier.enabled = true;
++      input.enabled = true;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/todo-comments.nix b/modules/terminal/features/nvim/_plugins/todo-comments.nix
+new file mode 100644
+index 0000000..874eb0d
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/todo-comments.nix
+@@ -0,0 +1,13 @@
++{
++  programs.nixvim.plugins.todo-comments = {
++    enable = true;
++    settings = {
++      signs = true;
++      highlight = {
++        keyword = "wide";
++        after = "fg";
++        comments_only = true;
++      };
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/treesitter-textobjects.nix b/modules/terminal/features/nvim/_plugins/treesitter-textobjects.nix
+new file mode 100644
+index 0000000..32fc278
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/treesitter-textobjects.nix
+@@ -0,0 +1,15 @@
++{
++  programs.nixvim.plugins.treesitter-textobjects = {
++    enable = true;
++    settings = {
++      select = {
++        lookahead = true;
++        selection_modes = {
++          "@function.outer" = "V";
++          "@class.outer" = "V";
++        };
++      };
++      move.set_jumps = true;
++    };
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/treesitter.nix b/modules/terminal/features/nvim/_plugins/treesitter.nix
+new file mode 100644
+index 0000000..67fe144
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/treesitter.nix
+@@ -0,0 +1,24 @@
++{ config, ... }:
++
++let
++  grammars = config.programs.nixvim.plugins.treesitter.package.builtGrammars;
++in
++{
++  programs.nixvim.plugins.treesitter = {
++    enable = true;
++    grammarPackages = with grammars; [
++      python
++      lua
++      vim
++      vimdoc
++      regex
++      bash
++      markdown
++      markdown_inline
++      nix
++      json
++    ];
++    highlight.enable = true;
++    indent.enable = true;
++  };
++}
+diff --git a/modules/terminal/features/nvim/_plugins/which-key.nix b/modules/terminal/features/nvim/_plugins/which-key.nix
+new file mode 100644
+index 0000000..4f65cc9
+--- /dev/null
++++ b/modules/terminal/features/nvim/_plugins/which-key.nix
+@@ -0,0 +1,3 @@
++{
++  programs.nixvim.plugins.which-key.enable = true;
++}
+diff --git a/modules/terminal/features/nvim/_theme.nix b/modules/terminal/features/nvim/_theme.nix
+new file mode 100644
+index 0000000..33d1c52
+--- /dev/null
++++ b/modules/terminal/features/nvim/_theme.nix
+@@ -0,0 +1,10 @@
++{ ... }:
++
++let
++  theme = import ../../../_lib/theme.nix;
++in
++{
++  programs.nixvim.extraConfigLua = ''
++    local palette = vim.json.decode([[${builtins.toJSON theme}]])
++  '' + builtins.readFile ./assets/carbox-fox.lua;
++}
+diff --git a/modules/terminal/features/nvim/assets/carbox-fox.lua b/modules/terminal/features/nvim/assets/carbox-fox.lua
+index b65e853..5f20371 100644
+--- a/modules/terminal/features/nvim/assets/carbox-fox.lua
++++ b/modules/terminal/features/nvim/assets/carbox-fox.lua
+@@ -33,3 +33,18 @@ set(0, "DiagnosticError", { fg = palette.error })
+ set(0, "DiagnosticWarn", { fg = palette.warning })
+ set(0, "DiagnosticInfo", { fg = palette.info })
+ set(0, "DiagnosticHint", { fg = palette.success })
++
++set(0, "GitSignsAdd", { fg = palette.primary })
++set(0, "GitSignsChange", { fg = palette.secondary })
++set(0, "GitSignsDelete", { fg = palette.error })
++set(0, "GitSignsCurrentLineBlame", { fg = palette.fgDim, italic = true })
++
++set(0, "DiffAdd", { fg = palette.primary, bg = palette.bgAlt })
++set(0, "DiffChange", { fg = palette.secondary, bg = palette.bgAlt })
++set(0, "DiffDelete", { fg = palette.error, bg = palette.bgAlt })
++set(0, "DiffText", { fg = palette.bg, bg = palette.primary, bold = true })
++
++set(0, "NeogitDiffAddHighlight", { fg = palette.primary, bg = palette.bgAlt })
++set(0, "NeogitDiffDeleteHighlight", { fg = palette.error, bg = palette.bgAlt })
++set(0, "NeogitHunkHeader", { fg = palette.primary, bg = palette.bgAlt })
++set(0, "NeogitHunkHeaderHighlight", { fg = palette.bg, bg = palette.primary, bold = true })
+diff --git a/modules/terminal/features/nvim/default.nix b/modules/terminal/features/nvim/default.nix
+index 9fd4706..143530c 100644
+--- a/modules/terminal/features/nvim/default.nix
++++ b/modules/terminal/features/nvim/default.nix
+@@ -1,8 +1,5 @@
+ { inputs, ... }:
+ 
+-let
+-  theme = import ../../../_lib/theme.nix;
+-in
+ {
+   flake.modules.homeManager.terminal-feature-nvim = { config, pkgs, ... }:
+     let
+@@ -11,36 +8,15 @@ in
+       '';
+     in
+     {
+-      imports = [ inputs.nixvim.homeModules.nixvim ];
+-
+-      programs.nixvim = {
+-        enable = true;
+-        package = pkgs.neovim-unwrapped;
+-        viAlias = true;
+-        vimAlias = true;
+-        withPython3 = true;
+-        withRuby = false;
+-
+-        globals = {
+-          mapleader = " ";
+-          maplocalleader = "\\";
+-        };
+-
+-        opts = {
+-          number = true;
+-          relativenumber = true;
+-          signcolumn = "yes";
+-          termguicolors = true;
+-          timeoutlen = 400;
+-          updatetime = 250;
+-        };
+-
+-        extraConfigLua = ''
+-          local palette = vim.json.decode([[${builtins.toJSON theme}]])
+-        '' + builtins.readFile ./assets/carbox-fox.lua;
+-      };
+-
+-      home.packages = [ nvimLauncher ];
++      imports = [
++        inputs.nixvim.homeModules.nixvim
++        ./_config.nix
++      ];
++
++      home.packages = [
++        config.programs.nixvim.build.package
++        nvimLauncher
++      ];
+ 
+       home.sessionVariables = {
+         EDITOR = "nvim";
