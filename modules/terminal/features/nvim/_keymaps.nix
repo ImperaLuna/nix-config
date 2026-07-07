@@ -53,7 +53,7 @@
       {
         mode = "n";
         key = "<leader>ct";
-        action = "<cmd>TodoQuickFix cwd=%:p:h<CR>";
+        action = "<cmd>TodoQuickFix<CR>";
         options.desc = "Todo Quickfix";
       }
       {
