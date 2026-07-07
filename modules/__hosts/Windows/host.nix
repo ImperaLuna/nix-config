@@ -23,6 +23,10 @@
             pkgs.docker
           ];
 
+          # WSL Home Manager cannot express this as a normal dotfile because the
+          # terminal emulator lives on the Windows side. Patch Windows Terminal's
+          # settings.json so Shift+Enter sends CSI-u Shift+Enter (13;2u) instead
+          # of the Ctrl+Enter sequence (13;5u) that breaks multiline prompts.
           home.activation.windowsTerminalShiftEnter = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             settings_file="${windowsTerminalSettings}"
 
