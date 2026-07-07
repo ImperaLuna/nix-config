@@ -152,6 +152,7 @@ in
           after = "fg";
           comments_only = true;
         };
+        search.pattern = "\\b(KEYWORDS)\\b";
       };
     };
 
