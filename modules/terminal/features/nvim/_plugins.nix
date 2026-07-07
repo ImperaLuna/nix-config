@@ -147,6 +147,10 @@ in
       enable = true;
       settings = {
         signs = true;
+        keywords = {
+          NOTE.alt = config.lib.nixvim.emptyTable;
+          WARN.alt = config.lib.nixvim.emptyTable;
+        };
         highlight = {
           keyword = "bg";
           after = "fg";
