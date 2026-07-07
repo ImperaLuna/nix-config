@@ -142,5 +142,18 @@ in
         };
       };
     };
+
+    todo-comments = {
+      enable = true;
+      settings = {
+        signs = true;
+        highlight = {
+          keyword = "wide";
+          after = "fg";
+          comments_only = true;
+        };
+      };
+    };
+
   };
 }

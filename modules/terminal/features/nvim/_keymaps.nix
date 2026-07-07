@@ -52,6 +52,24 @@
       }
       {
         mode = "n";
+        key = "<leader>ct";
+        action = "<cmd>TodoQuickFix cwd=%:p:h<CR>";
+        options.desc = "Todo Quickfix";
+      }
+      {
+        mode = "n";
+        key = "]t";
+        action = "<cmd>lua require('todo-comments').jump_next()<CR>";
+        options.desc = "Next Todo Comment";
+      }
+      {
+        mode = "n";
+        key = "[t";
+        action = "<cmd>lua require('todo-comments').jump_prev()<CR>";
+        options.desc = "Previous Todo Comment";
+      }
+      {
+        mode = "n";
         key = "<leader>e";
         action = "<cmd>lua vim.diagnostic.open_float()<CR>";
         options.desc = "Line Diagnostic";
