@@ -151,6 +151,7 @@ in
           keyword = "wide";
           after = "fg";
           comments_only = true;
+          pattern = ".*<(KEYWORDS)>";
         };
         search.pattern = "\\b(KEYWORDS)\\b";
       };
