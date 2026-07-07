@@ -148,7 +148,7 @@ in
       settings = {
         signs = true;
         highlight = {
-          keyword = "wide";
+          keyword = "bg";
           after = "fg";
           comments_only = true;
           pattern = ".*<(KEYWORDS)>";
