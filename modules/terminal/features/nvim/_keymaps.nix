@@ -53,7 +53,7 @@
       {
         mode = "n";
         key = "<leader>ct";
-        action = "<cmd>TodoQuickFix<CR>";
+        action = "<cmd>lua local buf_dir = vim.fn.expand('%:p:h'); local cwd = vim.fs.root(0, { '.git' }) or (vim.fn.isdirectory(buf_dir) == 1 and buf_dir or vim.fn.getcwd()); require('todo-comments.search').setqflist({ cwd = cwd })<CR>";
         options.desc = "Todo Quickfix";
       }
       {
