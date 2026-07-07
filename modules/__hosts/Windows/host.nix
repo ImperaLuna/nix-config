@@ -16,6 +16,12 @@
           windowsPowershell = pkgs.writeShellScriptBin "powershell.exe" ''
             exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe "$@"
           '';
+          windowsClipboardCopy = pkgs.writeShellScriptBin "nvim-windows-clipboard-copy" ''
+            exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::InputEncoding = [Text.Encoding]::UTF8; Set-Clipboard -Value ([Console]::In.ReadToEnd())'
+          '';
+          windowsClipboardPaste = pkgs.writeShellScriptBin "nvim-windows-clipboard-paste" ''
+            exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::OutputEncoding = [Text.Encoding]::UTF8; [Console]::Out.Write([string](Get-Clipboard -Raw))'
+          '';
         in
         {
           home.sessionVariables = {
@@ -24,9 +30,26 @@
             VISUAL = "nvim";
           };
 
+          programs.nixvim.extraConfigLuaPre = ''
+            vim.g.clipboard = {
+              name = "WindowsClipboard",
+              copy = {
+                ["+"] = "nvim-windows-clipboard-copy",
+                ["*"] = "nvim-windows-clipboard-copy",
+              },
+              paste = {
+                ["+"] = "nvim-windows-clipboard-paste",
+                ["*"] = "nvim-windows-clipboard-paste",
+              },
+              cache_enabled = 0,
+            }
+          '';
+
           home.packages = [
             pkgs.awscli2
             windowsPowershell
+            windowsClipboardCopy
+            windowsClipboardPaste
             pkgs.docker
           ];
 
