@@ -52,6 +52,7 @@ let
 
       modules = [
         self.modules.homeManager.terminal
+        self.modules.homeManager.dev
         {
           home.username = username;
           home.homeDirectory = homeDirectory;
