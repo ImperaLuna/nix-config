@@ -35,7 +35,11 @@ in
 
     mini = {
       enable = true;
-      modules.pairs = { };
+      modules = {
+        ai = { };
+        pairs = { };
+        surround = { };
+      };
     };
 
     lualine = {
