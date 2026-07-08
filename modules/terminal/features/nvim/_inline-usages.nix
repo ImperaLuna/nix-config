@@ -14,6 +14,8 @@
             SymbolKind.Function,
             SymbolKind.Method,
           },
+          vt_position = "end_of_line",
+          request_pending_text = false,
           references = {
             enabled = true,
             include_declaration = false,
