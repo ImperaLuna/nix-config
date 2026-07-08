@@ -15,6 +15,7 @@
 
       home.packages = [
         config.programs.nixvim.build.package
+        pkgs.wl-clipboard
         nvimLauncher
       ];
 
