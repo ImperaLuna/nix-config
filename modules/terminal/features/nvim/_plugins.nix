@@ -161,5 +161,7 @@ in
       };
     };
 
+    ts-comments.enable = true;
+
   };
 }
