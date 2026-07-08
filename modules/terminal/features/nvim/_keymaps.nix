@@ -1,5 +1,8 @@
 { ... }:
 
+let
+  saveCurrentBuffer = "<cmd>lua if vim.bo.buftype == '' and vim.bo.modifiable and not vim.bo.readonly and vim.api.nvim_buf_get_name(0) ~= '' then vim.cmd('update') end<CR>";
+in
 {
   programs.nixvim = {
     globals = {
@@ -8,6 +11,12 @@
     };
 
     keymaps = [
+      {
+        mode = "i";
+        key = "<Esc>";
+        action = "<Esc>${saveCurrentBuffer}";
+        options.desc = "Exit Insert and Save";
+      }
       {
         mode = "n";
         key = "<leader>f";
