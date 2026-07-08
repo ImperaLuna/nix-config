@@ -120,6 +120,17 @@ in
 
     diffview.enable = true;
 
+    grug-far = {
+      enable = true;
+      settings = {
+        engine = "ripgrep";
+        engines.ripgrep = {
+          path = "rg";
+          showReplaceDiff = true;
+        };
+      };
+    };
+
     treesitter = {
       enable = true;
       grammarPackages = with grammars; [

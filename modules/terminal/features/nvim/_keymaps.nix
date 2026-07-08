@@ -22,6 +22,18 @@
       }
       {
         mode = "n";
+        key = "<leader>R";
+        action = "<cmd>GrugFar<CR>";
+        options.desc = "Search and Replace";
+      }
+      {
+        mode = "x";
+        key = "<leader>R";
+        action = ":GrugFar<CR>";
+        options.desc = "Search and Replace Selection";
+      }
+      {
+        mode = "n";
         key = "<leader>b";
         action = "<cmd>lua Snacks.picker.buffers()<CR>";
         options.desc = "Buffers";
