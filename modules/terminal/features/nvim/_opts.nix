@@ -8,6 +8,7 @@
     smartcase = true;
     signcolumn = "yes";
     cursorline = true;
+    scrolloff = 4;
     clipboard = "unnamedplus";
     expandtab = true;
     shiftwidth = 4;
