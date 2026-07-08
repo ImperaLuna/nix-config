@@ -34,24 +34,12 @@
       }
       {
         mode = "n";
-        key = "gD";
-        action = "<cmd>lua Snacks.picker.lsp_declarations()<CR>";
-        options.desc = "Goto Declaration";
-      }
-      {
-        mode = "n";
         key = "gr";
         action = "<cmd>lua Snacks.picker.lsp_references()<CR>";
         options = {
           desc = "Goto References";
           nowait = true;
         };
-      }
-      {
-        mode = "n";
-        key = "gI";
-        action = "<cmd>lua Snacks.picker.lsp_implementations()<CR>";
-        options.desc = "Goto Implementation";
       }
       {
         mode = "n";
