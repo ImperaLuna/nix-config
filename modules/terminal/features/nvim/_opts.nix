@@ -7,6 +7,7 @@
     ignorecase = true;
     smartcase = true;
     signcolumn = "yes";
+    cursorline = true;
     clipboard = "unnamedplus";
     expandtab = true;
     shiftwidth = 4;
