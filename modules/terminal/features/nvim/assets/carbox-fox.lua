@@ -21,6 +21,39 @@ set(0, "StatusLineNC", { fg = palette.fgDim, bg = palette.bgAlt })
 set(0, "TreesitterContext", { fg = palette.fg, bg = palette.bgAlt })
 set(0, "TreesitterContextLineNumber", { fg = palette.primary, bg = palette.bgAlt })
 set(0, "TreesitterContextSeparator", { fg = palette.primary, bg = palette.bgAlt })
+
+local noiceCmdline = { fg = palette.primary, bg = palette.bgAlt }
+local noiceSearch = { fg = palette.secondary, bg = palette.bgAlt }
+for _, group in ipairs({
+  "NoiceCmdlineIcon",
+  "NoiceCmdlineIconCmdline",
+  "NoiceCmdlineIconFilter",
+  "NoiceCmdlineIconLua",
+  "NoiceCmdlineIconHelp",
+  "NoiceCmdlineIconInput",
+  "NoiceCmdlinePopupBorder",
+  "NoiceCmdlinePopupBorderCmdline",
+  "NoiceCmdlinePopupBorderFilter",
+  "NoiceCmdlinePopupBorderLua",
+  "NoiceCmdlinePopupBorderHelp",
+  "NoiceCmdlinePopupBorderInput",
+  "NoiceCmdlinePopupTitle",
+  "NoiceCmdlinePopupTitleCmdline",
+  "NoiceCmdlinePopupTitleFilter",
+  "NoiceCmdlinePopupTitleLua",
+  "NoiceCmdlinePopupTitleHelp",
+  "NoiceCmdlinePopupTitleInput",
+}) do
+  set(0, group, noiceCmdline)
+end
+for _, group in ipairs({
+  "NoiceCmdlineIconSearch",
+  "NoiceCmdlinePopupBorderSearch",
+  "NoiceCmdlinePopupTitleSearch",
+}) do
+  set(0, group, noiceSearch)
+end
+
 local selectedBuffer = { fg = palette.bg, bg = palette.primary, bold = true, italic = false }
 set(0, "BufferLineBufferSelected", selectedBuffer)
 set(0, "BufferLineNumbersSelected", selectedBuffer)
