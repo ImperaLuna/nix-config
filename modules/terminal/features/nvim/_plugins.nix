@@ -110,6 +110,7 @@ in
         multiline_threshold = 1;
         trim_scope = "inner";
         mode = "topline";
+        separator = "─";
       };
     };
 
