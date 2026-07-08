@@ -18,9 +18,9 @@ set(0, "Visual", { bg = palette.secondary })
 set(0, "Search", { fg = palette.bg, bg = palette.primary })
 set(0, "StatusLine", { fg = palette.bg, bg = palette.primary, bold = true })
 set(0, "StatusLineNC", { fg = palette.fgDim, bg = palette.bgAlt })
-set(0, "TreesitterContext", { fg = palette.fg, bg = palette.bgAlt })
-set(0, "TreesitterContextLineNumber", { fg = palette.primary, bg = palette.bgAlt })
-set(0, "TreesitterContextSeparator", { fg = palette.primary, bg = palette.bgAlt })
+set(0, "TreesitterContext", { fg = palette.fg, bg = palette.bg })
+set(0, "TreesitterContextLineNumber", { fg = palette.primary, bg = palette.bg })
+set(0, "TreesitterContextSeparator", { fg = palette.primary, bg = palette.bg })
 
 local noiceCmdline = { fg = palette.primary, bg = palette.bg }
 local noiceSearch = { fg = palette.secondary, bg = palette.bg }
