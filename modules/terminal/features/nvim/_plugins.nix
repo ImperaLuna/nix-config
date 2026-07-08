@@ -33,6 +33,38 @@ in
       };
     };
 
+    blink-cmp = {
+      enable = true;
+      setupLspCapabilities = true;
+      settings = {
+        keymap = {
+          preset = "default";
+          "<C-space>" = [
+            "show"
+            "show_documentation"
+            "hide_documentation"
+          ];
+          "<C-e>" = [ "hide" ];
+          "<C-y>" = [ "select_and_accept" ];
+        };
+        sources.default = [
+          "lsp"
+          "path"
+          "buffer"
+        ];
+        completion = {
+          list.selection = {
+            preselect = false;
+            auto_insert = false;
+          };
+          accept.auto_brackets.semantic_token_resolution.enabled = false;
+        };
+        fuzzy.prebuilt_binaries.download = false;
+        signature.enabled = true;
+        appearance.nerd_font_variant = "normal";
+      };
+    };
+
     mini = {
       enable = true;
       modules = {
