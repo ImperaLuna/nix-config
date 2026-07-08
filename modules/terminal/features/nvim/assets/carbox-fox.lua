@@ -22,8 +22,8 @@ set(0, "TreesitterContext", { fg = palette.fg, bg = palette.bgAlt })
 set(0, "TreesitterContextLineNumber", { fg = palette.primary, bg = palette.bgAlt })
 set(0, "TreesitterContextSeparator", { fg = palette.primary, bg = palette.bgAlt })
 
-local noiceCmdline = { fg = palette.primary, bg = palette.bgAlt }
-local noiceSearch = { fg = palette.secondary, bg = palette.bgAlt }
+local noiceCmdline = { fg = palette.primary, bg = palette.bg }
+local noiceSearch = { fg = palette.secondary, bg = palette.bg }
 for _, group in ipairs({
   "NoiceCmdlineIcon",
   "NoiceCmdlineIconCmdline",
