@@ -3,6 +3,7 @@
 {
   imports = [
     ./_keymaps.nix
+    ./_inline-usages.nix
     ./_lsp.nix
     ./_opts.nix
     ./_plugins.nix
