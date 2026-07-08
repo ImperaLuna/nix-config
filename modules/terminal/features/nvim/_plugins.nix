@@ -2,7 +2,6 @@
 
 let
   grammars = config.programs.nixvim.plugins.treesitter.package.builtGrammars;
-  theme = import ../../../_lib/theme.nix;
 in
 {
   programs.nixvim.plugins = {
@@ -73,41 +72,13 @@ in
 
     bufferline = {
       enable = true;
-      settings = {
-        options = {
-          mode = "buffers";
-          always_show_bufferline = true;
-          diagnostics = "nvim_lsp";
-          separator_style = "thin";
-          show_buffer_close_icons = true;
-          show_close_icon = false;
-        };
-        highlights = {
-          buffer_selected = {
-            fg = theme.bg;
-            bg = theme.primary;
-            bold = true;
-            italic = false;
-          };
-          numbers_selected = {
-            fg = theme.bg;
-            bg = theme.primary;
-            bold = true;
-            italic = false;
-          };
-          modified_selected = {
-            fg = theme.bg;
-            bg = theme.primary;
-          };
-          separator_selected = {
-            fg = theme.primary;
-            bg = theme.primary;
-          };
-          indicator_selected = {
-            fg = theme.primary;
-            bg = theme.primary;
-          };
-        };
+      settings.options = {
+        mode = "buffers";
+        always_show_bufferline = true;
+        diagnostics = "nvim_lsp";
+        separator_style = "thin";
+        show_buffer_close_icons = true;
+        show_close_icon = false;
       };
     };
 
@@ -134,10 +105,10 @@ in
     treesitter-context = {
       enable = true;
       settings = {
-        max_lines = 3;
+        max_lines = 2;
         line_numbers = true;
         multiline_threshold = 1;
-        trim_scope = "outer";
+        trim_scope = "inner";
         mode = "cursor";
         separator = "─";
       };
