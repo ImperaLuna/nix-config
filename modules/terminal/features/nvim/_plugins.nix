@@ -109,7 +109,7 @@ in
         line_numbers = true;
         multiline_threshold = 1;
         trim_scope = "inner";
-        mode = "cursor";
+        mode = "topline";
         separator = "─";
       };
     };
