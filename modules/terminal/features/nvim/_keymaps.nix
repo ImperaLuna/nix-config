@@ -150,6 +150,39 @@
         options.desc = "Paste Without Yanking Selection";
       }
       {
+        mode = [
+          "n"
+          "x"
+        ];
+        key = "<leader>y";
+        action = "\"+y";
+        options.desc = "Yank to Clipboard";
+      }
+      {
+        mode = "n";
+        key = "<leader>Y";
+        action = "\"+Y";
+        options.desc = "Yank Line to Clipboard";
+      }
+      {
+        mode = [
+          "n"
+          "x"
+        ];
+        key = "<leader>p";
+        action = "\"+p";
+        options.desc = "Paste Clipboard";
+      }
+      {
+        mode = [
+          "n"
+          "x"
+        ];
+        key = "<leader>P";
+        action = "\"+P";
+        options.desc = "Paste Clipboard Before";
+      }
+      {
         mode = "n";
         key = "<C-a>";
         action = "ggVG";
