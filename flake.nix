@@ -23,7 +23,7 @@
     };
 
     nova = {
-      url = "git+ssh://git@github.com/ImperaLuna/Nova.git";
+      url = "github:ImperaLuna/nova-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
