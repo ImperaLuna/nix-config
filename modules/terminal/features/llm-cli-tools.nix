@@ -47,6 +47,7 @@
         pkgs.claude-code
         pkgs.codex
         pkgs.opencode
+        pkgs.pi-coding-agent
         omp
       ];
 
