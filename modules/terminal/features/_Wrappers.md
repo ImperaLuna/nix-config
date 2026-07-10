@@ -13,6 +13,6 @@ Tracks which features use [nix-wrapper-modules](https://birdeehub.github.io/nix-
 | Feature | File |
 |---------|------|
 | btop | `btop/default.nix` |
-| llm-cli-tools | `llm-cli-tools.nix` | # specifically for claude code and opencode
+| llm-cli-tools | `llm-cli-tools.nix` |
 | nvim | `nvim/default.nix` |
 | yazi | `yazi/default.nix` |

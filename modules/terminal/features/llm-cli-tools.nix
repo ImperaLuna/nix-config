@@ -1,8 +1,10 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   flake.modules.homeManager.terminal-feature-llm-cli-tools = { lib, pkgs, ... }:
     let
+      agents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+
       codexInsertNewline = ''insert_newline = ["ctrl-enter", "shift-enter"]'';
 
       claudeKeybindings = builtins.toJSON {
@@ -19,36 +21,13 @@
         ];
       };
 
-      omp = pkgs.stdenvNoCC.mkDerivation rec {
-        pname = "omp";
-        version = "16.4.1";
-
-        src = pkgs.fetchurl {
-          url = "https://github.com/can1357/oh-my-pi/releases/download/v${version}/omp-linux-x64";
-          hash = "sha256-JzlYrzHyLVOPGOUYRiEN/D3vlyNtuY7DhWTwXKNXJXk=";
-        };
-
-        dontUnpack = true;
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-
-        installPhase = ''
-          runHook preInstall
-
-          install -Dm755 $src $out/libexec/omp
-          makeWrapper ${pkgs.stdenv.cc.bintools.dynamicLinker} $out/bin/omp \
-            --add-flags $out/libexec/omp
-
-          runHook postInstall
-        '';
-      };
     in
     {
       home.packages = [
-        pkgs.claude-code
-        pkgs.codex
-        pkgs.opencode
-        pkgs.pi-coding-agent
-        omp
+        agents.claude-code
+        agents.codex
+        agents.omp
+        agents.pi
       ];
 
       home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";

@@ -10,6 +10,8 @@
     };
     nixvim.url = "github:nix-community/nixvim";
 
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
     nix-wrapper-modules = {
       url = "github:BirdeeHub/nix-wrapper-modules";
       inputs.nixpkgs.follows = "nixpkgs";
