@@ -3,15 +3,38 @@
 {
   flake.modules.homeManager.apps-feature-stremio = { pkgs, ... }:
   let
-    stremioServer = pkgs.runCommand "stremio-server-http-trackers" { } ''
-      mkdir -p $out/share/stremio
-      cp ${pkgs.stremio-linux-shell}/share/stremio/server.js $out/share/stremio/server.js
-      substituteInPlace $out/share/stremio/server.js \
-        --replace-fail \
-          'module.exports = [ "udp://tracker.opentrackr.org:1337/announce", "udp://open.demonoid.ch:6969/announce", "udp://open.demonii.com:1337/announce", "udp://open.tracker.cl:1337/announce", "udp://open.stealth.si:80/announce", "udp://tracker.torrent.eu.org:451/announce", "udp://tracker1.myporn.club:9337/announce", "udp://tracker.therarbg.to:6969/announce", "udp://tracker.qu.ax:6969/announce", "udp://tracker.dler.org:6969/announce", "udp://tracker.bittor.pw:1337/announce", "udp://tracker.0x7c0.com:6969/announce", "udp://tracker-udp.gbitt.info:80/announce", "udp://run.publictracker.xyz:6969/announce", "udp://retracker01-msk-virt.corbina.net:80/announce", "udp://opentracker.io:6969/announce", "udp://open.dstud.io:6969/announce", "udp://leet-tracker.moe:1337/announce", "udp://explodie.org:6969/announce", "udp://bt.rer.lol:6969/announce" ];' \
-          'module.exports = [ "http://tracker.opentrackr.org:1337/announce", "http://tracker.tritan.gg:8080/announce", "http://tracker.renfei.net:8080/announce", "http://tracker.qu.ax:6969/announce", "http://tracker.dhitechnical.com:6969/announce", "http://t.overflow.biz:6969/announce", "http://bittorrent-tracker.e-n-c-r-y-p-t.net:1337/announce", "http://004430.xyz:80/announce", "http://tracker2.dler.org:80/announce", "http://tracker.dler.org:6969/announce", "http://tracker.dler.com:6969/announce", "http://tracker.bt4g.com:2095/announce", "http://tracker.waaa.moe:6969/announce", "http://tracker.skyts.net:6969/announce", "http://tr.nyacat.pw:80/announce", "udp://tracker.opentrackr.org:1337/announce", "udp://tracker.qu.ax:6969/announce", "udp://tracker.dler.org:6969/announce", "udp://opentracker.io:6969/announce", "udp://explodie.org:6969/announce" ];'
+    trackerList = ''module.exports = [ "http://tracker.opentrackr.org:1337/announce", "http://tracker.tritan.gg:8080/announce", "http://tracker.renfei.net:8080/announce", "http://tracker.qu.ax:6969/announce", "http://tracker.dhitechnical.com:6969/announce", "http://t.overflow.biz:6969/announce", "http://bittorrent-tracker.e-n-c-r-y-p-t.net:1337/announce", "http://004430.xyz:80/announce", "http://tracker2.dler.org:80/announce", "http://tracker.dler.org:6969/announce", "http://tracker.dler.com:6969/announce", "http://tracker.bt4g.com:2095/announce", "http://tracker.waaa.moe:6969/announce", "http://tracker.skyts.net:6969/announce", "http://tr.nyacat.pw:80/announce", "udp://tracker.opentrackr.org:1337/announce", "udp://tracker.qu.ax:6969/announce", "udp://tracker.dler.org:6969/announce", "udp://opentracker.io:6969/announce", "udp://explodie.org:6969/announce" ];'';
+
+    patchStremioTrackers = pkgs.writeText "patch-stremio-trackers.js" ''
+      const fs = require("fs");
+
+      const serverPath = process.argv[2];
+      const source = fs.readFileSync(serverPath, "utf8");
+      const trackerModulePattern =
+        /module\.exports = \[ (?:"(?:https?|udp):\/\/[^"\n]+\/announce"(?:, )?)+ \];/g;
+      const matches = Array.from(source.matchAll(trackerModulePattern));
+
+      if (matches.length !== 1) {
+        throw new Error(
+          "expected exactly one tracker module in " + serverPath + ", found " + matches.length,
+        );
+      }
+
+      const replacement = ${builtins.toJSON trackerList};
+      fs.writeFileSync(serverPath, source.replace(matches[0][0], replacement));
     '';
 
+    stremioServer = pkgs.runCommand "stremio-server-http-trackers" {
+      nativeBuildInputs = [ pkgs.nodejs ];
+    } ''
+      server_js=${pkgs.stremio-linux-shell}/libexec/stremio/server.js
+      if ! test -f "$server_js"; then
+        server_js=${pkgs.stremio-linux-shell}/share/stremio/server.js
+      fi
+
+      install -Dm644 "$server_js" $out/share/stremio/server.js
+      node ${patchStremioTrackers} $out/share/stremio/server.js
+    '';
     stremioWeb = pkgs.writeShellApplication {
       name = "stremio";
       runtimeInputs = [
@@ -62,6 +85,7 @@
         ${pkgs.stremio-linux-shell}/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg \
         $out/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg
     '';
+
   in
   {
     home.packages = [
