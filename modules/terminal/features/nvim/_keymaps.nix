@@ -291,6 +291,41 @@ in
         action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_previous_start('@class.outer', 'textobjects')<CR>";
         options.desc = "Previous Class";
       }
+      {
+        mode = [
+          "n"
+          "x"
+          "o"
+        ];
+        key = "s";
+        action = "<cmd>lua require('flash').jump()<CR>";
+        options.desc = "Flash Jump";
+      }
+      {
+        mode = [
+          "n"
+          "x"
+          "o"
+        ];
+        key = "S";
+        action = "<cmd>lua require('flash').treesitter()<CR>";
+        options.desc = "Flash Treesitter";
+      }
+      {
+        mode = "o";
+        key = "r";
+        action = "<cmd>lua require('flash').remote()<CR>";
+        options.desc = "Remote Flash";
+      }
+      {
+        mode = [
+          "o"
+          "x"
+        ];
+        key = "R";
+        action = "<cmd>lua require('flash').treesitter_search()<CR>";
+        options.desc = "Flash Treesitter Search";
+      }
     ];
   };
 }

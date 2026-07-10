@@ -14,6 +14,8 @@ in
       };
     };
 
+    flash.enable = true;
+
     which-key.enable = true;
 
     noice = {

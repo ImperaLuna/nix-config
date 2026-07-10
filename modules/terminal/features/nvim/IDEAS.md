@@ -32,25 +32,6 @@ Possible keymaps:
 <leader>xQ  Quickfix list
 ```
 
-### `flash.nvim`
-
-Fast in-buffer jump/search motions.
-
-Why it is likely worth adding:
-
-- Improves navigation without affecting file contents.
-- Complements Treesitter textobjects and normal Vim motions.
-- Useful once basic movement starts to feel limiting.
-
-Possible keymaps:
-
-```text
-s  Flash jump
-S  Treesitter flash
-r  Remote flash in operator-pending mode
-R  Treesitter search in operator/visual mode
-```
-
 ## Useful, but wait for clearer need
 
 ### `conform.nvim`
