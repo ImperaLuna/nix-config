@@ -17,7 +17,6 @@ in
   imports = [
     ./_functions.nix
     ./_aliases.nix
-    ./_env.nix
   ];
 
   programs.fish = {

@@ -67,5 +67,6 @@ in
     // (import ./DuskNova/host.nix { inherit mkHost config; });
 
   flake.homeConfigurations =
-    import ./Windows/host.nix { inherit mkHome; };
+    (import ./Windows/host.nix { inherit mkHome; })
+    // (import ./Linux/host.nix { inherit mkHome; });
 }

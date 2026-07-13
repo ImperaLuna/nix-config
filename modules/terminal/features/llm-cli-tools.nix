@@ -77,7 +77,6 @@
         [tui.keymap.editor]
         $desired
         EOF
-          exit 0
         fi
 
         tmp_file="$(mktemp)"
