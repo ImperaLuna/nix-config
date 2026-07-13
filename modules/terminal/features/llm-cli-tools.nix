@@ -5,6 +5,32 @@
     let
       agents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
+      # The upstream OMP binary has Nix's dynamic loader but no glibc runtime
+      # search path.  On non-NixOS systems (notably WSL) it mixes Nix's loader
+      # with the host libc and segfaults before startup.  Patch a copy of the
+      # cached binary so OMP keeps the adjacent native addon it expects without
+      # rebuilding the large Bun application.
+      omp = pkgs.runCommand "omp-${agents.omp.version}" {
+        nativeBuildInputs = [
+          pkgs.makeWrapper
+          pkgs.patchelf
+        ];
+        meta = agents.omp.meta;
+      } ''
+        mkdir -p "$out/bin" "$out/lib"
+        cp -r ${agents.omp}/lib/omp "$out/lib/omp"
+        chmod -R u+w "$out/lib/omp"
+
+        patchelf --set-rpath "${lib.makeLibraryPath [
+          pkgs.glibc
+          pkgs.stdenv.cc.cc.lib
+          pkgs.zlib
+        ]}" "$out/lib/omp/omp"
+
+        makeWrapper "$out/lib/omp/omp" "$out/bin/omp" \
+          --set PI_SKIP_VERSION_CHECK 1
+      '';
+
       codexInsertNewline = ''insert_newline = ["ctrl-enter", "shift-enter"]'';
 
       claudeKeybindings = builtins.toJSON {
@@ -26,7 +52,7 @@
       home.packages = [
         agents.claude-code
         agents.codex
-        agents.omp
+        omp
         agents.pi
       ];
 
