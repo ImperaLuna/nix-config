@@ -14,7 +14,6 @@
     softtabstop = 4;
     tabstop = 4;
     termguicolors = true;
-    clipboard = "unnamedplus";
     timeoutlen = 1000;
     updatetime = 250;
   };

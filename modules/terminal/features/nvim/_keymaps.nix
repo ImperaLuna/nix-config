@@ -165,43 +165,37 @@ in
         options.desc = "Next Buffer";
       }
       {
-        mode = "x";
-        key = "p";
-        action = "\"_dP";
-        options.desc = "Paste Without Yanking Selection";
-      }
-      {
         mode = [
           "n"
           "x"
         ];
-        key = "<leader>y";
+        key = "y";
         action = "\"+y";
-        options.desc = "Yank to Clipboard";
+        options.desc = "Copy to Clipboard";
       }
       {
         mode = "n";
-        key = "<leader>Y";
+        key = "Y";
         action = "\"+Y";
-        options.desc = "Yank Line to Clipboard";
+        options.desc = "Copy Line to Clipboard";
       }
       {
         mode = [
           "n"
           "x"
         ];
-        key = "<leader>p";
+        key = "p";
         action = "\"+p";
-        options.desc = "Paste Clipboard";
+        options.desc = "Paste from Clipboard";
       }
       {
         mode = [
           "n"
           "x"
         ];
-        key = "<leader>P";
+        key = "P";
         action = "\"+P";
-        options.desc = "Paste Clipboard Before";
+        options.desc = "Paste Before from Clipboard";
       }
       {
         mode = "n";
