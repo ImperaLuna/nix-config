@@ -37,6 +37,26 @@ In short: `host -> role -> feature`.
   `modules/terminal/default.nix`, `modules/desktop/default.nix`,
   `modules/workstation/default.nix`).
 
+## Binary caches and lockfile updates
+
+`flake.nix` advertises the Numtide substituter and signing key, so single-user
+Nix installations and trusted users can use the `llm-agents` binary cache.
+NixOS hosts also trust the cache at daemon level through
+`modules/__hosts/common.nix`.
+
+On a standalone multi-user WSL or VPS installation, cache trust is a restricted
+daemon setting. Add the following to `/etc/nix/nix.conf` and restart
+`nix-daemon`:
+
+```ini
+extra-substituters = https://cache.numtide.com
+extra-trusted-public-keys = niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=
+```
+
+Normal evaluation and build commands should preserve `flake.lock`. Use
+`--no-write-lock-file` for read-only checks. Only intentional input updates,
+such as `nix flake update llm-agents`, should rewrite and commit the lockfile.
+
 ## Where to enable/disable features
 
 - Edit the role file that includes that feature. One real example:
