@@ -7,7 +7,7 @@
     home-manager.useGlobalPkgs = true;
     home-manager.useUserPackages = true;
     home-manager.sharedModules = [
-      self.modules.homeManager.terminal
+      self.modules.homeManager.terminal-desktop
       self.modules.homeManager.dev
       self.modules.homeManager.apps
       self.modules.homeManager.gaming
@@ -25,7 +25,6 @@
     home-manager.sharedModules = [
       self.modules.homeManager.terminal
       self.modules.homeManager.dev
-      self.modules.homeManager.experimental
     ];
   };
 }

@@ -39,4 +39,11 @@
       config.flake.modules.homeManager.terminal-feature-llm-cli-tools
     ];
   };
+
+  flake.modules.homeManager.terminal-desktop = {
+    imports = [
+      config.flake.modules.homeManager.terminal
+      config.flake.modules.homeManager.terminal-feature-desktop-integrations
+    ];
+  };
 }

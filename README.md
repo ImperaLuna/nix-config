@@ -25,6 +25,13 @@ In short: `host -> role -> feature`.
 - Home Manager stacks are in `modules/home-stack.nix`:
   - `home-desktop` for desktop hosts
   - `home-lab` for server/lab hosts
+- The terminal role has a portability seam:
+  - `terminal` provides the shell, CLI tools, Neovim, Btop, and Yazi without GUI
+    launchers or media-preview packages.
+  - `terminal-desktop` layers Ghostty launchers, desktop entries, clipboard support,
+    and Yazi's FFmpeg/MPV/Poppler/ImageMagick/Loupe integrations onto `terminal`.
+- `home-lab` and standalone `mkHome` profiles use `terminal`; `home-desktop` uses
+  `terminal-desktop`.
 - System roles are in `modules/_systems/default.nix`.
 - Home Manager domain roles are in `modules/*/default.nix` (for example
   `modules/terminal/default.nix`, `modules/desktop/default.nix`,
