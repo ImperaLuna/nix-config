@@ -144,4 +144,4 @@ copy the local session to that machine.
 - [Herdr concepts](https://herdr.dev/docs/concepts/)
 - [Keyboard reference](https://herdr.dev/docs/keyboard/)
 
-This repo installs the package in [`../herdr.nix`](../herdr.nix).
+This repo installs the package in [`default.nix`](./default.nix).
