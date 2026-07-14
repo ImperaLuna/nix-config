@@ -39,10 +39,9 @@ In short: `host -> role -> feature`.
 
 ## Binary caches and lockfile updates
 
-`flake.nix` advertises the Numtide substituter and signing key, so single-user
-Nix installations and trusted users can use the `llm-agents` binary cache.
-NixOS hosts also trust the cache at daemon level through
-`modules/__hosts/common.nix`.
+NixOS hosts configure the Numtide substituter and signing key at daemon level
+through `modules/__hosts/common.nix`, so the `llm-agents` binary cache is
+available without client-specified restricted settings.
 
 On a standalone multi-user WSL or VPS installation, cache trust is a restricted
 daemon setting. Add the following to `/etc/nix/nix.conf` and restart

@@ -1,13 +1,4 @@
 {
-  # Advertise the Numtide cache to standalone flake consumers such as WSL and
-  # non-NixOS VPS profiles. Multi-user installs must trust it in the daemon;
-  # NixOS hosts do that system-wide in modules/__hosts/common.nix.
-  nixConfig = {
-    extra-substituters = [ "https://cache.numtide.com" ];
-    extra-trusted-public-keys = [
-      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-    ];
-  };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
