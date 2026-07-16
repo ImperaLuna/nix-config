@@ -51,9 +51,10 @@ important plugin mappings from [`_plugins.nix`](./_plugins.nix).
 | `:DiffviewFileHistory %` | Command | Show history for the current file |
 | `:DiffviewClose` | Command | Close Diffview |
 
-Neogit is the main Git entry point. Its floating interface exposes the Git
-operations relevant to the current view; the hunk mappings above are the fast
-path while editing.
+Neogit is the main Git entry point. It opens in a dedicated tab so commit
+views appear beside the status instead of behind a floating window. Press
+`q` once to return from a commit view to status, then again to close Neogit
+and return to the file you were editing.
 
 ## Flash navigation
 

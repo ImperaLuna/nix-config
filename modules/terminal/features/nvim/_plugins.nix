@@ -188,7 +188,7 @@ in
     neogit = {
       enable = true;
       settings = {
-        kind = "floating";
+        kind = "tab";
         integrations.diffview = true;
       };
     };
