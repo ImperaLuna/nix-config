@@ -53,11 +53,11 @@
             pkgs.docker
           ];
 
-          # WSL Home Manager cannot express this as a normal dotfile because the
+          # WSL Home Manager cannot express these as normal dotfiles because the
           # terminal emulator lives on the Windows side. Patch Windows Terminal's
-          # settings.json so Shift+Enter sends CSI-u Shift+Enter (13;2u) instead
-          # of the Ctrl+Enter sequence (13;5u) that breaks multiline prompts.
-          home.activation.windowsTerminalShiftEnter = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          # settings.json so Shift+Enter sends CSI-u Shift+Enter (13;2u), and
+          # Ctrl+Alt+V sends Ctrl+V through to Codex for image clipboard paste.
+          home.activation.windowsTerminalKeybindings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             settings_file="${windowsTerminalSettings}"
 
             if [ -f "$settings_file" ]; then
@@ -72,29 +72,33 @@
             actions = data.setdefault("actions", [])
             keybindings = data.setdefault("keybindings", [])
 
-            def is_shift_enter(binding):
+            def has_keys(binding, desired):
                 keys = binding.get("keys")
                 if isinstance(keys, str):
-                    return keys.lower() == "shift+enter"
+                    return keys.lower() == desired
                 if isinstance(keys, list):
-                    return any(isinstance(key, str) and key.lower() == "shift+enter" for key in keys)
+                    return any(isinstance(key, str) and key.lower() == desired for key in keys)
                 return False
 
-            binding = next((item for item in keybindings if is_shift_enter(item)), None)
-            if binding is None:
-                action_id = "User.sendInput.ShiftEnterNewline"
-                keybindings.append({"id": action_id, "keys": "shift+enter"})
-            else:
-                action_id = binding.get("id") or "User.sendInput.ShiftEnterNewline"
-                binding["id"] = action_id
-                binding["keys"] = "shift+enter"
+            def ensure_send_input(keys, default_action_id, input_text):
+                binding = next((item for item in keybindings if has_keys(item, keys)), None)
+                if binding is None:
+                    action_id = default_action_id
+                    keybindings.append({"id": action_id, "keys": keys})
+                else:
+                    action_id = binding.get("id") or default_action_id
+                    binding["id"] = action_id
+                    binding["keys"] = keys
 
-            action = next((item for item in actions if item.get("id") == action_id), None)
-            command = {"action": "sendInput", "input": "\u001b[13;2u"}
-            if action is None:
-                actions.append({"command": command, "id": action_id})
-            else:
-                action["command"] = command
+                action = next((item for item in actions if item.get("id") == action_id), None)
+                command = {"action": "sendInput", "input": input_text}
+                if action is None:
+                    actions.append({"command": command, "id": action_id})
+                else:
+                    action["command"] = command
+
+            ensure_send_input("shift+enter", "User.sendInput.ShiftEnterNewline", "\u001b[13;2u")
+            ensure_send_input("ctrl+alt+v", "User.sendInput.CodexPasteImage", "\u0016")
 
             rendered = json.dumps(data, indent=4) + "\n"
             if path.read_text() != rendered:
