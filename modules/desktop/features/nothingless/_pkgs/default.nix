@@ -12,16 +12,8 @@ let
 
   supportPkgs = import ./support.nix { inherit pkgs; };
 
-  quickshellPkg = pkgs.quickshell.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or [ ]) ++ [
-      pkgs.kdePackages.kirigami
-      pkgs.kdePackages.kirigami-addons
-      pkgs.kdePackages.qqc2-desktop-style
-      pkgs.kdePackages.syntax-highlighting
-    ];
-  });
 
-  corePkgs     = import ./core.nix      { inherit pkgs quickshellPkg; };
+  corePkgs     = import ./core.nix      { inherit pkgs; };
   toolsPkgs    = import ./tools.nix     { inherit pkgs; };
   mediaPkgs    = import ./media.nix     { inherit pkgs; };
   appsPkgs     = import ./apps.nix      { inherit pkgs; };
@@ -164,7 +156,7 @@ let
   };
 
   launcher = pkgs.writeShellScriptBin "nothingless" ''
-    export NOTHINGLESS_QS="${quickshellPkg}/bin/qs"
+    export NOTHINGLESS_QS="${pkgs.quickshell}/bin/qs"
     export PATH="${envNothingLess}/bin:$PATH"
     export QML2_IMPORT_PATH="${envNothingLess}/lib/qt-6/qml:$QML2_IMPORT_PATH"
     export QML_IMPORT_PATH="$QML2_IMPORT_PATH"

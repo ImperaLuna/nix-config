@@ -5,6 +5,8 @@
   let
     trackerList = ''module.exports = [ "http://tracker.opentrackr.org:1337/announce", "http://tracker.tritan.gg:8080/announce", "http://tracker.renfei.net:8080/announce", "http://tracker.qu.ax:6969/announce", "http://tracker.dhitechnical.com:6969/announce", "http://t.overflow.biz:6969/announce", "http://bittorrent-tracker.e-n-c-r-y-p-t.net:1337/announce", "http://004430.xyz:80/announce", "http://tracker2.dler.org:80/announce", "http://tracker.dler.org:6969/announce", "http://tracker.dler.com:6969/announce", "http://tracker.bt4g.com:2095/announce", "http://tracker.waaa.moe:6969/announce", "http://tracker.skyts.net:6969/announce", "http://tr.nyacat.pw:80/announce", "udp://tracker.opentrackr.org:1337/announce", "udp://tracker.qu.ax:6969/announce", "udp://tracker.dler.org:6969/announce", "udp://opentracker.io:6969/announce", "udp://explodie.org:6969/announce" ];'';
 
+    stremioSource = pkgs.stremio-linux-shell.src;
+
     patchStremioTrackers = pkgs.writeText "patch-stremio-trackers.js" ''
       const fs = require("fs");
 
@@ -27,10 +29,7 @@
     stremioServer = pkgs.runCommand "stremio-server-http-trackers" {
       nativeBuildInputs = [ pkgs.nodejs ];
     } ''
-      server_js=${pkgs.stremio-linux-shell}/libexec/stremio/server.js
-      if ! test -f "$server_js"; then
-        server_js=${pkgs.stremio-linux-shell}/share/stremio/server.js
-      fi
+      server_js=${stremioSource}/data/server.js
 
       install -Dm644 "$server_js" $out/share/stremio/server.js
       node ${patchStremioTrackers} $out/share/stremio/server.js
@@ -82,7 +81,7 @@
 
     stremioIcon = pkgs.runCommand "stremio-icon" { } ''
       install -Dm644 \
-        ${pkgs.stremio-linux-shell}/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg \
+        ${stremioSource}/data/icons/com.stremio.Stremio.svg \
         $out/share/icons/hicolor/scalable/apps/com.stremio.Stremio.svg
     '';
 

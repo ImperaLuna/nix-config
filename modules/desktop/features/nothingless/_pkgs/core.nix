@@ -1,7 +1,7 @@
-{ pkgs, quickshellPkg }:
+{ pkgs }:
 
 with pkgs; [
-  quickshellPkg
+  quickshell
 
   mesa
   libglvnd
@@ -16,5 +16,8 @@ with pkgs; [
   qt6.qtimageformats
   kdePackages.qtmultimedia
   kdePackages.qtshadertools
+  kdePackages.kirigami
+  kdePackages.kirigami-addons
+  kdePackages.qqc2-desktop-style
   kdePackages.syntax-highlighting
 ]
