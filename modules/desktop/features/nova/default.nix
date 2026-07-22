@@ -3,7 +3,7 @@
 {
   flake.modules.homeManager.desktop-feature-nova = { pkgs, ... }:
     let
-      nova = inputs.nova.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      nova = inputs.nova.packages.${pkgs.stdenv.hostPlatform.system}.withCalculator;
 
       iconThemePackages = [
         pkgs.adwaita-icon-theme
