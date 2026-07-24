@@ -4,7 +4,7 @@
   programs.fish = {
     shellAliases = {
       cat = "bat";
-      ls = "eza --icons --color=always";
+      ls = "eza --icons=always --color=always";
     };
 
     shellAbbrs = {

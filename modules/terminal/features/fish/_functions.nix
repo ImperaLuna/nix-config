@@ -63,7 +63,7 @@ let theme = import ../../../_lib/theme.nix; in
                   --reverse \
                   --ansi \
                   --query "$prefix" \
-                  --preview 'eza --tree --level=2 --color=always --icons {}'
+                  --preview 'eza --tree --level=2 --color=always --icons=always {}'
       )
 
       if test -n "$selected"

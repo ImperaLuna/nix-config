@@ -39,12 +39,12 @@ in
           -p 'systemctl status $fifc_candidate 2>/dev/null; printf "\n---\n"; tldr $fifc_candidate 2>/dev/null'
       fifc \
           -n 'test -d "$fifc_candidate"' \
-          -p 'eza --tree --level=2 --color=always --icons "$fifc_candidate"' \
+          -p 'eza --tree --level=2 --color=always --icons=always "$fifc_candidate"' \
           -O 1
       fifc \
           -n 'string match -qr "^cd\\s" -- $fifc_commandline; or test "$fifc_commandline" = cd' \
           -s _fifc_source_cd_directories \
-          -p 'eza --tree --level=2 --color=always --icons "$fifc_candidate"' \
+          -p 'eza --tree --level=2 --color=always --icons=always "$fifc_candidate"' \
           -O 2
     '';
 
@@ -74,7 +74,7 @@ in
         bind --mode $mode ctrl-/ _fzf_search_commands_tldr
       end
 
-      set -gx fzf_preview_dir_cmd eza --tree --level=2 --icons --color=always
+      set -gx fzf_preview_dir_cmd eza --tree --level=2 --icons=always --color=always
       set fzf_diff_highlighter delta --paging=never --width=100
       set fzf_history_time_format %d-%m-%y
       set -gx FZF_DEFAULT_OPTS "\
