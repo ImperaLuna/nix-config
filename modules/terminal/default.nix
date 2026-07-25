@@ -18,6 +18,7 @@
       config.flake.modules.homeManager.terminal-feature-file
       config.flake.modules.homeManager.terminal-feature-home-manager
       config.flake.modules.homeManager.terminal-feature-ripgrep
+      config.flake.modules.homeManager.terminal-feature-stow
       config.flake.modules.homeManager.terminal-feature-fzf
       config.flake.modules.homeManager.terminal-feature-tealdeer
 
