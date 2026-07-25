@@ -156,6 +156,7 @@ in
   # SESSION ENVIRONMENT
   # ===================================================================
   environment.sessionVariables = {
+    OBSIDIAN_VAULT = "/home/imperaluna/Obsidian/Rares's Vault";
     TERMINAL = "ghostty";          # launcher uses this for Terminal=true desktop entries
     WLR_NO_HARDWARE_CURSORS = "1";  # fixes invisible cursor on nvidia+wayland
     NIXOS_OZONE_WL = "1";           # native wayland for electron apps
