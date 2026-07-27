@@ -25,7 +25,7 @@
         in
         {
           home.sessionVariables = {
-            OBSIDIAN_VAULT = "/mnt/c/Users/rbrezeanu/Documents/ObsidianVault";
+            OBSIDIAN_VAULT = "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
             HM_CONFIG_NAME = "Windows";
             EDITOR = "nvim";
             VISUAL = "nvim";
