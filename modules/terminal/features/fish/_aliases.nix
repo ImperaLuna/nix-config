@@ -3,14 +3,13 @@
 {
   programs.fish = {
     shellAliases = {
-      cat = "bat";
+      cat = "bat --style=plain --paging=never";
       ls = "eza --icons=always --color=always";
     };
 
     shellAbbrs = {
       devup = "kubectl scale deployment -n homelab-dev --replicas=1 --all";
       devdown = "kubectl scale deployment -n homelab-dev --replicas=0 --all";
-      batn = "cat --style=full --paging=auto";
       gs = "git status";
       install = "nix shell nixpkgs#";
       search = "nix search nixpkgs";
