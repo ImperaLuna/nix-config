@@ -167,26 +167,6 @@
         "type": "github"
       }
     },
-    "iris": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785250801,
-        "narHash": "sha256-fZRpc6pfLztaP64ffU+G9KmC8kmagaKEHiN5LLKQLYc=",
-        "owner": "versenilvis",
-        "repo": "iris",
-        "rev": "69fb77910deab604ae16d1f4752ccb0972c70a8f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "versenilvis",
-        "repo": "iris",
-        "type": "github"
-      }
-    },
     "llm-agents": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -377,7 +357,6 @@
         "herdr": "herdr",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
-        "iris": "iris",
         "llm-agents": "llm-agents",
         "nix-wrapper-modules": "nix-wrapper-modules",
         "nixpkgs": "nixpkgs_2",

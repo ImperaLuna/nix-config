@@ -5,7 +5,7 @@
     ./_aliases.nix
     ./_functions.nix
     ./_highlighting.nix
-    ./_iris.nix
+    ./_history.nix
   ];
 
   programs.zsh.enable = true;
