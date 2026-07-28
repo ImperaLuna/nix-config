@@ -73,6 +73,7 @@ let theme = import ../../../_lib/theme.nix; in
           if test (count $result) -gt 1
               set key $result[1]
               set selected $result[2]
+              test -n "$key"; or set key enter
           end
 
           switch "$key"
