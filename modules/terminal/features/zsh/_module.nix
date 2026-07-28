@@ -6,6 +6,7 @@
     ./_functions.nix
     ./_highlighting.nix
     ./_history.nix
+    ./_atuin.nix
   ];
 
   programs.zsh.enable = true;
