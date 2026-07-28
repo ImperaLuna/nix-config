@@ -52,8 +52,7 @@ let theme = import ../../../_lib/theme.nix; in
           end
 
           if test (count $candidates) -eq 0
-              commandline --function complete
-              return
+              set candidates "$base_dir"
           end
 
           set -l result (
