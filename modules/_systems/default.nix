@@ -7,7 +7,7 @@
       ./features/niri.nix
       ./features/input-remap.nix
       ./features/virtualisation.nix
-      ./features/nothingless.nix
+      # ./features/nothingless.nix
       ./features/remote-access.nix
       ./features/syncthing.nix
       ./features/voxtype.nix

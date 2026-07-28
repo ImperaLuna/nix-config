@@ -33,107 +33,6 @@
         "type": "github"
       }
     },
-    "caelestia-cli": {
-      "inputs": {
-        "caelestia-shell": [
-          "caelestia-shell"
-        ],
-        "nixpkgs": [
-          "caelestia-shell",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1784950224,
-        "narHash": "sha256-kAblkqaFzElLUXjA1Mh/FAWW2643bF2ZVINJjLx/MA0=",
-        "owner": "caelestia-dots",
-        "repo": "cli",
-        "rev": "c788ba3ab83767b0fd44dcb323875121c313e674",
-        "type": "github"
-      },
-      "original": {
-        "owner": "caelestia-dots",
-        "repo": "cli",
-        "type": "github"
-      }
-    },
-    "caelestia-shell": {
-      "inputs": {
-        "caelestia-cli": "caelestia-cli",
-        "m3shapes": "m3shapes",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "quickshell": "quickshell"
-      },
-      "locked": {
-        "lastModified": 1785071012,
-        "narHash": "sha256-LtkywDbgL6555N2NSopGqdKWi9RIEXAEhmRgi6igMsM=",
-        "owner": "caelestia-dots",
-        "repo": "shell",
-        "rev": "71df36cd7d8ad4b776ed23675eba96654905326e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "caelestia-dots",
-        "repo": "shell",
-        "type": "github"
-      }
-    },
-    "dank-material-shell": {
-      "inputs": {
-        "dank-qml-common": "dank-qml-common",
-        "flake-compat": "flake-compat",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785122542,
-        "narHash": "sha256-TUcncRKPtyRIA+usG1pB6w8TiLlLG2sfTZaHF9RLYmA=",
-        "owner": "AvengeMedia",
-        "repo": "DankMaterialShell",
-        "rev": "c67b1850765c0263e87973af8d81f54b89dfd1b4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AvengeMedia",
-        "repo": "DankMaterialShell",
-        "type": "github"
-      }
-    },
-    "dank-qml-common": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1785121997,
-        "narHash": "sha256-/MslqFCpjxws8DZqipEKCCTBa0m/SCV3+v1NRT6EuvQ=",
-        "owner": "AvengeMedia",
-        "repo": "dank-qml-common",
-        "rev": "7cc4564e5903a2955fe7da76969f20252cacf9bf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AvengeMedia",
-        "repo": "dank-qml-common",
-        "type": "github"
-      }
-    },
-    "flake-compat": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1767039857,
-        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
-        "owner": "NixOS",
-        "repo": "flake-compat",
-        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -290,23 +189,6 @@
         "type": "github"
       }
     },
-    "m3shapes": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1781017666,
-        "narHash": "sha256-kfHyzZaPHgqZML48OA+5JwBOsLdQJ2ci/aGPShvUB4Y=",
-        "owner": "soramanew",
-        "repo": "m3shapes",
-        "rev": "bdc327b29f95394a732baf3c9b19658ba23755b6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "soramanew",
-        "repo": "m3shapes",
-        "rev": "bdc327b29f95394a732baf3c9b19658ba23755b6",
-        "type": "github"
-      }
-    },
     "nix-wrapper-modules": {
       "inputs": {
         "nixpkgs": [
@@ -415,7 +297,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "quickshell": "quickshell_2"
+        "quickshell": "quickshell"
       },
       "locked": {
         "lastModified": 1783283799,
@@ -432,27 +314,6 @@
       }
     },
     "quickshell": {
-      "inputs": {
-        "nixpkgs": [
-          "caelestia-shell",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1784799776,
-        "narHash": "sha256-6AM0doj8hSNav9qkX4dOHOp1LSjegdQ+VmzDz9MnWAs=",
-        "ref": "refs/heads/master",
-        "rev": "10b439fc6e3fd65c15fe1c486271b31da05ed023",
-        "revCount": 833,
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      }
-    },
-    "quickshell_2": {
       "inputs": {
         "nixpkgs": [
           "nova",
@@ -492,8 +353,6 @@
     },
     "root": {
       "inputs": {
-        "caelestia-shell": "caelestia-shell",
-        "dank-material-shell": "dank-material-shell",
         "flake-parts": "flake-parts",
         "herdr": "herdr",
         "home-manager": "home-manager",

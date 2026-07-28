@@ -10,7 +10,7 @@
       config.flake.modules.homeManager.desktop-feature-hyprland
       config.flake.modules.homeManager.desktop-feature-niri
       config.flake.modules.homeManager.desktop-feature-nova
-      config.flake.modules.homeManager.desktop-feature-nothingless
+      # config.flake.modules.homeManager.desktop-feature-nothingless
       config.flake.modules.homeManager.desktop-feature-qylock
       config.flake.modules.homeManager.desktop-feature-ghostty
       config.flake.modules.homeManager.desktop-feature-obsidian
