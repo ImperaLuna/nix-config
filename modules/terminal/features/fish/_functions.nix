@@ -36,39 +36,59 @@ let theme = import ../../../_lib/theme.nix; in
 
       test -d "$base_dir"; or return
 
-      set -l candidates
-      if type -q fd
-          set candidates (
-              fd --max-depth 1 --type d "^$prefix" "$base_dir" 2>/dev/null \
-                  | string replace --regex '^\\./' ""
-          )
-      else
-          for dir in (find "$base_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
-              set -l trimmed (string replace --regex '^\\./' "" -- "$dir")
-              set -l name (path basename -- "$trimmed")
-              string match --quiet -- "$prefix*" -- "$name"; and set -a candidates "$trimmed"
+      while true
+          set -l candidates
+          if type -q fd
+              set candidates (
+                  fd --max-depth 1 --type d "^$prefix" "$base_dir" 2>/dev/null \
+                      | string replace --regex '^\\./' ""
+              )
+          else
+              for dir in (find "$base_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+                  set -l trimmed (string replace --regex '^\\./' "" -- "$dir")
+                  set -l name (path basename -- "$trimmed")
+                  string match --quiet -- "$prefix*" -- "$name"; and set -a candidates "$trimmed"
+              end
           end
-      end
 
-      if test (count $candidates) -eq 0
-          commandline --function complete
-          return
-      end
+          if test (count $candidates) -eq 0
+              commandline --function complete
+              return
+          end
 
-      set -l selected (
-          printf '%s\n' $candidates \
-              | fzf \
-                  --select-1 \
-                  --exit-0 \
-                  --reverse \
-                  --ansi \
-                  --query "$prefix" \
-                  --preview 'eza --tree --level=2 --color=always --icons=always {}'
-      )
+          set -l result (
+              printf '%s\n' $candidates \
+                  | fzf \
+                      --expect=left,right \
+                      --reverse \
+                      --ansi \
+                      --query "$prefix" \
+                      --header '←/→ navigate  ENTER select  ESC cancel' \
+                      --preview 'eza --tree --level=2 --color=always --icons=always {}'
+          )
+          test (count $result) -gt 0; or return
 
-      if test -n "$selected"
-          commandline --replace --current-token -- "$selected"
-          commandline --function repaint
+          set -l key enter
+          set -l selected $result[1]
+          if test (count $result) -gt 1
+              set key $result[1]
+              set selected $result[2]
+          end
+
+          switch "$key"
+              case right
+                  if test -d "$selected"
+                      set base_dir "$selected"
+                      set prefix
+                  end
+              case left
+                  set base_dir (path dirname -- "$base_dir")
+                  set prefix
+              case enter
+                  commandline --replace --current-token -- "$selected"
+                  commandline --function repaint
+                  return
+          end
       end
     '';
     _fifc_source_cd_directories = ''
