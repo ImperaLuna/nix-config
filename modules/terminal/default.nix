@@ -26,6 +26,7 @@
       config.flake.modules.homeManager.terminal-feature-delta
       config.flake.modules.homeManager.terminal-feature-gh
       config.flake.modules.homeManager.terminal-feature-lazygit
+      config.flake.modules.homeManager.terminal-feature-tuicr
 
       # Terminal apps and monitoring
       config.flake.modules.homeManager.terminal-feature-btop
