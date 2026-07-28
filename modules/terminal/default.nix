@@ -25,6 +25,7 @@
       # Git and diffs
       config.flake.modules.homeManager.terminal-feature-delta
       config.flake.modules.homeManager.terminal-feature-gh
+      config.flake.modules.homeManager.terminal-feature-gh-dash
       config.flake.modules.homeManager.terminal-feature-lazygit
       config.flake.modules.homeManager.terminal-feature-tuicr
 
