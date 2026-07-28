@@ -4,6 +4,11 @@ let
   theme = import ../../../_lib/theme.nix;
 in
 {
+  programs.zsh.history = {
+    ignoreAllDups = true;
+    saveNoDups = true;
+  };
+
   programs.zsh.initContent = ''
     _fzf_history_delete() {
       emulate -L zsh
