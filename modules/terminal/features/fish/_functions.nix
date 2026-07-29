@@ -78,18 +78,18 @@ let theme = import ../../../_lib/theme.nix; in
           switch "$key"
               case right
                   if test "$selected" = "$base_dir"
-                      return
+                      continue
                   end
 
-                  test -d "$selected"; or return
+                  test -d "$selected"; or continue
                   set -l child_dir (command find "$selected" -mindepth 1 -maxdepth 1 -type d -print -quit 2>/dev/null)
-                  test -n "$child_dir"; or return
+                  test -n "$child_dir"; or continue
 
                   set base_dir "$selected"
                   set prefix
               case left
                   set -l parent_dir (path dirname -- "$base_dir")
-                  test "$parent_dir" = "$base_dir"; and return
+                  test "$parent_dir" = "$base_dir"; and continue
 
                   set base_dir "$parent_dir"
                   set prefix

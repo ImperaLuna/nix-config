@@ -140,16 +140,16 @@ in
             [[ "$selected_path" == "~"* ]] && selected_path="$HOME''${selected_path#\~}"
             if [[ -d "$selected_path" && "$selected_path" != "$base_dir" ]]; then
               child_dirs=( "$selected_path"/*(N/) )
-              (( ''${#child_dirs} )) || return 0
+              (( ''${#child_dirs} )) || continue
               base_dir="$selected_path"
               prefix=""
             else
-              return 0
+              continue
             fi
             ;;
           left)
             parent_dir="''${base_dir:h}"
-            [[ "$parent_dir" == "$base_dir" ]] && return 0
+            [[ "$parent_dir" == "$base_dir" ]] && continue
             base_dir="$parent_dir"
             prefix=""
             ;;
