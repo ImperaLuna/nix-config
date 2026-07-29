@@ -43,6 +43,7 @@ in
 
       while true
           set -l candidates
+          set -l at_end 0
           if type -q fd
               set candidates (
                   fd --max-depth 1 --type d "^$prefix" "$base_dir" 2>/dev/null \
@@ -56,10 +57,20 @@ in
               end
           end
 
-          if test (count $candidates) -eq 0
+          if test (count $candidates) -gt 0
+              set at_end 0
+          else
               set candidates "$base_dir"
+              set at_end 1
           end
 
+          set -l fzf_bindings
+          if test $at_end -eq 1
+              set -a fzf_bindings --bind 'right:ignore'
+          end
+          if test "$base_dir" = "."; or test "$base_dir" = "/"
+              set -a fzf_bindings --bind 'left:ignore'
+          end
           set -l result (
               printf '%s\n' $candidates \
                   | fzf \
@@ -68,7 +79,8 @@ in
                       --ansi \
                       --query "$prefix" \
                       --header '←/→ navigate  ENTER select  ESC cancel' \
-                      --preview 'eza --tree --level=2 --color=always --icons=always {}'
+                      --preview 'eza --tree --level=2 --color=always --icons=always {}' \
+                      $fzf_bindings
           )
           test (count $result) -gt 0; or return
 

@@ -17,22 +17,33 @@ in
         return 0
       fi
       local token="$1"
-      local selected
-      local -a candidates
+      local selected mode_file
+      local -a candidates fzf_args
 
       candidates=( ''${(k)commands} ''${(k)builtins} ''${(k)aliases} )
       typeset -U candidates
+      mode_file="$(mktemp)"
+      print -r -- tldr > "$mode_file"
+      local -x FZF_COMMAND_HELP_MODE_FILE="$mode_file"
+
+      fzf_args=(
+        --query="$token"
+        --exact
+        --with-shell='bash -c'
+        --preview='if [ "$(cat "$FZF_COMMAND_HELP_MODE_FILE" 2>/dev/null)" = tldr ]; then page="$(${tldr} {} 2>/dev/null)"; if [ -n "$page" ]; then printf "%s\n" "$page" | ${bat} --paging=never --language=markdown; else ${man} {} 2>/dev/null | ${bat} --paging=never --language=man; fi; else ${man} {} 2>/dev/null | ${bat} --paging=never --language=man; fi'
+        --preview-window='right:60%'
+        --preview-label=' TLDR '
+        --header='left: TLDR  right: MAN'
+        --prompt='Commands> '
+        --bind='left:execute-silent(printf "tldr\n" > "$FZF_COMMAND_HELP_MODE_FILE")+change-preview-label( TLDR )+refresh-preview'
+        --bind='right:execute-silent(printf "man\n" > "$FZF_COMMAND_HELP_MODE_FILE")+change-preview-label( MAN )+refresh-preview'
+      )
+
       selected="$(
         print -rl -- $candidates |
-          command ${fzf} \
-            --query="$token" \
-            --exact \
-            --with-shell='bash -c' \
-            --preview='page="$(${tldr} {} 2>/dev/null)"; if [ -n "$page" ]; then printf "%s\n" "$page" | ${bat} --paging=never --language=markdown; else ${man} {} 2>/dev/null | ${bat} --paging=never --language=man; fi' \
-            --preview-window='right:60%' \
-            --header='ENTER: insert command  preview: TLDR, then MAN' \
-            --prompt='Commands> '
+          command ${fzf} $fzf_args
       )"
+      rm -f "$mode_file"
 
       [[ -n "$selected" ]] || return 0
       _zsh_replace_current_token "$selected"
@@ -62,7 +73,8 @@ in
       local path="$token"
       local base_dir prefix
       local out key selected selected_path
-      local -a candidates display_candidates child_dirs
+      local -i at_end
+      local -a candidates display_candidates child_dirs fzf_args
 
       if [[ "$path" == "~" || "$path" == "~/"* ]]; then
         path="$HOME''${path#\~}"
@@ -86,7 +98,12 @@ in
         else
           candidates=( "$base_dir"/*(N/) )
         fi
-        (( ''${#candidates} )) || candidates=("$base_dir")
+        if (( ''${#candidates} )); then
+          at_end=0
+        else
+          candidates=("$base_dir")
+          at_end=1
+        fi
 
         display_candidates=()
         for candidate in "''${candidates[@]}"; do
@@ -96,15 +113,20 @@ in
           display_candidates+=("$display")
         done
 
+        fzf_args=(
+          --expect=left,right
+          --reverse
+          --query="$prefix"
+          --header='←/→ navigate  ENTER insert  ESC cancel'
+          --preview='${eza} --tree --level=2 --color=always --icons=always -- {}'
+          --preview-window='right:60%'
+        )
+        (( at_end )) && fzf_args+=(--bind 'right:ignore')
+        [[ "$base_dir" == "." || "$base_dir" == "/" ]] && fzf_args+=(--bind 'left:ignore')
+
         out="$(
           print -rl -- "''${display_candidates[@]}" |
-            command ${fzf} \
-              --expect=left,right \
-              --reverse \
-              --query="$prefix" \
-              --header='←/→ navigate  ENTER insert  ESC cancel' \
-              --preview='${eza} --tree --level=2 --color=always --icons=always -- {}' \
-              --preview-window='right:60%'
+            command ${fzf} $fzf_args
         )"
         [[ -n "$out" ]] || return 0
 
