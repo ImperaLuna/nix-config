@@ -2,6 +2,20 @@
 
 let
   theme = import ../../../_lib/theme.nix;
+  atuin = pkgs.atuin.overrideAttrs (_: rec {
+    version = "18.18.0";
+    src = pkgs.fetchFromGitHub {
+      owner = "atuinsh";
+      repo = "atuin";
+      tag = "v18.18.0";
+      hash = "sha256-o20MwzWItvKcUIwrfxY60v2jqLnqLRbQ9lIevQWgVPI=";
+    };
+    cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+      pname = "atuin";
+      inherit version src;
+      hash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
+    };
+  });
 in
 {
   xdg.configFile."atuin/themes/carbonfox.toml".text = ''
@@ -10,19 +24,19 @@ in
     parent = "default"
 
     [colors]
-    AlertInfo = "${theme.info}"
+    AlertInfo = "${theme.secondary}"
     AlertWarn = "${theme.warning}"
     AlertError = "${theme.error}"
     Annotation = "${theme.fgDim}"
     Base = "${theme.fg}"
-    Guidance = "${theme.info}"
+    Guidance = "${theme.secondary}"
     Important = "${theme.primary}"
     Title = "${theme.primary}"
     Muted = "${theme.fgDim}"
     SyntaxCommand = "${theme.primary}"
     SyntaxFlag = "${theme.success}"
     SyntaxString = "${theme.warning}"
-    SyntaxVariable = "${theme.info}"
+    SyntaxVariable = "${theme.secondary}"
     SyntaxOperator = "${theme.primary}"
     SyntaxComment = "${theme.fgDim}"
   '';
@@ -32,16 +46,7 @@ in
     enable = true;
     enableZshIntegration = true;
     # Remove this override once nixpkgs provides Atuin 18.18 or newer.
-    package = pkgs.atuin.overrideAttrs (_: {
-      version = "18.18.0";
-      src = pkgs.fetchFromGitHub {
-        owner = "atuinsh";
-        repo = "atuin";
-        tag = "v18.18.0";
-        hash = "sha256-o20MwzWItvKcUIwrfxY60v2jqLnqLRbQ9lIevQWgVPI=";
-      };
-      cargoHash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
-    });
+    package = atuin;
 
     settings = {
       theme = {
