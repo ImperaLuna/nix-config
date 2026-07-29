@@ -143,6 +143,8 @@ binds {
 
     Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
     Mod+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+    Mod+WheelScrollRight cooldown-ms=100 { focus-column-right; }
+    Mod+WheelScrollLeft  cooldown-ms=100 { focus-column-left; }
     Alt+WheelScrollDown cooldown-ms=100 { focus-column-right; }
     Alt+WheelScrollUp   cooldown-ms=100 { focus-column-left; }
 
