@@ -78,13 +78,6 @@ in
       set -gx fzf_preview_dir_cmd ${eza} --tree --level=2 --icons=always --color=always
       set fzf_diff_highlighter delta --paging=never --width=100
       set fzf_history_time_format %d-%m-%y
-      set -gx FZF_DEFAULT_OPTS "\
-      --layout=reverse \
-      --color=bg:${theme.bg},bg+:${theme.primary},spinner:${theme.info},hl:${theme.primary} \
-      --color=fg:${theme.fg},fg+:${theme.bg},header:${theme.primary},info:${theme.fg},pointer:${theme.bg} \
-      --color=marker:${theme.bg},prompt:${theme.primary},hl+:${theme.bg} \
-      --color=selected-bg:${theme.primary} \
-      --color=border:${theme.bgAlt},label:${theme.fg}"
 
       set -g fish_color_normal ${builtins.substring 1 6 theme.fg}
       set -g fish_color_command ${builtins.substring 1 6 theme.primary}

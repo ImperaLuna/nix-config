@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+  theme = import ../../../_lib/theme.nix;
   fzf = "${pkgs.fzf}/bin/fzf";
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
@@ -29,6 +30,8 @@ in
       fzf_args=(
         --query="$token"
         --exact
+        --color='prompt:${theme.primary},header:${theme.secondary},border:${theme.primary},label:${theme.primary}'
+        --ansi
         --with-shell='bash -c'
         --preview='if [ "$(cat "$FZF_COMMAND_HELP_MODE_FILE" 2>/dev/null)" = tldr ]; then page="$(${tldr} {} 2>/dev/null)"; if [ -n "$page" ]; then printf "%s\n" "$page" | ${bat} --paging=never --language=markdown; else ${man} {} 2>/dev/null | ${bat} --paging=never --language=man; fi; else ${man} {} 2>/dev/null | ${bat} --paging=never --language=man; fi'
         --preview-window='right:60%'

@@ -244,6 +244,7 @@ browse() {
       fzf \
         "${selection_args[@]}" \
         --ansi \
+        --with-shell="$BASH -c" \
         --delimiter=$'\t' \
         --with-nth=2 \
         --accept-nth=1 \
