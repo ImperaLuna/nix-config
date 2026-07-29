@@ -116,7 +116,7 @@ in
       elif [[ "$line" =~ '^[[:space:]]*(${pathBrowser.commandPattern})([[:space:]]|$)' ]]; then
         _zsh_path_menu paths "$token"
       else
-        zle .expand-or-complete
+        zle fzf-tab-complete
       fi
     }
 
