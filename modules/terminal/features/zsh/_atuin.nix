@@ -60,7 +60,7 @@ in
         name = "carbonfox";
       };
       auto_sync = false;
-      store_failed = true;
+      store_failed = false;
       search_mode = "fuzzy";
       filter_mode = "global";
       filter_mode_shell_up_key_binding = "directory";

@@ -205,5 +205,13 @@ in
 
       env HOME_MANAGER_BACKUP_EXT=hm-backup HOME_MANAGER_BACKUP_OVERWRITE=1 "$activationPkg/activate"
     }
+
+    function ssh() {
+      if [[ "$TERM" == "xterm-ghostty" ]]; then
+        env TERM=xterm-256color ssh "$@"
+      else
+        command ssh "$@"
+      fi
+    }
   '';
 }
