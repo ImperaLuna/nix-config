@@ -27,7 +27,7 @@ in
     [colors]
     AlertInfo = "${theme.secondary}"
     AlertWarn = "${theme.warning}"
-    AlertError = "${theme.error}"
+    AlertError = "${theme.secondary}"
     Annotation = "${theme.fgDim}"
     Base = "${theme.fg}"
     Guidance = "${theme.secondary}"
