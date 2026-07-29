@@ -28,6 +28,10 @@
 
     _zsh_command_help_menu() {
       emulate -L zsh
+      if (( ! $+commands[fzf] )); then
+        zle .expand-or-complete
+        return 0
+      fi
       local token="$1"
       local selected
       local -a candidates
@@ -63,6 +67,10 @@
 
     _zsh_cd_menu() {
       emulate -L zsh
+      if (( ! $+commands[fzf] )); then
+        zle .expand-or-complete
+        return 0
+      fi
       setopt localoptions nullglob
 
       local token="$1"
