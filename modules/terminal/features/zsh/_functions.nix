@@ -1,6 +1,7 @@
 { pkgs, ... }:
 let
   fzf = "${pkgs.fzf}/bin/fzf";
+  eza = "${pkgs.eza}/bin/eza";
 in
 
 {
@@ -80,8 +81,7 @@ in
       local path="$token"
       local base_dir prefix
       local out key selected selected_path
-      local candidate display
-      local -a candidates display_candidates
+      local -a candidates display_candidates child_dirs
 
       if [[ "$path" == "~" || "$path" == "~/"* ]]; then
         path="$HOME''${path#\~}"
@@ -94,8 +94,8 @@ in
         base_dir="''${path:h}"
         prefix="''${path:t}"
       fi
-
       [[ -n "$base_dir" ]] || base_dir=.
+      [[ "$base_dir" != "/" ]] && base_dir="''${base_dir%/}"
       [[ -d "$base_dir" ]] || return 0
 
       while true; do
@@ -122,7 +122,7 @@ in
               --reverse \
               --query="$prefix" \
               --header='←/→ navigate  ENTER insert  ESC cancel' \
-              --preview='eza --tree --level=2 --color=always --icons=always -- {}' \
+              --preview='${eza} --tree --level=2 --color=always --icons=always -- {}' \
               --preview-window='right:60%'
         )"
         [[ -n "$out" ]] || return 0
@@ -134,19 +134,23 @@ in
           selected="$out"
         fi
         [[ -n "$selected" ]] || return 0
-
         case "$key" in
           right)
             selected_path="$selected"
             [[ "$selected_path" == "~"* ]] && selected_path="$HOME''${selected_path#\~}"
-            if [[ -d "$selected_path" ]]; then
+            if [[ -d "$selected_path" && "$selected_path" != "$base_dir" ]]; then
+              child_dirs=( "$selected_path"/*(N/) )
+              (( ''${#child_dirs} )) || return 0
               base_dir="$selected_path"
               prefix=""
+            else
+              return 0
             fi
             ;;
           left)
-            base_dir="''${base_dir:h}"
-            [[ -n "$base_dir" ]] || base_dir=.
+            parent_dir="''${base_dir:h}"
+            [[ "$parent_dir" == "$base_dir" ]] && return 0
+            base_dir="$parent_dir"
             prefix=""
             ;;
           *)
