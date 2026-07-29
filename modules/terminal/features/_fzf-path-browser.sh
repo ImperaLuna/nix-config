@@ -7,31 +7,44 @@ find_entries() {
   local browse_mode=$2
 
   if [[ $browse_mode == directories ]]; then
-    find "$directory" -mindepth 1 -maxdepth 1 -type d ! -name '.*' -print0
+    find "$directory" -mindepth 1 -maxdepth 1 -xtype d ! -name '.*' -print0 | sort -z
   else
-    find "$directory" -mindepth 1 -maxdepth 1 ! -name '.*' -print0
+    find "$directory" -mindepth 1 -maxdepth 1 -xtype d ! -name '.*' -print0 | sort -z
+    find "$directory" -mindepth 1 -maxdepth 1 ! -xtype d ! -name '.*' -print0 | sort -z
   fi
 }
 
 list_entries() {
   local state_dir=$1
   local base browse_mode candidate name
-  local found=0
+  local index
+  local -a candidates names displays
 
   base=$(<"$state_dir/base")
   browse_mode=$(<"$state_dir/mode")
   while IFS= read -r -d '' candidate; do
-    found=1
-    name=${candidate##*/}
-    [[ -d $candidate ]] && name+=/
-    printf '%s\t%s\n' "$candidate" "$name"
-  done < <(find_entries "$base" "$browse_mode" | sort -z)
+    candidates+=("$candidate")
+    names+=("${candidate##*/}")
+  done < <(find_entries "$base" "$browse_mode")
 
-  if (( ! found )); then
+  if (( ${#candidates[@]} == 0 )); then
     name=${base##*/}
     [[ -n $name ]] || name=/
     printf '%s\t%s/\n' "$base" "$name"
+    return
   fi
+
+  mapfile -t displays < <(
+    cd -- "$base"
+    eza --oneline --list-dirs --sort=none --color=always --icons=always --classify=always -- "${names[@]}"
+  )
+  if (( ${#displays[@]} != ${#candidates[@]} )); then
+    displays=("${names[@]}")
+  fi
+
+  for ((index = 0; index < ${#candidates[@]}; index++)); do
+    printf '%s\t%s\n' "${candidates[index]}" "${displays[index]}"
+  done
 }
 
 has_browsable_entry() {
@@ -58,7 +71,7 @@ entry_position() {
       printf '%d\n' "$position"
       return
     fi
-  done < <(find_entries "$directory" "$browse_mode" | sort -z)
+  done < <(find_entries "$directory" "$browse_mode")
 
   printf '1\n'
 }
@@ -230,6 +243,7 @@ browse() {
     "$BASH" "$script_path" list "$state_dir" |
       fzf \
         "${selection_args[@]}" \
+        --ansi \
         --delimiter=$'\t' \
         --with-nth=2 \
         --accept-nth=1 \
