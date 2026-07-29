@@ -29,13 +29,31 @@ has_child_directory() {
   [[ -n $child ]]
 }
 
+directory_position() {
+  local directory=$1
+  local target=$2
+  local candidate
+  local position=0
+
+  while IFS= read -r -d '' candidate; do
+    ((position += 1))
+    if [[ $candidate == "$target" ]]; then
+      printf '%d\n' "$position"
+      return
+    fi
+  done < <(find "$directory" -mindepth 1 -maxdepth 1 -type d ! -name '.*' -print0 | sort -z)
+
+  printf '1\n'
+}
+
 reload_action() {
   local state_dir=$1
   local shell_path=$2
   local script_path=$3
+  local position=$4
 
-  printf 'change-query()+reload-sync(%s %s list %s)+wait+first+transform-list-label(%s %s label %s)\n' \
-    "$shell_path" "$script_path" "$state_dir" "$shell_path" "$script_path" "$state_dir"
+  printf 'change-query()+reload-sync(%s %s list %s)+wait+pos(%d)+transform-list-label(%s %s label %s)\n' \
+    "$shell_path" "$script_path" "$state_dir" "$position" "$shell_path" "$script_path" "$state_dir"
 }
 
 navigate_right() {
@@ -51,12 +69,12 @@ navigate_right() {
   fi
 
   printf '%s\n' "$selected" > "$state_dir/base"
-  reload_action "$state_dir" "$BASH" "$script_path"
+  reload_action "$state_dir" "$BASH" "$script_path" 1
 }
 
 navigate_left() {
   local state_dir=$1
-  local base parent
+  local base parent position
 
   base=$(<"$state_dir/base")
   if [[ $base == / ]]; then
@@ -65,8 +83,9 @@ navigate_left() {
   fi
 
   parent=$(dirname -- "$base")
+  position=$(directory_position "$parent" "$base")
   printf '%s\n' "$parent" > "$state_dir/base"
-  reload_action "$state_dir" "$BASH" "$script_path"
+  reload_action "$state_dir" "$BASH" "$script_path" "$position"
 }
 
 print_label() {
