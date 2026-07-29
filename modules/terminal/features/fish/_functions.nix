@@ -1,5 +1,10 @@
-{ ... }:
-let theme = import ../../../_lib/theme.nix; in
+{ pkgs, ... }:
+let
+  theme = import ../../../_lib/theme.nix;
+  tldr = "${pkgs.tealdeer}/bin/tldr";
+  bat = "${pkgs.bat}/bin/bat";
+  man = "${pkgs.man}/bin/man";
+in
 
 {
   programs.fish.functions = {
@@ -188,29 +193,6 @@ let theme = import ../../../_lib/theme.nix; in
 
       commandline --function repaint
     '';
-    _fzf_command_help_preview = ''
-      set -l cmd $argv[1]
-      set -l mode tldr
-
-      if set -q FZF_COMMAND_HELP_MODE_FILE; and test -f "$FZF_COMMAND_HELP_MODE_FILE"
-          set mode (string trim < "$FZF_COMMAND_HELP_MODE_FILE")
-      end
-
-      if test "$mode" = tldr
-          if type -q tldr
-              tldr "$cmd" 2>/dev/null | bat --paging=never --language=markdown
-              if test $pipestatus[1] -eq 0
-                  return 0
-              end
-          end
-      end
-
-      if type -q bat
-          man "$cmd" 2>/dev/null | bat --paging=never --language=man
-      else
-          man "$cmd" 2>/dev/null
-      end
-    '';
     _fzf_search_commands_tldr = ''
       set -f token (commandline --current-token)
       set -lx FZF_COMMAND_HELP_MODE_FILE (mktemp)
@@ -224,7 +206,8 @@ let theme = import ../../../_lib/theme.nix; in
               --delimiter '\t' \
               --nth '1' \
               --with-nth '1' \
-              --preview '_fzf_command_help_preview {1}' \
+              --with-shell 'bash -c' \
+              --preview 'if [ "$(cat "$FZF_COMMAND_HELP_MODE_FILE" 2>/dev/null)" = tldr ]; then page="$(${tldr} {1} 2>/dev/null)"; if [ -n "$page" ]; then printf "%s\n" "$page" | ${bat} --paging=never --language=markdown; else ${man} {1} 2>/dev/null | ${bat} --paging=never --language=man; fi; else ${man} {1} 2>/dev/null | ${bat} --paging=never --language=man; fi' \
               --preview-window 'right:60%' \
               --preview-label ' TLDR ' \
               --prompt "Commands> " \

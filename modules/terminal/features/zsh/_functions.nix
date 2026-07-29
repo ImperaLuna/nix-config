@@ -2,33 +2,13 @@
 let
   fzf = "${pkgs.fzf}/bin/fzf";
   eza = "${pkgs.eza}/bin/eza";
+  tldr = "${pkgs.tealdeer}/bin/tldr";
+  bat = "${pkgs.bat}/bin/bat";
+  man = "${pkgs.man}/bin/man";
 in
 
 {
   programs.zsh.initContent = ''
-    _zsh_command_help_preview() {
-      emulate -L zsh
-      local cmd="$1"
-      local page
-
-      if (( $+commands[tldr] )); then
-        page="$(command tldr "$cmd" 2>/dev/null)"
-        if [[ -n "$page" ]]; then
-          if (( $+commands[bat] )); then
-            print -r -- "$page" | command bat --paging=never --language=markdown
-          else
-            print -r -- "$page"
-          fi
-          return 0
-        fi
-      fi
-
-      if (( $+commands[bat] )); then
-        command man "$cmd" 2>/dev/null | command bat --paging=never --language=man
-      else
-        command man "$cmd" 2>/dev/null
-      fi
-    }
 
     _zsh_command_help_menu() {
       emulate -L zsh
@@ -47,7 +27,8 @@ in
           command ${fzf} \
             --query="$token" \
             --exact \
-            --preview='_zsh_command_help_preview {}' \
+            --with-shell='bash -c' \
+            --preview='page="$(${tldr} {} 2>/dev/null)"; if [ -n "$page" ]; then printf "%s\n" "$page" | ${bat} --paging=never --language=markdown; else ${man} {} 2>/dev/null | ${bat} --paging=never --language=man; fi' \
             --preview-window='right:60%' \
             --header='ENTER: insert command  preview: TLDR, then MAN' \
             --prompt='Commands> '
