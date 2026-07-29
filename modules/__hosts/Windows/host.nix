@@ -108,11 +108,6 @@
             fi
           '';
 
-          programs.fish.interactiveShellInit = lib.mkAfter ''
-            # Give WSL time to deliver complete Windows Terminal escape sequences.
-            set -g fish_escape_delay_ms 100
-          '';
-
           programs.fish.shellInit = lib.mkAfter ''
             # WSL imports Windows PATH entries verbatim. Some installers add an
             # executable instead of its parent directory, which makes fish command

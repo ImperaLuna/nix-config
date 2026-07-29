@@ -14,6 +14,12 @@
 
   # fzf-tab must load after compinit and before autosuggestions.
   programs.zsh.initContent = lib.mkOrder 650 ''
+    bindkey -e
+    zmodload zsh/terminfo
+    if [[ -n "''${terminfo[kdch1]}" ]]; then
+      bindkey "''${terminfo[kdch1]}" delete-char
+    fi
+
     source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
   '';
 
