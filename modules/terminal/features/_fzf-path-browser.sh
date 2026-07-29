@@ -237,7 +237,7 @@ browse() {
         --layout=reverse \
         --header="$header" \
         --list-label="$("$BASH" "$script_path" label "$state_dir")" \
-        --preview="bash -c 'if [[ -d \$1 ]]; then eza --tree --level=2 --color=always --icons=always -- \"\$1\"; else bat --color=always --style=numbers --line-range=:500 -- \"\$1\"; fi' _ {1}" \
+        --preview="'$BASH' -c 'if [[ -d \$1 ]]; then eza --tree --level=2 --color=always --icons=always -- \"\$1\"; else bat --color=always --style=numbers --line-range=:500 -- \"\$1\"; fi' _ {1}" \
         --preview-window='right:60%' \
         --bind="right:transform($BASH $script_path right $state_dir {1})" \
         --bind="left:transform($BASH $script_path left $state_dir {1})"
