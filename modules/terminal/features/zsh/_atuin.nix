@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 let
   theme = import ../../../_lib/theme.nix;
@@ -31,6 +31,17 @@ in
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
+    # Remove this override once nixpkgs provides Atuin 18.18 or newer.
+    package = pkgs.atuin.overrideAttrs (_: {
+      version = "18.18.0";
+      src = pkgs.fetchFromGitHub {
+        owner = "atuinsh";
+        repo = "atuin";
+        tag = "v18.18.0";
+        hash = "sha256-o20MwzWItvKcUIwrfxY60v2jqLnqLRbQ9lIevQWgVPI=";
+      };
+      cargoHash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
+    });
 
     settings = {
       theme = {
