@@ -49,6 +49,17 @@ in
       _zsh_replace_current_token "$selected"
       zle redisplay
     }
+    _zsh_command_help_widget() {
+      emulate -L zsh
+      local line="''${BUFFER[1,$CURSOR]}"
+      local token="''${line##*[[:space:]]}"
+      _zsh_command_help_menu "$token"
+    }
+
+    zle -N _zsh_command_help_widget
+    bindkey -M emacs '^_' _zsh_command_help_widget
+    bindkey -M viins '^_' _zsh_command_help_widget 2>/dev/null
+
 
     _zsh_replace_current_token() {
       emulate -L zsh
