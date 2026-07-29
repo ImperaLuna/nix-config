@@ -1,4 +1,7 @@
-{ ... }:
+{ pkgs, ... }:
+let
+  fzf = "${pkgs.fzf}/bin/fzf";
+in
 
 {
   programs.zsh.initContent = ''
@@ -28,7 +31,7 @@
 
     _zsh_command_help_menu() {
       emulate -L zsh
-      if (( ! $+commands[fzf] )); then
+      if [[ ! -x "${fzf}" ]]; then
         zle .expand-or-complete
         return 0
       fi
@@ -40,7 +43,7 @@
       typeset -U candidates
       selected="$(
         print -rl -- $candidates |
-          command fzf \
+          command ${fzf} \
             --query="$token" \
             --exact \
             --preview='_zsh_command_help_preview {}' \
@@ -67,7 +70,7 @@
 
     _zsh_cd_menu() {
       emulate -L zsh
-      if (( ! $+commands[fzf] )); then
+      if [[ ! -x "${fzf}" ]]; then
         zle .expand-or-complete
         return 0
       fi
@@ -114,7 +117,7 @@
 
         out="$(
           print -rl -- "''${display_candidates[@]}" |
-            command fzf \
+            command ${fzf} \
               --expect=left,right \
               --reverse \
               --query="$prefix" \
