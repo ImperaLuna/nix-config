@@ -17,8 +17,8 @@ in
         command = "fg=${theme.primary}";
         alias = "fg=${theme.primary}";
         function = "fg=${theme.secondary}";
-        builtin = "fg=${theme.info}";
-        precommand = "fg=${theme.info}";
+        builtin = "fg=${theme.secondary}";
+        precommand = "fg=${theme.secondary}";
         unknown-token = "fg=${theme.error}";
         reserved-word = "fg=${theme.primary}";
         commandseparator = "fg=${theme.primary}";
@@ -33,10 +33,10 @@ in
         dollar-quoted-argument = "fg=${theme.warning}";
         back-quoted-argument = "fg=${theme.warning}";
         dollar-double-quoted-argument = "fg=${theme.warning}";
-        assign = "fg=${theme.info}";
+        assign = "fg=${theme.secondary}";
         comment = "fg=${theme.fgDim},italic";
-        history-expansion = "fg=${theme.info}";
-        command-substitution = "fg=${theme.info}";
+        history-expansion = "fg=${theme.secondary}";
+        command-substitution = "fg=${theme.secondary}";
       };
     };
   };
