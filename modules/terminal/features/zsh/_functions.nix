@@ -4,7 +4,7 @@ let
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
   man = "${pkgs.man}/bin/man";
-  cdBrowser = import ../_fzf-cd-browser.nix { inherit pkgs; };
+  pathBrowser = import ../_fzf-path-browser.nix { inherit pkgs; };
 in
 
 {
@@ -67,23 +67,29 @@ in
       local token="''${line##*[[:space:]]}"
       local start="''${line%$token}"
       local after="''${BUFFER[$((CURSOR + 1)),-1]}"
+      local replacement
 
-      BUFFER="$start$1$after"
-      CURSOR=$(( ''${#start} + ''${#1} ))
+      case "$1" in
+        "~") replacement='~' ;;
+        "~/"*) replacement="~/''${(q)1[3,-1]}" ;;
+        *) replacement="''${(q)1}" ;;
+      esac
+      BUFFER="$start$replacement$after"
+      CURSOR=$(( ''${#start} + ''${#replacement} ))
     }
 
-    _zsh_cd_menu() {
+    _zsh_path_menu() {
       emulate -L zsh
       local selected
 
-      selected="$(${cdBrowser}/bin/fzf-cd-browser "$1")" || return 0
+      selected="$(${pathBrowser.package}/bin/fzf-path-browser "$1" "$2")" || return 0
       [[ -n "$selected" ]] || return 0
 
       _zsh_replace_current_token "$selected"
       zle redisplay
     }
 
-    _zsh_tab_complete_or_cd_menu() {
+    _zsh_tab_complete_or_path_menu() {
       emulate -L zsh
       local line="''${BUFFER[1,$CURSOR]}"
       local token="''${line##*[[:space:]]}"
@@ -91,15 +97,17 @@ in
       if [[ "$line" != *[[:space:]]* ]]; then
         _zsh_command_help_menu "$token"
       elif [[ "$line" =~ '^[[:space:]]*cd([[:space:]]|$)' ]]; then
-        _zsh_cd_menu "$token"
+        _zsh_path_menu directories "$token"
+      elif [[ "$line" =~ '^[[:space:]]*(${pathBrowser.commandPattern})([[:space:]]|$)' ]]; then
+        _zsh_path_menu paths "$token"
       else
         zle .expand-or-complete
       fi
     }
 
-    zle -N _zsh_tab_complete_or_cd_menu
-    bindkey -M emacs '^I' _zsh_tab_complete_or_cd_menu
-    bindkey -M viins '^I' _zsh_tab_complete_or_cd_menu 2>/dev/null
+    zle -N _zsh_tab_complete_or_path_menu
+    bindkey -M emacs '^I' _zsh_tab_complete_or_path_menu
+    bindkey -M viins '^I' _zsh_tab_complete_or_path_menu 2>/dev/null
     function rebuild() {
       local flakePath
 

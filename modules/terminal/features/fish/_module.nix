@@ -71,7 +71,7 @@ in
 
       for mode in default insert
         bind --erase --preset --mode $mode \t 2>/dev/null
-        bind --mode $mode \t _tab_complete_or_cd_menu
+        bind --mode $mode \t _tab_complete_or_path_menu
         bind --mode $mode ctrl-/ _fzf_search_commands_tldr
       end
 

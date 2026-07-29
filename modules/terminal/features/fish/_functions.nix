@@ -4,7 +4,7 @@ let
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
   man = "${pkgs.man}/bin/man";
-  cdBrowser = import ../_fzf-cd-browser.nix { inherit pkgs; };
+  pathBrowser = import ../_fzf-path-browser.nix { inherit pkgs; };
 in
 
 {
@@ -15,7 +15,7 @@ in
           | uniq \
           | awk -F '\t' '{ print $1 }'
     '';
-    _tab_complete_or_cd_menu = ''
+    _tab_complete_or_path_menu = ''
       set -l line (commandline --cut-at-cursor)
       set -l token (commandline --current-token)
 
@@ -24,15 +24,29 @@ in
           return
       end
 
-      if not string match -qr '^cd(\s|$)' -- "$line"
+      set -l browse_mode
+      if string match -qr '^\s*cd(\s|$)' -- "$line"
+          set browse_mode directories
+      else if string match -qr '^\s*(${pathBrowser.commandPattern})(\s|$)' -- "$line"
+          set browse_mode paths
+      else
           _fifc
           return
       end
 
-      set -l selected (${cdBrowser}/bin/fzf-cd-browser "$token")
+      set -l selected (${pathBrowser.package}/bin/fzf-path-browser "$browse_mode" "$token")
       test -n "$selected"; or return
 
-      commandline --replace --current-token -- "$selected"
+      set -l replacement
+      switch "$selected"
+          case '~'
+              set replacement '~'
+          case '~/*'
+              set replacement "~/"(string escape -- (string sub --start 3 -- "$selected"))
+          case '*'
+              set replacement (string escape -- "$selected")
+      end
+      commandline --replace --current-token -- "$replacement"
       commandline --function repaint
     '';
     _fifc_source_cd_directories = ''
