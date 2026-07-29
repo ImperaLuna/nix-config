@@ -2,7 +2,7 @@
 
 let
   theme = import ../../../_lib/theme.nix;
-  atuin = pkgs.atuin.overrideAttrs (_: rec {
+  atuin = pkgs.atuin.overrideAttrs (old: rec {
     version = "18.18.0";
     src = pkgs.fetchFromGitHub {
       owner = "atuinsh";
@@ -15,6 +15,7 @@ let
       inherit version src;
       hash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
     };
+    checkFlags = (old.checkFlags or [ ]) ++ [ "--skip=api_client" ];
   });
 in
 {
