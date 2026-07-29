@@ -1,10 +1,10 @@
 { pkgs, ... }:
 let
   fzf = "${pkgs.fzf}/bin/fzf";
-  eza = "${pkgs.eza}/bin/eza";
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
   man = "${pkgs.man}/bin/man";
+  cdBrowser = import ../_fzf-cd-browser.nix { inherit pkgs; };
 in
 
 {
@@ -63,109 +63,13 @@ in
 
     _zsh_cd_menu() {
       emulate -L zsh
-      if [[ ! -x "${fzf}" ]]; then
-        zle .expand-or-complete
-        return 0
-      fi
-      setopt localoptions nullglob
+      local selected
 
-      local token="$1"
-      local path="$token"
-      local base_dir prefix
-      local out key selected selected_path
-      local -i at_end
-      local -a candidates display_candidates child_dirs fzf_args
+      selected="$(${cdBrowser}/bin/fzf-cd-browser "$1")" || return 0
+      [[ -n "$selected" ]] || return 0
 
-      if [[ "$path" == "~" || "$path" == "~/"* ]]; then
-        path="$HOME''${path#\~}"
-      fi
-
-      if [[ "$token" == */ || -d "$path" ]]; then
-        base_dir="$path"
-        prefix=""
-      else
-        base_dir="''${path:h}"
-        prefix="''${path:t}"
-      fi
-      [[ -n "$base_dir" ]] || base_dir=.
-      [[ "$base_dir" != "/" ]] && base_dir="''${base_dir%/}"
-      [[ -d "$base_dir" ]] || return 0
-
-      while true; do
-        candidates=()
-        if [[ -n "$prefix" ]]; then
-          candidates=( "$base_dir"/''${~prefix}*(N/) )
-        else
-          candidates=( "$base_dir"/*(N/) )
-        fi
-        if (( ''${#candidates} )); then
-          at_end=0
-        else
-          candidates=("$base_dir")
-          at_end=1
-        fi
-
-        display_candidates=()
-        for candidate in "''${candidates[@]}"; do
-          display="$candidate"
-          [[ "$base_dir" == "." && "$display" == ./* ]] && display="''${display#./}"
-          display="''${display%/}"
-          display_candidates+=("$display")
-        done
-
-        fzf_args=(
-          --expect=left,right
-          --reverse
-          --query="$prefix"
-          --header='←/→ navigate  ENTER insert  ESC cancel'
-          --preview='${eza} --tree --level=2 --color=always --icons=always -- {}'
-          --preview-window='right:60%'
-        )
-        (( at_end )) && fzf_args+=(--bind 'right:ignore')
-        [[ "$base_dir" == "." || "$base_dir" == "/" ]] && fzf_args+=(--bind 'left:ignore')
-
-        out="$(
-          print -rl -- "''${display_candidates[@]}" |
-            command ${fzf} $fzf_args
-        )"
-        [[ -n "$out" ]] || return 0
-
-        key="''${out%%$'\n'*}"
-        if [[ "$out" == *$'\n'* ]]; then
-          selected="''${out#*$'\n'}"
-        else
-          selected="$out"
-        fi
-        [[ -n "$selected" ]] || return 0
-        case "$key" in
-          right)
-            selected_path="$selected"
-            [[ "$selected_path" == "~"* ]] && selected_path="$HOME''${selected_path#\~}"
-            if [[ -d "$selected_path" && "$selected_path" != "$base_dir" ]]; then
-              child_dirs=( "$selected_path"/*(N/) )
-              (( ''${#child_dirs} )) || continue
-              base_dir="$selected_path"
-              prefix=""
-            else
-              continue
-            fi
-            ;;
-          left)
-            parent_dir="''${base_dir:h}"
-            [[ "$parent_dir" == "$base_dir" ]] && continue
-            base_dir="$parent_dir"
-            prefix=""
-            ;;
-          *)
-            if [[ "$token" == "~"* && "$selected" == "$HOME"/* ]]; then
-              selected="~''${selected#$HOME}"
-            fi
-            _zsh_replace_current_token "$selected"
-            zle redisplay
-            return 0
-            ;;
-        esac
-      done
+      _zsh_replace_current_token "$selected"
+      zle redisplay
     }
 
     _zsh_tab_complete_or_cd_menu() {

@@ -4,6 +4,7 @@ let
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
   man = "${pkgs.man}/bin/man";
+  cdBrowser = import ../_fzf-cd-browser.nix { inherit pkgs; };
 in
 
 {
@@ -28,94 +29,11 @@ in
           return
       end
 
-      set -l path (_fifc_expand_tilde "$token")
-      set -l base_dir .
-      set -l prefix
+      set -l selected (${cdBrowser}/bin/fzf-cd-browser "$token")
+      test -n "$selected"; or return
 
-      if string match --quiet -- '*/' "$token"; or test -d "$path"
-          set base_dir "$path"
-      else if test -n "$path"
-          set base_dir (path dirname -- "$path")
-          set prefix (path basename -- "$path")
-      end
-
-      test -d "$base_dir"; or return
-
-      while true
-          set -l candidates
-          set -l at_end 0
-          if type -q fd
-              set candidates (
-                  fd --max-depth 1 --type d "^$prefix" "$base_dir" 2>/dev/null \
-                      | string replace --regex '^\\./' ""
-              )
-          else
-              for dir in (find "$base_dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
-                  set -l trimmed (string replace --regex '^\\./' "" -- "$dir")
-                  set -l name (path basename -- "$trimmed")
-                  string match --quiet -- "$prefix*" -- "$name"; and set -a candidates "$trimmed"
-              end
-          end
-
-          if test (count $candidates) -gt 0
-              set at_end 0
-          else
-              set candidates "$base_dir"
-              set at_end 1
-          end
-
-          set -l fzf_bindings
-          if test $at_end -eq 1
-              set -a fzf_bindings --bind 'right:ignore'
-          end
-          if test "$base_dir" = "."; or test "$base_dir" = "/"
-              set -a fzf_bindings --bind 'left:ignore'
-          end
-          set -l result (
-              printf '%s\n' $candidates \
-                  | fzf \
-                      --expect=left,right \
-                      --reverse \
-                      --ansi \
-                      --query "$prefix" \
-                      --header '←/→ navigate  ENTER select  ESC cancel' \
-                      --preview 'eza --tree --level=2 --color=always --icons=always {}' \
-                      $fzf_bindings
-          )
-          test (count $result) -gt 0; or return
-
-          set -l key enter
-          set -l selected $result[1]
-          if test (count $result) -gt 1
-              set key $result[1]
-              set selected $result[2]
-              test -n "$key"; or set key enter
-          end
-
-          switch "$key"
-              case right
-                  if test "$selected" = "$base_dir"
-                      continue
-                  end
-
-                  test -d "$selected"; or continue
-                  set -l child_dir (command find "$selected" -mindepth 1 -maxdepth 1 -type d -print -quit 2>/dev/null)
-                  test -n "$child_dir"; or continue
-
-                  set base_dir "$selected"
-                  set prefix
-              case left
-                  set -l parent_dir (path dirname -- "$base_dir")
-                  test "$parent_dir" = "$base_dir"; and continue
-
-                  set base_dir "$parent_dir"
-                  set prefix
-              case enter
-                  commandline --replace --current-token -- "$selected"
-                  commandline --function repaint
-                  return
-          end
-      end
+      commandline --replace --current-token -- "$selected"
+      commandline --function repaint
     '';
     _fifc_source_cd_directories = ''
       set -l token (string unescape -- $fifc_token)
