@@ -15,6 +15,12 @@ let
       inherit version src;
       hash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
     };
+    postPatch = (old.postPatch or "") + ''
+      substituteInPlace crates/atuin/src/command/client/search/history_list.rs \
+        --replace-fail \
+        'style = self.theme.as_style(Meaning::AlertError);' \
+        'style = self.theme.as_style(Meaning::AlertInfo);'
+    '';
     checkFlags = (old.checkFlags or [ ]) ++ [ "--skip=api_client" ];
   });
 in
