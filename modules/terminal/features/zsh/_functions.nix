@@ -68,24 +68,39 @@ in
       local start="''${line%$token}"
       local after="''${BUFFER[$((CURSOR + 1)),-1]}"
       local replacement
+      local literal="''${2:-}"
 
-      case "$1" in
-        "~") replacement='~' ;;
-        "~/"*) replacement="~/''${(q)1[3,-1]}" ;;
-        *) replacement="''${(q)1}" ;;
-      esac
+      if [[ "$literal" == literal ]]; then
+        replacement="$1"
+      else
+        case "$1" in
+          "~") replacement='~' ;;
+          "~/"*) replacement="~/''${(q)1[3,-1]}" ;;
+          *) replacement="''${(q)1}" ;;
+        esac
+      fi
       BUFFER="$start$replacement$after"
       CURSOR=$(( ''${#start} + ''${#replacement} ))
     }
 
     _zsh_path_menu() {
       emulate -L zsh
-      local selected
+      local output path replacement
+      local -a selected replacements
 
-      selected="$(${pathBrowser.package}/bin/fzf-path-browser "$1" "$2")" || return 0
-      [[ -n "$selected" ]] || return 0
+      output="$(${pathBrowser.package}/bin/fzf-path-browser "$1" "$2")" || return 0
+      [[ -n "$output" ]] || return 0
+      selected=("''${(@f)output}")
 
-      _zsh_replace_current_token "$selected"
+      for path in "''${selected[@]}"; do
+        case "$path" in
+          "~") replacement='~' ;;
+          "~/"*) replacement="~/''${(q)path[3,-1]}" ;;
+          *) replacement="''${(q)path}" ;;
+        esac
+        replacements+=("$replacement")
+      done
+      _zsh_replace_current_token "''${(j: :)replacements}" literal
       zle redisplay
     }
 

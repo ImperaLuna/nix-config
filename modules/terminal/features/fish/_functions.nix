@@ -35,18 +35,22 @@ in
       end
 
       set -l selected (${pathBrowser.package}/bin/fzf-path-browser "$browse_mode" "$token")
-      test -n "$selected"; or return
+      test (count $selected) -gt 0; or return
 
-      set -l replacement
-      switch "$selected"
-          case '~'
-              set replacement '~'
-          case '~/*'
-              set replacement "~/"(string escape -- (string sub --start 3 -- "$selected"))
-          case '*'
-              set replacement (string escape -- "$selected")
+      set -l replacements
+      for path in $selected
+          set -l replacement
+          switch "$path"
+              case '~'
+                  set replacement '~'
+              case '~/*'
+                  set replacement "~/"(string escape -- (string sub --start 3 -- "$path"))
+              case '*'
+                  set replacement (string escape -- "$path")
+          end
+          set -a replacements "$replacement"
       end
-      commandline --replace --current-token -- "$replacement"
+      commandline --replace --current-token -- (string join ' ' -- $replacements)
       commandline --function repaint
     '';
     _fifc_source_cd_directories = ''

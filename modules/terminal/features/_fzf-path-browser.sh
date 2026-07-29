@@ -191,7 +191,8 @@ format_selection() {
 browse() {
   local browse_mode=$1
   local token=${2-}
-  local path base prefix path_mode state_dir result
+  local path base prefix path_mode state_dir result selected header
+  local -a selection_args
 
   case $token in
     '~') path=$HOME; path_mode=home ;;
@@ -219,15 +220,22 @@ browse() {
   printf '%s\n' "$base" > "$state_dir/base"
   printf '%s\n' "$browse_mode" > "$state_dir/mode"
 
+  header='←/→ navigate  ENTER insert  ESC cancel'
+  if [[ $browse_mode == paths ]]; then
+    header='TAB mark/unmark  ←/→ navigate  ENTER insert  ESC cancel'
+    selection_args=(--multi --marker='✓' --bind='tab:toggle+down')
+  fi
+
   result=$(
     "$BASH" "$script_path" list "$state_dir" |
       fzf \
+        "${selection_args[@]}" \
         --delimiter=$'\t' \
         --with-nth=2 \
         --accept-nth=1 \
         --query="$prefix" \
         --layout=reverse \
-        --header='←/→ navigate  ENTER insert  ESC cancel' \
+        --header="$header" \
         --list-label="$("$BASH" "$script_path" label "$state_dir")" \
         --preview="bash -c 'if [[ -d \$1 ]]; then eza --tree --level=2 --color=always --icons=always -- \"\$1\"; else bat --color=always --style=numbers --line-range=:500 -- \"\$1\"; fi' _ {1}" \
         --preview-window='right:60%' \
@@ -236,7 +244,9 @@ browse() {
   ) || return 0
   [[ -n $result ]] || return 0
 
-  format_selection "$path_mode" "$result"
+  while IFS= read -r selected; do
+    [[ -n $selected ]] && format_selection "$path_mode" "$selected"
+  done <<< "$result"
 }
 
 script_path=$(realpath -- "$0")
