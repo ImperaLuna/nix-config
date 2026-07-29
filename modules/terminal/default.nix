@@ -6,7 +6,6 @@
   flake.modules.homeManager.terminal = {
     imports = [
       # Shell and session
-      config.flake.modules.homeManager.terminal-feature-fish
       config.flake.modules.homeManager.terminal-feature-zsh
       config.flake.modules.homeManager.terminal-feature-starship
       config.flake.modules.homeManager.terminal-feature-zoxide

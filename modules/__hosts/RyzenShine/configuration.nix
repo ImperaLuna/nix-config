@@ -62,7 +62,7 @@ in
     isNormalUser = true;
     description = "Rares Brezeanu";
     extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
 
   # ===================================================================

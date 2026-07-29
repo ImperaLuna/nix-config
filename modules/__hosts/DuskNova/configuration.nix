@@ -134,7 +134,7 @@ in
     isNormalUser = true;
     description = "Rares Brezeanu";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
 
   # ===================================================================
