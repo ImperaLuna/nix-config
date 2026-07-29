@@ -21,6 +21,9 @@
     fi
 
     source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+
+    bindkey -M emacs '^Z' undo
+    bindkey -M viins '^Z' undo
   '';
 
   home.packages = [ pkgs.fzf ];
