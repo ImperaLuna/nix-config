@@ -101,7 +101,7 @@ in
       local line="''${BUFFER[1,$CURSOR]}"
       local token="''${line##*[[:space:]]}"
 
-      if [[ "$line" != *[[:space:]]* ]]; then
+      if [[ "$line" != *[[:space:]]* && "$token" != */* ]]; then
         _zsh_command_help_menu "$token"
       elif [[ "$line" =~ '^[[:space:]]*cd([[:space:]]|$)' ]]; then
         _zsh_path_menu directories "$token"
