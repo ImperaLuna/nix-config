@@ -96,6 +96,7 @@ in
   # DELAY_INIT quirk for SteelSeries Arctis Nova 5X (1038:2253) — 6.18.x regression
   # where the USB audio control interface times out during enumeration.
   boot.kernelParams = [ "usbcore.quirks=1038:2253:0x40" ];
+  boot.extraModprobeConfig = "options kvm_amd nested=1";
 
   # ===================================================================
   # GPU — nvidia proprietary driver

@@ -1,7 +1,10 @@
 { pkgs, ... }:
 
 {
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu.swtpm.enable = true;
+  };
   virtualisation.docker.rootless = {
     enable = true;
     setSocketVariable = true;
