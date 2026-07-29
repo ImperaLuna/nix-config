@@ -7,10 +7,10 @@ find_entries() {
   local browse_mode=$2
 
   if [[ $browse_mode == directories ]]; then
-    find "$directory" -mindepth 1 -maxdepth 1 -xtype d ! -name '.*' -print0 | sort -z
+    find "$directory" -mindepth 1 -maxdepth 1 -xtype d ! -name '.*' -print0 | LC_ALL=C sort -z
   else
-    find "$directory" -mindepth 1 -maxdepth 1 -xtype d ! -name '.*' -print0 | sort -z
-    find "$directory" -mindepth 1 -maxdepth 1 ! -xtype d ! -name '.*' -print0 | sort -z
+    find "$directory" -mindepth 1 -maxdepth 1 -xtype d ! -name '.*' -print0 | LC_ALL=C sort -z
+    find "$directory" -mindepth 1 -maxdepth 1 ! -xtype d ! -name '.*' -print0 | LC_ALL=C sort -z
   fi
 }
 
