@@ -15,6 +15,20 @@ let
       inherit version src;
       hash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
     };
+    postPatch = (old.postPatch or "") + ''
+      substituteInPlace crates/atuin/src/command/client/search/history_list.rs \
+        --replace-fail \
+        '        if self.alternate_highlight && (self.y as usize + self.state.offset == self.state.selected)
+        {
+            style = style.add_modifier(Modifier::REVERSED);
+        }' \
+        '        if self.y as usize + self.state.offset == self.state.selected {
+            style = self
+              .theme
+              .as_style(Meaning::Important)
+              .add_modifier(Modifier::REVERSED);
+        }'
+    '';
     checkFlags = (old.checkFlags or [ ]) ++ [ "--skip=api_client" ];
   });
 in
@@ -31,7 +45,7 @@ in
     Annotation = "${theme.fgDim}"
     Base = "${theme.fg}"
     Guidance = "${theme.secondary}"
-    Important = "${theme.primary}"
+    Important = "${theme.secondary}"
     Title = "${theme.primary}"
     Muted = "${theme.fgDim}"
     SyntaxCommand = "${theme.primary}"
