@@ -199,5 +199,5 @@ binds {
     Mod+Shift+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+E { quit; }
     Ctrl+Alt+Delete { quit; }
-    Mod+Ctrl+Shift+P allow-inhibiting=false { power-off-monitors; }
+    Mod+Ctrl+Shift+P allow-inhibiting=true { power-off-monitors; }
 }
