@@ -109,7 +109,7 @@ browse() {
 
   case $token in
     '~') path=$HOME; mode=home ;;
-    '~/'*) path="$HOME/${token#\~/}"; mode=home ;;
+    \~/*) path="$HOME/${token:2}"; mode=home ;;
     /*) path=$token; mode=absolute ;;
     *) path=$token; mode=relative ;;
   esac
