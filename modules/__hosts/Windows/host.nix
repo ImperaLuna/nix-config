@@ -10,12 +10,6 @@
         let
           windowsTerminalSettings =
             "/mnt/c/Users/rbrezeanu/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json";
-          # WSL binfmt_misc can be unavailable under systemd, which makes direct
-          # Windows .exe launches look like shell scripts. OMP uses powershell.exe
-          # for Windows clipboard reads, so route it through WSL's /init interop.
-          windowsPowershell = pkgs.writeShellScriptBin "powershell.exe" ''
-            exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe "$@"
-          '';
           windowsClipboardCopy = pkgs.writeShellScriptBin "nvim-windows-clipboard-copy" ''
             exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::InputEncoding = [Text.Encoding]::UTF8; Set-Clipboard -Value ([Console]::In.ReadToEnd())'
           '';
@@ -48,7 +42,6 @@
 
           home.packages = [
             pkgs.awscli2
-            windowsPowershell
             windowsClipboardCopy
             windowsClipboardPaste
             pkgs.docker
