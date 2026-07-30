@@ -85,6 +85,9 @@ in
       selected=("''${(@f)output}")
 
       for path in "''${selected[@]}"; do
+        # fzf can accept the query when there is no selected row (for
+        # example immediately after a reload). Never turn that into an empty quoted argument.
+        [[ -n "$path" ]] || continue
         case "$path" in
           "~") replacement='~' ;;
           "~/"*) replacement="~/''${(q)path[3,-1]}" ;;
@@ -92,6 +95,7 @@ in
         esac
         replacements+=("$replacement")
       done
+      (( ''${#replacements[@]} > 0 )) || return 0
       _zsh_replace_current_token "''${(j: :)replacements}" literal
       zle redisplay
     }
