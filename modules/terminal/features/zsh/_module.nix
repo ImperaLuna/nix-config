@@ -22,6 +22,12 @@
 
     source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
 
+    # Include dotfiles in native completion and therefore in fzf-tab's menu.
+    # Unlike GLOB_DOTS, this does not make ordinary globs such as `rm *` match them.
+    zstyle ':completion:*' file-patterns \
+      '%p(D):globbed-files *(D-/):directories' \
+      '*(D):all-files'
+
     bindkey -M emacs '^Z' undo
     bindkey -M viins '^Z' undo
   '';
