@@ -26,7 +26,7 @@
       home.packages = [
         agents.claude-code
         agents.codex
-        agents.pi
+        (agents.pi.override { useBun = false; })
       ];
 
       home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
