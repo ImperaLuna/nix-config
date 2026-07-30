@@ -214,7 +214,11 @@ browse() {
     *) path=$token; path_mode=relative ;;
   esac
 
-  if [[ $token == */ || -d $path ]]; then
+  if [[ $token == . || $token == ./ ]]; then
+    # Keep the dot as the fzf query so `mv .<Tab>` targets hidden entries.
+    base=.
+    prefix=.
+  elif [[ $token == */ || -d $path ]]; then
     base=$path
     prefix=
   elif [[ -n $path ]]; then
