@@ -1,18 +1,12 @@
-# Nix configuration instructions
+# Agent instructions
 
-This repository is `~/nix-config`.
-It supports NixOS machines and non-NixOS systems using Nix as a package manager.
+## Repository workflow
 
-## Nix workflow
-
+- Work directly on `main` unless a branch or worktree is requested.
+- In this repository, commit completed changes because the repository is synchronized across devices.
 - Check for uncommitted `flake.lock` changes before starting and preserve intentional updates.
-- Do not run `nix search`, `nix build`, or `nixos-rebuild`.
-- Suggest rebuild commands for the user to run.
-- For a cheap syntax check, use `nix-instantiate --parse <file> >/dev/null`.
-- Use `nix eval` only for a single scalar option.
-- Keep Nix command output concise.
 
-## Structure
+## Repository structure
 
 The configuration follows `host → role → feature`.
 
@@ -30,9 +24,3 @@ Home Manager modules configure the user environment.
 Features are enabled or disabled in their role's `default.nix`.
 Feature files are discovered by `_lib/import-feature-tree.nix`.
 
-## Commands
-
-```bash
-rebuild   # apply the current NixOS configuration
-upgrade   # update flake inputs and rebuild
-```
