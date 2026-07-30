@@ -76,19 +76,11 @@ in
       efiSupport = true;
       efiInstallAsRemovable = true;
       maxGenerations = 5;
-      # Machine-specific dual-boot convenience entry for this desktop.
-      # Replace or remove on new hosts because EFI partition UUID/path will differ.
+      # Windows EFI partition on the SK hynix SSD.
       extraEntries = ''
-        /Arch Limine
+        /Windows 11
           protocol: efi
-          path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/EFI/limine/limine_x64.efi
-
-        # Example bypass Limine menu:
-        # /Arch
-        #   protocol: linux
-        #   kernel_path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/vmlinuz-linux
-        #   kernel_cmdline: root=PARTUUID=cbad4a8a-99cf-4986-a819-16a605fc58f4 zswap.enabled=0 rootflags=subvol=@ rw rootfstype=btrfs
-        #   module_path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/initramfs-linux.img
+          path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/EFI/Microsoft/Boot/bootmgfw.efi
       '';
     };
   };
