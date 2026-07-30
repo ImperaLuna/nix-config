@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  theme = import ../../../_lib/theme.nix;
+  theme = import ../../../../_lib/theme.nix;
   hex = color: builtins.substring 1 6 color;
 in
 {

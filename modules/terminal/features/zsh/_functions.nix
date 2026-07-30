@@ -5,7 +5,7 @@ let
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
   man = "${pkgs.man}/bin/man";
-  pathBrowser = import ../_fzf-path-browser.nix { inherit pkgs; };
+  pathBrowser = import ../../_lib/fzf-path-browser.nix { inherit pkgs; };
 in
 
 {

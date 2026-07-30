@@ -1,6 +1,13 @@
 { pkgs, inputs, config, ... }:
 
 let
+  sddmSessionDir = pkgs.runCommand "sddm-sessions" { } ''
+    mkdir -p "$out/share/wayland-sessions" "$out/share/xsessions"
+    cp -L ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/* "$out/share/wayland-sessions/"
+    cp -L ${config.services.displayManager.sessionData.desktops}/share/xsessions/* "$out/share/xsessions/"
+    rm -f "$out/share/wayland-sessions/hyprland.desktop"
+  '';
+
   qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
     pname = "qylock-sddm-theme";
     version = "unstable-2026-04-09";
@@ -23,6 +30,7 @@ in
   ];
 
   programs.steam.enable = true;
+  services.desktopManager.plasma6.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
@@ -94,11 +102,17 @@ in
   # GPU — nvidia proprietary driver
   # ===================================================================
   services.xserver.videoDrivers = [ "nvidia" ];
+  # UWSM is the recommended Hyprland session; keep the plain Hyprland
+  # launcher out of the default session choice.
   services.displayManager.defaultSession = "hyprland-uwsm";
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
     theme = "${qylockSddmTheme}/share/sddm/themes/qylock";
+    settings = {
+      Wayland.SessionDir = "${sddmSessionDir}/share/wayland-sessions";
+      X11.SessionDir = "${sddmSessionDir}/share/xsessions";
+    };
     extraPackages = with pkgs.qt6; [
       qt5compat
       qtdeclarative

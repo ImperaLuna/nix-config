@@ -5,7 +5,7 @@
     system = "x86_64-linux";
     hostPath = ./.;
     username = "imperaluna";
-    userConfig = ../../../modules/credentials/imperaluna;
+    userConfig = ../.users/imperaluna;
     homeProfile = "desktop";
     extraSystemModules = [
       config.flake.nixosModules._systems-role-desktop

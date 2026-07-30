@@ -58,13 +58,11 @@
           ./modules/parts.nix
           ./modules/home-stack.nix
           ./modules/_experimental/default.nix
-          ./modules/_systems/default.nix
+          ./modules/__hosts/_systems/default.nix
           ./modules/terminal/default.nix
           ./modules/dev/default.nix
-          ./modules/apps/default.nix
           ./modules/gaming/default.nix
           ./modules/desktop/default.nix
-          ./modules/workstation/default.nix
         ];
       }
     );

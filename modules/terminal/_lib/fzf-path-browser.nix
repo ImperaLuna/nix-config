@@ -12,6 +12,6 @@
       findutils
       fzf
     ];
-    text = builtins.readFile ./_fzf-path-browser.sh;
+    text = builtins.readFile ./fzf-path-browser.sh;
   };
 }

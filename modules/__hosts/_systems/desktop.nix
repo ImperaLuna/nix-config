@@ -7,17 +7,9 @@
       ./features/niri.nix
       ./features/input-remap.nix
       ./features/virtualisation.nix
-      # ./features/nothingless.nix
       ./features/remote-access.nix
       ./features/syncthing.nix
       ./features/voxtype.nix
-    ];
-  };
-
-  flake.nixosModules._systems-role-server = {
-    imports = [
-      ./features/homelab.nix
-      ./features/remote-access.nix
     ];
   };
 }
