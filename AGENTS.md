@@ -5,6 +5,7 @@
 - Work directly on `main` unless a branch or worktree is requested.
 - In this repository, commit completed changes because the repository is synchronized across devices.
 - Check for uncommitted `flake.lock` changes before starting and preserve intentional updates.
+- Push any change you make to remote. 
 
 ## Repository structure
 
