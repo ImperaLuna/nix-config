@@ -101,7 +101,10 @@ in
   # ===================================================================
   # GPU — nvidia proprietary driver
   # ===================================================================
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+  };
   # UWSM is the recommended Hyprland session; keep the plain Hyprland
   # launcher out of the default session choice.
   services.displayManager.defaultSession = "hyprland-uwsm";
@@ -168,11 +171,6 @@ in
     WLR_NO_HARDWARE_CURSORS = "1";  # fixes invisible cursor on nvidia+wayland
     NIXOS_OZONE_WL = "1";           # native wayland for electron apps
   };
-
-  # Keep this out of the global environment: SDDM's Wayland compositor runs
-  # before a display exists and crashes when the GTK Qt platform theme is
-  # loaded. Apply it only to the desktop user's sessions instead.
-  home-manager.users.imperaluna.home.sessionVariables.QT_QPA_PLATFORMTHEME = "gtk3";
 
   environment.systemPackages = [
     qylockSddmTheme
