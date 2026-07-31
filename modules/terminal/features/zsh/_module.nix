@@ -28,6 +28,15 @@
       '%p(D):globbed-files *(D-/):directories' \
       '*(D):all-files'
 
+    # Zsh's completion definitions provide the candidates; fzf-tab is only the
+    # universal presenter. This covers paths, options, subcommands, hosts, etc.
+    zstyle ':fzf-tab:*' fzf-flags \
+      --height=100% \
+      --preview-window=right:60% \
+      --header='TAB navigate  CTRL-SPACE mark/unmark  ENTER insert  ESC cancel'
+    zstyle ':fzf-tab:complete:*:*' fzf-preview \
+      'if [[ -n $realpath && -d $realpath ]]; then ${pkgs.eza}/bin/eza --tree --level=2 --color=always --icons=always -- "$realpath"; elif [[ -n $realpath && -f $realpath ]]; then ${pkgs.bat}/bin/bat --color=always --style=numbers --line-range=:500 -- "$realpath"; elif [[ -n $desc && $desc != $word ]]; then print -r -- "$desc"; fi'
+
     bindkey -M emacs '^Z' undo
     bindkey -M viins '^Z' undo
   '';
