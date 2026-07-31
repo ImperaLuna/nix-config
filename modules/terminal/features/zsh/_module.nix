@@ -1,5 +1,18 @@
 { pkgs, lib, ... }:
 
+let
+  zshFzfTab = pkgs.zsh-fzf-tab.overrideAttrs {
+    postPatch = ''
+      substituteInPlace lib/-ftb-fzf \
+        --replace-fail \
+          '_ftb_query="''${_ftb_query}$(command "$dd" bs=1G count=1 status=none iflag=nonblock < /dev/tty 2>/dev/null)" || true' \
+          'if [[ -z ''${WSL_DISTRO_NAME-} && -z ''${WSL_INTEROP-} ]]; then
+            _ftb_query="''${_ftb_query}$(command "$dd" bs=1G count=1 status=none iflag=nonblock < /dev/tty 2>/dev/null)" || true
+          fi'
+    '';
+  };
+in
+
 {
   imports = [
     ./_aliases.nix
@@ -20,7 +33,9 @@
       bindkey "''${terminfo[kdch1]}" delete-char
     fi
 
-    source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+    # fzf-tab's non-blocking type-ahead read blocks on WSL, making its menu
+    # appear to require a second Tab. The patched package skips only that read.
+    source ${zshFzfTab}/share/fzf-tab/fzf-tab.plugin.zsh
 
     # Include dotfiles in native completion and therefore in fzf-tab's menu.
     # Unlike GLOB_DOTS, this does not make ordinary globs such as `rm *` match them.
