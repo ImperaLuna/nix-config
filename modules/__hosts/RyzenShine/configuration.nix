@@ -128,7 +128,7 @@ in
     modesetting.enable = true;
     nvidiaSettings = false;
     open = false;
-    package = config.boot.kernelPackages.nvidiaPackages.dc_590;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   # GPU acceleration + 32-bit support (required for Steam/games)
