@@ -6,6 +6,7 @@ let
     cp -L ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/* "$out/share/wayland-sessions/"
     cp -L ${config.services.displayManager.sessionData.desktops}/share/xsessions/* "$out/share/xsessions/"
     rm -f "$out/share/wayland-sessions/hyprland.desktop"
+    rm -f "$out/share/xsessions/plasmax11.desktop"
   '';
 
   qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
@@ -101,10 +102,7 @@ in
   # ===================================================================
   # GPU — nvidia proprietary driver
   # ===================================================================
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-  };
+  services.xserver.videoDrivers = [ "nvidia" ];
   # UWSM is the recommended Hyprland session; keep the plain Hyprland
   # launcher out of the default session choice.
   services.displayManager.defaultSession = "hyprland-uwsm";
