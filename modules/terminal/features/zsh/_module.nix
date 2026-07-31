@@ -30,6 +30,7 @@
 
     # Zsh's completion definitions provide the candidates; fzf-tab is only the
     # universal presenter. This covers paths, options, subcommands, hosts, etc.
+    zstyle ':fzf-tab:*' use-fzf-default-opts yes
     zstyle ':fzf-tab:*' fzf-flags \
       --height=100% \
       --preview-window=right:60% \
