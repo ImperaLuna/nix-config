@@ -3,10 +3,9 @@
 let
   sddmSessionDir = pkgs.runCommand "sddm-sessions" { } ''
     mkdir -p "$out/share/wayland-sessions" "$out/share/xsessions"
-    cp -L ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/* "$out/share/wayland-sessions/"
-    cp -L ${config.services.displayManager.sessionData.desktops}/share/xsessions/* "$out/share/xsessions/"
+    cp -RL ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/. "$out/share/wayland-sessions/"
+    cp -RL ${config.services.displayManager.sessionData.desktops}/share/xsessions/. "$out/share/xsessions/"
     rm -f "$out/share/wayland-sessions/hyprland.desktop"
-    rm -f "$out/share/xsessions/plasmax11.desktop"
   '';
 
   qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
@@ -31,7 +30,6 @@ in
   ];
 
   programs.steam.enable = true;
-  services.desktopManager.plasma6.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
