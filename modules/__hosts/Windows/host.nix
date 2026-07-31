@@ -4,7 +4,7 @@
   Windows = mkHome {
     username = "rbrezeanu";
     homeDirectory = "/home/rbrezeanu";
-    userConfig = ../../../modules/credentials/rbrezeanu;
+    userConfig = ../.users/rbrezeanu;
     extraModules = [
       ({ lib, pkgs, ... }:
         let

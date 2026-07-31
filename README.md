@@ -1,140 +1,108 @@
 # nix-config
 
-My NixOS setup, organized so I can understand it fast even after a long break.
+NixOS and Home Manager configuration for my desktop, server, and WSL environments.
 
-## 60-second mental model
+## Install
 
-- `flake.nix` only wires module domains together.
-- Real config lives in `modules/`.
-- There are 2 module classes:
-  - NixOS modules = machine/system config
-  - Home Manager modules = user environment config
-- Hosts pick role bundles; roles pick features.
+### Install the Nix package manager
 
-In short: `host -> role -> feature`.
-
-## How wiring flows
-
-- Hosts are defined in `modules/__hosts/default.nix`.
-- Each NixOS host folder (`modules/__hosts/RyzenShine`, `modules/__hosts/DuskNova`) has
-  - `host.nix` (which roles/stacks this host uses)
-  - `configuration.nix` (host-specific config)
-  - `hardware.nix` (generated hardware config)
-- Home Manager-only hosts, such as WSL, can also live under `modules/__hosts/`
-  with just a `host.nix`.
-- Home Manager stacks are in `modules/home-stack.nix`:
-  - `home-desktop` for desktop hosts
-  - `home-lab` for server/lab hosts
-- The terminal role has a portability seam:
-  - `terminal` provides the shell, CLI tools, Neovim, Btop, and Yazi without GUI
-    launchers or media-preview packages.
-  - `terminal-desktop` layers Ghostty launchers, desktop entries, clipboard support,
-    and Yazi's FFmpeg/MPV/Poppler/ImageMagick/Loupe integrations onto `terminal`.
-- `home-lab` and standalone `mkHome` profiles use `terminal`; `home-desktop` uses
-  `terminal-desktop`.
-- System roles are in `modules/_systems/default.nix`.
-- Home Manager domain roles are in `modules/*/default.nix` (for example
-  `modules/terminal/default.nix`, `modules/desktop/default.nix`,
-  `modules/workstation/default.nix`).
-
-## Binary caches and lockfile updates
-
-NixOS hosts configure the Numtide substituter and signing key at daemon level
-through `modules/__hosts/common.nix`, so the `llm-agents` binary cache is
-available without client-specified restricted settings.
-
-On a standalone multi-user WSL or VPS installation, cache trust is a restricted
-daemon setting. Add the following to `/etc/nix/nix.conf` and restart
-`nix-daemon`:
-
-```ini
-extra-substituters = https://cache.numtide.com
-extra-trusted-public-keys = niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=
-```
-
-Normal evaluation and build commands should preserve `flake.lock`. Use
-`--no-write-lock-file` for read-only checks. Only intentional input updates,
-such as `nix flake update llm-agents`, should rewrite and commit the lockfile.
-
-## Where to enable/disable features
-
-- Edit the role file that includes that feature. One real example:
-
-Disable `yazi` from the terminal role:
-
-```nix
-# modules/terminal/default.nix
-flake.modules.homeManager.terminal = {
-  imports = [
-    # ...
-    # config.flake.modules.homeManager.terminal-feature-yazi
-    # ...
-  ];
-};
-```
-
-That removes `yazi` from every host using the `terminal` HM role.
-
-## Configuration approaches
-
-This config uses two approaches, depending on what each app supports.
-
-### 1) Wrapped package (config baked in)
-
-For tools that support config flags, this repo uses
-[`nix-wrapper-modules`](https://birdeehub.github.io/nix-wrapper-modules/) to
-build a configured package.
-
-Example: tmux
-
-- `modules/terminal/features/tmux/default.nix` builds a tmux package with
-  config baked in and tells Home Manager to install it (`programs.tmux.package`)
-- when you run `tmux`, you are running that pre-configured package (no separate
-  tmux dotfile needed)
-
-Why this is nice:
-
-- portable: same tmux behavior anywhere that package is installed
-- no local tmux dotfile conflicts
-
-Limitations:
-
-- only works cleanly for tools that support config via args/flags
-- not every app has a ready-made wrapper module
-  ([wrapper list](https://birdeehub.github.io/nix-wrapper-modules/))
-
-### 2) Home Manager writes config files
-
-For apps that read config from fixed paths (like `~/.config/...`) and do not
-have a config flag, Home Manager manages the file directly.
-
-Example: Zed (`modules/workstation/features/zed.nix`)
-
-```nix
-modules.zed.manageSettings = false;
-```
-
-- `true` (default): Home Manager writes Zed settings and desktop entry overrides
-- `false`: Zed is still installed, but your local Zed settings are left alone
-
-Why Zed is done this way:
-
-- Zed reads from `~/.config/zed/` at runtime
-- there is no clean `--config` style flag path like tmux has
-
-## Scratch area
-
-Use `modules/_experimental/default.nix` for quick package tests.
-
-## Rebuild
+NixOS already includes Nix. On Ubuntu, Debian, another Linux distribution, or
+WSL, install the multi-user Nix package manager first:
 
 ```bash
-rebuild
+sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
 ```
 
-or:
+Restart your shell after installation, then clone the repository:
 
 ```bash
-sudo nixos-rebuild switch --flake ~/nix-config#RyzenShine
+git clone <repository-url> ~/nix-config
+cd ~/nix-config
+```
+
+### WSL
+
+WSL uses the standalone Home Manager profile named `Windows`:
+
+```bash
+nix run github:nix-community/home-manager -- switch --flake ~/nix-config#Windows
+```
+
+This configures the shell, editor, clipboard integration, and Windows Terminal
+bindings. Run the command again after changing the configuration.
+
+### Linux server (Ubuntu/Debian/etc.)
+
+This uses the standalone Home Manager profile named `Linux`
+
+```bash
+nix run github:nix-community/home-manager -- switch --flake ~/nix-config#Linux
+```
+
+Use this for a normal Linux server where you only want the configured user
+environment.
+
+### NixOS server
+
+Install NixOS on the machine, copy this repository to it, and check or replace
+its hardware configuration. Then apply the server host:
+
+```bash
 sudo nixos-rebuild switch --flake ~/nix-config#DuskNova
 ```
+
+`DuskNova` manages the complete NixOS system and uses the `home-lab` environment.
+
+### Another bare-metal NixOS machine
+
+1. Install NixOS and generate its hardware configuration.
+2. Create a directory under `modules/__hosts/`.
+3. Add `host.nix`, `configuration.nix`, `hardware.nix`, and `default.nix`.
+4. Register the host in `modules/__hosts/default.nix`.
+5. Apply it:
+
+```bash
+sudo nixos-rebuild switch --flake ~/nix-config#YourHostName
+```
+
+Use `RyzenShine` as the desktop example and `DuskNova` as the server example.
+
+## Daily commands
+
+```bash
+rebuild   # apply the current NixOS configuration
+upgrade   # update flake inputs and rebuild
+```
+
+Before changing inputs, check `flake.lock`. Keep lockfile changes intentional.
+
+## Changing features
+
+Features are enabled in the relevant role's `default.nix`. Commenting out a
+feature there disables it for every host using that role.
+
+Temporary experiments belong in `modules/_experimental/default.nix`.
+
+## Mental model
+
+The configuration follows:
+
+```text
+host → role → feature
+```
+
+- `flake.nix` wires everything together.
+- `modules/__hosts/` contains machine definitions and host-specific system roles.
+- `modules/terminal/` contains portable CLI tools and shells.
+- `modules/dev/` contains development tools such as Zed.
+- `modules/desktop/` is the desktop entry point. It contains two feature groups:
+  - `features/apps/` — applications such as Discord, Spotify, and Obsidian.
+  - `features/desktop/` — desktop essentials expected on any graphical PC,
+    including Hyprland, Niri, Ghostty, GTK, and related tools.
+- `modules/gaming/` contains gaming support.
+- `modules/_experimental/` is for temporary package tests.
+- `modules/__hosts/.users/` contains per-user settings shared by that user's hosts.
+- `modules/_lib/` contains shared module helpers and themes.
+
+System configuration is provided by NixOS modules. User configuration is provided
+by Home Manager.

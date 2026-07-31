@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.workstation-feature-zed = { lib, config, pkgs, ... }:
+  flake.modules.homeManager.dev-feature-zed = { lib, config, pkgs, ... }:
     let
       cfg = config.modules.zed;
     in

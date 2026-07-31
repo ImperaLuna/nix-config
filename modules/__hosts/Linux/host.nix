@@ -4,7 +4,7 @@
   Linux = mkHome {
     username = "root";
     homeDirectory = "/root";
-    userConfig = ../../../modules/credentials/imperaluna;
+    userConfig = ../.users/imperaluna;
     extraModules = [
       {
         home.sessionPath = [

@@ -9,10 +9,8 @@
     home-manager.sharedModules = [
       self.modules.homeManager.terminal-desktop
       self.modules.homeManager.dev
-      self.modules.homeManager.apps
       self.modules.homeManager.gaming
       self.modules.homeManager.desktop
-      self.modules.homeManager.workstation
       self.modules.homeManager.experimental
     ];
   };

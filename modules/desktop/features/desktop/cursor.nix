@@ -3,7 +3,7 @@
 {
   flake.modules.homeManager.desktop-feature-cursor = { pkgs, ... }:
     let
-      theme = import ../../_lib/themes/carbonfox.nix;
+      theme = import ../../../_lib/themes/carbonfox.nix;
       cursorThemeName = "Bibata-Modern-Carbonfox";
       cursorSize = 24;
 
