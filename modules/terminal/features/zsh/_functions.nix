@@ -5,7 +5,6 @@ let
   tldr = "${pkgs.tealdeer}/bin/tldr";
   bat = "${pkgs.bat}/bin/bat";
   man = "${pkgs.man}/bin/man";
-  pathBrowser = import ../../_lib/fzf-path-browser.nix { inherit pkgs; };
 in
 
 {
@@ -75,50 +74,25 @@ in
       CURSOR=$(( ''${#start} + ''${#replacement} ))
     }
 
-    _zsh_path_menu() {
-      emulate -L zsh
-      local output path replacement
-      local -a selected replacements
-
-      output="$(${pathBrowser.package}/bin/fzf-path-browser "$1" "$2")" || return 0
-      [[ -n "$output" ]] || return 0
-      selected=("''${(@f)output}")
-
-      for path in "''${selected[@]}"; do
-        # fzf can accept the query when there is no selected row (for
-        # example immediately after a reload). Never turn that into an empty quoted argument.
-        [[ -n "$path" ]] || continue
-        case "$path" in
-          "~") replacement='~' ;;
-          "~/"*) replacement="~/''${(q)path[3,-1]}" ;;
-          *) replacement="''${(q)path}" ;;
-        esac
-        replacements+=("$replacement")
-      done
-      (( ''${#replacements[@]} > 0 )) || return 0
-      _zsh_replace_current_token "''${(j: :)replacements}" literal
-      zle redisplay
-    }
-
-    _zsh_tab_complete_or_path_menu() {
+    _zsh_tab_complete() {
       emulate -L zsh
       local line="''${BUFFER[1,$CURSOR]}"
       local token="''${line##*[[:space:]]}"
 
+      # Only command-name completion is special. Once a command is present,
+      # let Zsh's completion definitions decide whether the context contains
+      # paths, options, subcommands, hosts, package names, and so on. fzf-tab
+      # then gives every completion type the same UI without a command allowlist.
       if [[ "$line" != *[[:space:]]* && "$token" != */* ]]; then
         _zsh_command_help_menu "$token"
-      elif [[ "$line" =~ '^[[:space:]]*cd([[:space:]]|$)' ]]; then
-        _zsh_path_menu directories "$token"
-      elif [[ "$line" =~ '^[[:space:]]*(${pathBrowser.commandPattern})([[:space:]]|$)' ]]; then
-        _zsh_path_menu paths "$token"
       else
         zle fzf-tab-complete
       fi
     }
 
-    zle -N _zsh_tab_complete_or_path_menu
-    bindkey -M emacs '^I' _zsh_tab_complete_or_path_menu
-    bindkey -M viins '^I' _zsh_tab_complete_or_path_menu 2>/dev/null
+    zle -N _zsh_tab_complete
+    bindkey -M emacs '^I' _zsh_tab_complete
+    bindkey -M viins '^I' _zsh_tab_complete 2>/dev/null
     function rebuild() {
       local flakePath
 
