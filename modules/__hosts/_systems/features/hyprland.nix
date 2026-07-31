@@ -53,6 +53,10 @@
     xwayland.enable = true;
   };
 
+  programs.uwsm.package = pkgs.uwsm.override {
+    uuctlSupport = false;
+  };
+
   xdg.portal = {
     enable = true;
     extraPortals = [
