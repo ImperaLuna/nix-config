@@ -167,8 +167,12 @@ in
     TERMINAL = "ghostty";          # launcher uses this for Terminal=true desktop entries
     WLR_NO_HARDWARE_CURSORS = "1";  # fixes invisible cursor on nvidia+wayland
     NIXOS_OZONE_WL = "1";           # native wayland for electron apps
-    QT_QPA_PLATFORMTHEME = "gtk3";  # Qt apps use GTK theme
   };
+
+  # Keep this out of the global environment: SDDM's Wayland compositor runs
+  # before a display exists and crashes when the GTK Qt platform theme is
+  # loaded. Apply it only to the desktop user's sessions instead.
+  home-manager.users.imperaluna.home.sessionVariables.QT_QPA_PLATFORMTHEME = "gtk3";
 
   environment.systemPackages = [
     qylockSddmTheme
