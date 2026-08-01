@@ -50,5 +50,19 @@
       home.packages = [
         novaWithIconSearchPath
       ];
+
+      # Bridge legacy XEmbed tray icons from Wine apps into Nova's SNI tray.
+      systemd.user.services.xembedsniproxy = {
+        Unit = {
+          Description = "Convert XEmbed tray icons to StatusNotifierItems";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = lib.getExe' pkgs.kdePackages.plasma-workspace "xembedsniproxy";
+          Restart = "on-failure";
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
     };
 }
