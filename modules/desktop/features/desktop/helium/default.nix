@@ -55,7 +55,13 @@
 
       xdg.mimeApps = {
         enable = true;
-        defaultApplications."x-scheme-handler/helium-open" = [ "helium-open.desktop" ];
+        defaultApplications = {
+          "text/html" = [ "zen-beta.desktop" ];
+          "application/xhtml+xml" = [ "zen-beta.desktop" ];
+          "x-scheme-handler/http" = [ "zen-beta.desktop" ];
+          "x-scheme-handler/https" = [ "zen-beta.desktop" ];
+          "x-scheme-handler/helium-open" = [ "helium-open.desktop" ];
+        };
       };
     };
 }
