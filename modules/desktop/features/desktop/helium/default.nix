@@ -29,39 +29,8 @@
           sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
         };
       };
-
-      heliumOpen = pkgs.writeShellScript "helium-open" ''
-        uri="$1"
-        case "$uri" in
-          helium-open://*)
-            exec ${helium}/bin/helium "http://''${uri#helium-open://}"
-            ;;
-        esac
-
-        echo "Unsupported Helium URL: $uri" >&2
-        exit 2
-      '';
     in
     {
       home.packages = [ helium ];
-
-      xdg.desktopEntries.helium-open = {
-        name = "Open URL in Helium";
-        exec = "${heliumOpen} %u";
-        icon = "helium";
-        mimeType = [ "x-scheme-handler/helium-open" ];
-        settings.NoDisplay = "true";
-      };
-
-      xdg.mimeApps = {
-        enable = true;
-        defaultApplications = {
-          "text/html" = [ "zen-beta.desktop" ];
-          "application/xhtml+xml" = [ "zen-beta.desktop" ];
-          "x-scheme-handler/http" = [ "zen-beta.desktop" ];
-          "x-scheme-handler/https" = [ "zen-beta.desktop" ];
-          "x-scheme-handler/helium-open" = [ "helium-open.desktop" ];
-        };
-      };
     };
 }
