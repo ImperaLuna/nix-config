@@ -70,6 +70,15 @@ window-rule {
     default-floating-position x=10 y=10 relative-to="bottom-right"
 }
 
+// xwayland-satellite does not honor the proxy container's X11 opacity.
+window-rule {
+    match app-id=r#"^xembedsniproxy$"#
+    open-floating true
+    open-focused false
+    default-column-width { fixed 1; }
+    default-window-height { fixed 1; }
+    opacity 0.0
+}
 
 window-rule {
     match app-id=r#"^org\.keepassxc\.KeePassXC$"#
