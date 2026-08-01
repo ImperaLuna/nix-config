@@ -41,12 +41,6 @@ in
     # appear to require a second Tab. The patched package skips only that read.
     source ${zshFzfTab}/share/fzf-tab/fzf-tab.plugin.zsh
 
-    # Include dotfiles in native completion and therefore in fzf-tab's menu.
-    # Unlike GLOB_DOTS, this does not make ordinary globs such as `rm *` match them.
-    zstyle ':completion:*' file-patterns \
-      '%p(D):globbed-files *(D-/):directories' \
-      '*(D):all-files'
-
     # Zsh's completion definitions provide the candidates; fzf-tab is only the
     # universal presenter. This covers paths, options, subcommands, hosts, etc.
     zstyle ':fzf-tab:*' use-fzf-default-opts yes
