@@ -21,14 +21,18 @@ let
       modules = [
         hostPath
         homeStackModule
-        {
-          home-manager.backupFileExtension = "hm-backup";
+        ({ pkgs, ... }: {
+          home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
+            target="$1"
+            timestamp="$(${pkgs.coreutils}/bin/date +%Y%m%d-%H%M%S-%N)"
+            exec ${pkgs.coreutils}/bin/mv -- "$target" "$target.hm-backup-$timestamp"
+          '';
           home-manager.extraSpecialArgs = {
             inherit inputs homeProfile;
             inherit userConfig;
           };
           home-manager.users.${username} = import ../../modules/home.nix;
-        }
+        })
       ] ++ extraSystemModules;
     };
 
