@@ -7,37 +7,58 @@
 
     stremioSource = pkgs.stremio-linux-shell.src;
 
-    patchStremioTrackers = pkgs.writeText "patch-stremio-trackers.js" ''
+    patchStremioServer = pkgs.writeText "patch-stremio-server.js" ''
       const fs = require("fs");
 
       const serverPath = process.argv[2];
-      const source = fs.readFileSync(serverPath, "utf8");
+      let source = fs.readFileSync(serverPath, "utf8");
       const trackerModulePattern =
         /module\.exports = \[ (?:"(?:https?|udp):\/\/[^"\n]+\/announce"(?:, )?)+ \];/g;
-      const matches = Array.from(source.matchAll(trackerModulePattern));
+      const trackerMatches = Array.from(source.matchAll(trackerModulePattern));
 
-      if (matches.length !== 1) {
+      if (trackerMatches.length !== 1) {
         throw new Error(
-          "expected exactly one tracker module in " + serverPath + ", found " + matches.length,
+          "expected exactly one tracker module in " + serverPath + ", found " + trackerMatches.length,
         );
       }
 
-      const replacement = ${builtins.toJSON trackerList};
-      fs.writeFileSync(serverPath, source.replace(matches[0][0], replacement));
+      const trackerReplacement = ${builtins.toJSON trackerList};
+      source = source.replace(trackerMatches[0][0], trackerReplacement);
+
+      const mpvPath = 'path: [ "/usr/bin/mpv" ]';
+      if (source.split(mpvPath).length !== 2) {
+        throw new Error("expected exactly one mpv path in " + serverPath);
+      }
+
+      source = source.replace(
+        mpvPath,
+        'path: [ process.env.MPV_BIN || "/usr/bin/mpv" ]',
+      );
+      fs.writeFileSync(serverPath, source);
     '';
 
+    stremioMpv = pkgs.writeShellApplication {
+      name = "stremio-mpv";
+      text = ''
+        exec ${pkgs.mpv}/bin/mpv \
+          --vo=gpu-next \
+          --gpu-api=vulkan \
+          --hwdec=nvdec-copy \
+          "$@"
+      '';
+    };
     stremioServer = pkgs.runCommand "stremio-server-http-trackers" {
       nativeBuildInputs = [ pkgs.nodejs ];
     } ''
       server_js=${stremioSource}/data/server.js
 
       install -Dm644 "$server_js" $out/share/stremio/server.js
-      node ${patchStremioTrackers} $out/share/stremio/server.js
+      node ${patchStremioServer} $out/share/stremio/server.js
     '';
     stremioNativePackage = pkgs.stremio-linux-shell.overrideAttrs (oldAttrs: {
       nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.nodejs ];
       postPatch = (oldAttrs.postPatch or "") + ''
-        node ${patchStremioTrackers} data/server.js
+        node ${patchStremioServer} data/server.js
       '';
     });
     configureStremioNvenc = pkgs.writeText "configure-stremio-nvenc.js" ''
@@ -87,6 +108,7 @@
         log_file="$log_dir/server.log"
         settings_file="$HOME/.stremio-server/server-settings.json"
         restart_server=0
+        export MPV_BIN="${stremioMpv}/bin/stremio-mpv"
 
         if [[ -e /dev/nvidia0 ]]; then
           restart_server="$(node ${configureStremioNvenc} "$settings_file")"
@@ -148,6 +170,7 @@
           done
         done
 
+        export MPV_BIN="${stremioMpv}/bin/stremio-mpv"
         exec ${stremioNativePackage}/bin/stremio "$@"
       '';
     };
