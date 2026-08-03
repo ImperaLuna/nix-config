@@ -34,6 +34,12 @@
       install -Dm644 "$server_js" $out/share/stremio/server.js
       node ${patchStremioTrackers} $out/share/stremio/server.js
     '';
+    stremioNativePackage = pkgs.stremio-linux-shell.overrideAttrs (oldAttrs: {
+      nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.nodejs ];
+      postPatch = (oldAttrs.postPatch or "") + ''
+        node ${patchStremioTrackers} data/server.js
+      '';
+    });
     configureStremioNvenc = pkgs.writeText "configure-stremio-nvenc.js" ''
       const fs = require("fs");
       const path = require("path");
@@ -125,6 +131,26 @@
         exec xdg-open "$app_url"
       '';
     };
+    stremioNative = pkgs.writeShellApplication {
+      name = "stremio-native";
+      runtimeInputs = [
+        pkgs.coreutils
+        pkgs.procps
+      ];
+      text = ''
+        for pid in $(pgrep -f '/share/stremio/server[.]js' || true); do
+          kill "$pid" 2>/dev/null || true
+          for _ in $(seq 1 20); do
+            if ! kill -0 "$pid" 2>/dev/null; then
+              break
+            fi
+            sleep 0.05
+          done
+        done
+
+        exec ${stremioNativePackage}/bin/stremio "$@"
+      '';
+    };
 
     stremioIcon = pkgs.runCommand "stremio-icon" { } ''
       install -Dm644 \
@@ -136,11 +162,12 @@
   {
     home.packages = [
       stremioWeb
+      stremioNative
       stremioIcon
     ];
 
     xdg.desktopEntries."com.stremio.Stremio" = {
-      name = "Stremio";
+      name = "Stremio (Web)";
       comment = "Freedom To Stream";
       exec = "stremio %U";
       icon = "com.stremio.Stremio";
@@ -152,7 +179,25 @@
       ];
       mimeType = [ "x-scheme-handler/stremio" ];
       startupNotify = true;
-      settings.Keywords = "Stremio;Media;Play;";
+      settings.Keywords = "Stremio;Media;Play;Web;";
+    };
+
+    xdg.desktopEntries."com.stremio.Stremio.Native" = {
+      name = "Stremio (Native)";
+      comment = "Freedom To Stream with native video playback";
+      exec = "stremio-native %U";
+      icon = "com.stremio.Stremio";
+      categories = [
+        "Utility"
+        "AudioVideo"
+        "Video"
+        "Player"
+      ];
+      startupNotify = true;
+      settings = {
+        Keywords = "Stremio;Media;Play;Native;";
+        StartupWMClass = "com.stremio.Stremio";
+      };
     };
   };
 }
