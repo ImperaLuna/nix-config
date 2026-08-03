@@ -34,6 +34,35 @@
       install -Dm644 "$server_js" $out/share/stremio/server.js
       node ${patchStremioTrackers} $out/share/stremio/server.js
     '';
+    configureStremioNvenc = pkgs.writeText "configure-stremio-nvenc.js" ''
+      const fs = require("fs");
+      const path = require("path");
+
+      const settingsPath = process.argv[2];
+      let settings = {};
+
+      try {
+        settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));
+      } catch (error) {
+        if (error.code !== "ENOENT") {
+          throw error;
+        }
+      }
+
+      const changed =
+        settings.transcodeHardwareAccel !== true || settings.transcodeProfile !== "nvenc-linux";
+
+      if (changed) {
+        settings.transcodeHardwareAccel = true;
+        settings.transcodeProfile = "nvenc-linux";
+        fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
+        const temporaryPath = settingsPath + "." + process.pid + ".tmp";
+        fs.writeFileSync(temporaryPath, JSON.stringify(settings, null, 4) + "\n");
+        fs.renameSync(temporaryPath, settingsPath);
+      }
+
+      process.stdout.write(changed ? "1" : "0");
+    '';
     stremioWeb = pkgs.writeShellApplication {
       name = "stremio";
       runtimeInputs = [
@@ -50,13 +79,31 @@
         app_url="https://app.strem.io/shell-v4.4/?streamingServer=http%3A%2F%2F127.0.0.1%3A11470"
         log_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/stremio"
         log_file="$log_dir/server.log"
+        settings_file="$HOME/.stremio-server/server-settings.json"
+        restart_server=0
+
+        if [[ -e /dev/nvidia0 ]]; then
+          restart_server="$(node ${configureStremioNvenc} "$settings_file")"
+        fi
 
         for pid in $(pgrep -f '/share/stremio/server[.]js' || true); do
           cmdline="$(tr '\0' ' ' <"/proc/$pid/cmdline" 2>/dev/null || true)"
           case "$cmdline" in
-            *"$server_js"*) ;;
-            ?*) kill "$pid" 2>/dev/null || true ;;
+            *"$server_js"*)
+              if [[ "$restart_server" != 1 ]]; then
+                continue
+              fi
+              ;;
+            "") continue ;;
           esac
+
+          kill "$pid" 2>/dev/null || true
+          for _ in $(seq 1 20); do
+            if ! kill -0 "$pid" 2>/dev/null; then
+              break
+            fi
+            sleep 0.05
+          done
         done
 
         if ! curl --silent --fail --max-time 1 "$server_url" >/dev/null 2>&1; then
