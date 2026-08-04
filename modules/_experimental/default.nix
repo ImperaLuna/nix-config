@@ -9,6 +9,7 @@
     in
     {
       home.packages = [
+        pkgs.gemini-cli
         t3code
         # pkgs.alacritty
         # pkgs.google-chrome
