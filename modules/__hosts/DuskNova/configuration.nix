@@ -141,7 +141,7 @@ in
   # BOOT
   # ===================================================================
   boot.loader = {
-    timeout = 5;
+    timeout = 60;
     efi.canTouchEfiVariables = true;
     systemd-boot.enable = false;
     limine = {

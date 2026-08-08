@@ -76,7 +76,7 @@ in
   # BOOT
   # ===================================================================
   boot.loader = {
-    timeout = 5;
+    timeout = 60;
     systemd-boot.enable = false;
     limine = {
       enable = true;
