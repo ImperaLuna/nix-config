@@ -6,7 +6,7 @@
     homeDirectory = "/home/rbrezeanu";
     userConfig = ../.users/rbrezeanu;
     extraModules = [
-      ({ lib, pkgs, ... }:
+      ({ config, lib, pkgs, ... }:
         let
           windowsTerminalSettings =
             "/mnt/c/Users/rbrezeanu/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json";
@@ -18,6 +18,9 @@
           '';
         in
         {
+          home.file."start-jira-tunnel.sh".source =
+            config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+
           home.sessionVariables = {
             OBSIDIAN_VAULT = "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
             HM_CONFIG_NAME = "Windows";

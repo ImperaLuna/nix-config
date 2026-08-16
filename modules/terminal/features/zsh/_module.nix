@@ -28,9 +28,6 @@ in
   # fzf-tab must load after compinit and before autosuggestions.
   programs.zsh.initContent = lib.mkOrder 650 ''
     bindkey -e
-    if [[ -f "$HOME/.claude/start-jira-tunnel-login.sh" ]]; then
-      ${pkgs.bash}/bin/bash "$HOME/.claude/start-jira-tunnel-login.sh"
-    fi
 
     zmodload zsh/terminfo
     if [[ -n "''${terminfo[kdch1]}" ]]; then
