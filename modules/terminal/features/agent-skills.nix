@@ -7,7 +7,10 @@
       # apply without a rebuild; the repo must be cloned at ~/Skills.
       # Entries are "<author>/<skill>"; the link is named after the skill alone.
       skillsRepo = "${config.home.homeDirectory}/Skills";
-      skills = [ "poteto/unslop" ];
+      skills = [
+        "mattpocock/teach"
+        "poteto/unslop"
+      ];
 
       linksFor = root:
         builtins.listToAttrs (
