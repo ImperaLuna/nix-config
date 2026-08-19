@@ -5,14 +5,15 @@
     let
       # Links point into the live checkout so skill edits and ./update.sh pulls
       # apply without a rebuild; the repo must be cloned at ~/Skills.
+      # Entries are "<author>/<skill>"; the link is named after the skill alone.
       skillsRepo = "${config.home.homeDirectory}/Skills";
-      skills = [ "unslop" ];
+      skills = [ "poteto/unslop" ];
 
       linksFor = root:
         builtins.listToAttrs (
-          map (name: {
-            name = "${root}/${name}";
-            value.source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/${name}";
+          map (skill: {
+            name = "${root}/${baseNameOf skill}";
+            value.source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/${skill}";
           }) skills
         );
     in
