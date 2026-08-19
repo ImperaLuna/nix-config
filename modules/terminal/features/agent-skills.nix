@@ -8,6 +8,7 @@
       # Entries are "<author>/<skill>"; the link is named after the skill alone.
       skillsRepo = "${config.home.homeDirectory}/Skills";
       skills = [
+        "imperaluna/synced-repos"
         "mattpocock/teach"
         "poteto/unslop"
       ];
