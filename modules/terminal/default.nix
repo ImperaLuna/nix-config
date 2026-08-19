@@ -40,6 +40,7 @@
 
       # AI/code assistants
       config.flake.modules.homeManager.terminal-feature-llm-cli-tools
+      config.flake.modules.homeManager.terminal-feature-agent-skills
     ];
   };
 
