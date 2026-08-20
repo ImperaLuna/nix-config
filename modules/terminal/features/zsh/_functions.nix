@@ -108,7 +108,8 @@ in
         return 1
       fi
 
-      sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" "$@"
+      sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" "$@" || return $?
+      exec zsh
     }
 
     function upgrade() {
@@ -128,7 +129,8 @@ in
 
       nix flake update --flake "$flakePath" "$@" || return $?
 
-      sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)"
+      sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" || return $?
+      exec zsh
     }
 
     function homeswitch() {
@@ -173,7 +175,8 @@ in
         return 1
       fi
 
-      env HOME_MANAGER_BACKUP_EXT=hm-backup HOME_MANAGER_BACKUP_OVERWRITE=1 "$activationPkg/activate"
+      env HOME_MANAGER_BACKUP_EXT=hm-backup HOME_MANAGER_BACKUP_OVERWRITE=1 "$activationPkg/activate" || return $?
+      exec zsh
     }
 
     function ssh() {
