@@ -36,8 +36,7 @@
             install) exec "${skillsRepo}/install.sh" ;;
             check) exec "${skillsRepo}/update.sh" status ;;
             update) exec "${skillsRepo}/update.sh" check ;;
-            add) shift; exec "${skillsRepo}/update.sh" add "$@" ;;
-            *) echo "usage: skill install | check | update | add <repo> <path> [name] [author]" >&2; exit 2 ;;
+            *) echo "usage: skill install | check | update" >&2; exit 2 ;;
           esac
         '')
       ];
