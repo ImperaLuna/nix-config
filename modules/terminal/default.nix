@@ -28,6 +28,7 @@
       config.flake.modules.homeManager.terminal-feature-gh-dash
       config.flake.modules.homeManager.terminal-feature-lazygit
       config.flake.modules.homeManager.terminal-feature-tuicr
+      config.flake.modules.homeManager.terminal-feature-git-sync
 
       # Terminal apps and monitoring
       config.flake.modules.homeManager.terminal-feature-btop
