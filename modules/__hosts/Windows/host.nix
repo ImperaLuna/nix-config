@@ -21,6 +21,12 @@
           home.file."start-jira-tunnel.sh".source =
             config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
 
+          home.shellAliases = {
+            jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+            # Best-guess path, unverified; adjust here if the script lives elsewhere.
+            claude-auth = "${config.home.homeDirectory}/claude-auth";
+          };
+
           home.sessionVariables = {
             OBSIDIAN_VAULT = "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
             HM_CONFIG_NAME = "Windows";
