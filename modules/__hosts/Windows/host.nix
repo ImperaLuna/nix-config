@@ -136,6 +136,11 @@ builtins.mapAttrs mkWindowsHome {
     username = "imperaluna";
     userConfig = ../.users/imperaluna;
     windowsUser = "rbrez";
+    extraModules = [
+      ({ pkgs, ... }: {
+        home.packages = [ pkgs.docker ];
+      })
+    ];
   };
 
   Windows-work = {
