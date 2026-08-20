@@ -10,6 +10,7 @@
       skills = [
         "imperaluna/synced-repos"
         "mattpocock/teach"
+        "poteto/bro"
         "poteto/unslop"
       ];
 
