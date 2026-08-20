@@ -36,29 +36,29 @@
           };
         };
 
-      # `skill check` is the quick read-only status; `skill update` is the
+      # `skills check` is the quick read-only status; `skills update` is the
       # interactive pull. A real script so it works from zsh and fish alike.
       home.packages = [
-        (pkgs.writeShellScriptBin "skill" ''
+        (pkgs.writeShellScriptBin "skills" ''
           case "''${1:-}" in
             install) exec "${skillsRepo}/install.sh" ;;
             check) exec "${skillsRepo}/update.sh" status ;;
             update) exec "${skillsRepo}/update.sh" check ;;
-            *) echo "usage: skill install | check | update" >&2; exit 2 ;;
+            *) echo "usage: skills install | check | update" >&2; exit 2 ;;
           esac
         '')
       ];
 
-      # `skill` wraps the repo's scripts: check is the quick read-only status,
+      # `skills` wraps the repo's scripts: check is the quick read-only status,
       # update is the interactive pull.
       programs.zsh.initContent = ''
-        skill() {
+        skills() {
           case "''${1:-}" in
             install) "${skillsRepo}/install.sh" ;;
             check) "${skillsRepo}/update.sh" status ;;
             update) "${skillsRepo}/update.sh" check ;;
             add) shift; "${skillsRepo}/update.sh" add "$@" ;;
-            *) echo "usage: skill install | check | update | add <repo> <path> [name] [author]" >&2; return 2 ;;
+            *) echo "usage: skills install | check | update | add <repo> <path> [name] [author]" >&2; return 2 ;;
           esac
         }
       '';
