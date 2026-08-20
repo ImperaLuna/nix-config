@@ -1,135 +1,167 @@
 { mkHome, ... }:
 
-{
-  Windows = mkHome {
-    username = "imperaluna";
-    homeDirectory = "/home/imperaluna";
-    userConfig = ../.users/imperaluna;
-    extraModules = [
-      ({ config, lib, pkgs, ... }:
-        let
-          windowsTerminalSettings =
-            "/mnt/c/Users/rbrezeanu/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json";
-          windowsClipboardCopy = pkgs.writeShellScriptBin "nvim-windows-clipboard-copy" ''
-            exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::InputEncoding = [Text.Encoding]::UTF8; Set-Clipboard -Value ([Console]::In.ReadToEnd())'
-          '';
-          windowsClipboardPaste = pkgs.writeShellScriptBin "nvim-windows-clipboard-paste" ''
-            exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::OutputEncoding = [Text.Encoding]::UTF8; [Console]::Out.Write([string](Get-Clipboard -Raw))'
-          '';
-        in
-        {
-          home.file."start-jira-tunnel.sh".source =
-            config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+let
+  # One shared WSL definition, stamped out per machine. Each machine only
+  # differs in its WSL user, Windows-side user, git identity, and extras.
+  mkWindowsHome =
+    configName:
+    {
+      username,
+      userConfig,
+      windowsUser,
+      extraModules ? [ ],
+    }:
+    mkHome {
+      inherit username userConfig;
+      homeDirectory = "/home/${username}";
+      extraModules = [
+        ({ config, lib, pkgs, ... }:
+          let
+            windowsTerminalSettings =
+              "/mnt/c/Users/${windowsUser}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json";
+            windowsClipboardCopy = pkgs.writeShellScriptBin "nvim-windows-clipboard-copy" ''
+              exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::InputEncoding = [Text.Encoding]::UTF8; Set-Clipboard -Value ([Console]::In.ReadToEnd())'
+            '';
+            windowsClipboardPaste = pkgs.writeShellScriptBin "nvim-windows-clipboard-paste" ''
+              exec /init /mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command '[Console]::OutputEncoding = [Text.Encoding]::UTF8; [Console]::Out.Write([string](Get-Clipboard -Raw))'
+            '';
+          in
+          {
+            home.sessionVariables = {
+              HM_CONFIG_NAME = configName;
+              EDITOR = "nvim";
+              VISUAL = "nvim";
+            };
 
-          home.shellAliases = {
-            jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
-            # Best-guess path, unverified; adjust here if the script lives elsewhere.
-            claude-auth = "${config.home.homeDirectory}/claude-auth";
-          };
+            programs.nixvim.extraConfigLuaPre = ''
+              vim.g.clipboard = {
+                name = "WindowsClipboard",
+                copy = {
+                  ["+"] = "nvim-windows-clipboard-copy",
+                  ["*"] = "nvim-windows-clipboard-copy",
+                },
+                paste = {
+                  ["+"] = "nvim-windows-clipboard-paste",
+                  ["*"] = "nvim-windows-clipboard-paste",
+                },
+                cache_enabled = 0,
+              }
+            '';
 
-          home.sessionVariables = {
-            OBSIDIAN_VAULT = "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
-            HM_CONFIG_NAME = "Windows";
-            EDITOR = "nvim";
-            VISUAL = "nvim";
-          };
+            home.packages = [
+              windowsClipboardCopy
+              windowsClipboardPaste
+            ];
 
-          programs.nixvim.extraConfigLuaPre = ''
-            vim.g.clipboard = {
-              name = "WindowsClipboard",
-              copy = {
-                ["+"] = "nvim-windows-clipboard-copy",
-                ["*"] = "nvim-windows-clipboard-copy",
-              },
-              paste = {
-                ["+"] = "nvim-windows-clipboard-paste",
-                ["*"] = "nvim-windows-clipboard-paste",
-              },
-              cache_enabled = 0,
-            }
-          '';
+            # WSL Home Manager cannot express these as normal dotfiles because the
+            # terminal emulator lives on the Windows side. Patch Windows Terminal's
+            # settings.json so Shift+Enter sends CSI-u Shift+Enter (13;2u), and
+            # Ctrl+Alt+V sends Ctrl+V through to Codex for image clipboard paste.
+            home.activation.windowsTerminalKeybindings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              settings_file="${windowsTerminalSettings}"
 
-          home.packages = [
-            pkgs.awscli2
-            windowsClipboardCopy
-            windowsClipboardPaste
-            pkgs.docker
-          ];
+              if [ -f "$settings_file" ]; then
+                ${pkgs.python3}/bin/python3 - "$settings_file" <<'PY'
+              import json
+              import sys
+              from pathlib import Path
 
-          # WSL Home Manager cannot express these as normal dotfiles because the
-          # terminal emulator lives on the Windows side. Patch Windows Terminal's
-          # settings.json so Shift+Enter sends CSI-u Shift+Enter (13;2u), and
-          # Ctrl+Alt+V sends Ctrl+V through to Codex for image clipboard paste.
-          home.activation.windowsTerminalKeybindings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            settings_file="${windowsTerminalSettings}"
+              path = Path(sys.argv[1])
+              data = json.loads(path.read_text())
 
-            if [ -f "$settings_file" ]; then
-              ${pkgs.python3}/bin/python3 - "$settings_file" <<'PY'
-            import json
-            import sys
-            from pathlib import Path
+              actions = data.setdefault("actions", [])
+              keybindings = data.setdefault("keybindings", [])
 
-            path = Path(sys.argv[1])
-            data = json.loads(path.read_text())
+              def has_keys(binding, desired):
+                  keys = binding.get("keys")
+                  if isinstance(keys, str):
+                      return keys.lower() == desired
+                  if isinstance(keys, list):
+                      return any(isinstance(key, str) and key.lower() == desired for key in keys)
+                  return False
 
-            actions = data.setdefault("actions", [])
-            keybindings = data.setdefault("keybindings", [])
+              def ensure_send_input(keys, default_action_id, input_text):
+                  binding = next((item for item in keybindings if has_keys(item, keys)), None)
+                  if binding is None:
+                      action_id = default_action_id
+                      keybindings.append({"id": action_id, "keys": keys})
+                  else:
+                      action_id = binding.get("id") or default_action_id
+                      binding["id"] = action_id
+                      binding["keys"] = keys
 
-            def has_keys(binding, desired):
-                keys = binding.get("keys")
-                if isinstance(keys, str):
-                    return keys.lower() == desired
-                if isinstance(keys, list):
-                    return any(isinstance(key, str) and key.lower() == desired for key in keys)
-                return False
+                  action = next((item for item in actions if item.get("id") == action_id), None)
+                  command = {"action": "sendInput", "input": input_text}
+                  if action is None:
+                      actions.append({"command": command, "id": action_id})
+                  else:
+                      action["command"] = command
 
-            def ensure_send_input(keys, default_action_id, input_text):
-                binding = next((item for item in keybindings if has_keys(item, keys)), None)
-                if binding is None:
-                    action_id = default_action_id
-                    keybindings.append({"id": action_id, "keys": keys})
-                else:
-                    action_id = binding.get("id") or default_action_id
-                    binding["id"] = action_id
-                    binding["keys"] = keys
+              ensure_send_input("shift+enter", "User.sendInput.ShiftEnterNewline", "\u001b[13;2u")
+              ensure_send_input("ctrl+alt+v", "User.sendInput.CodexPasteImage", "\u0016")
 
-                action = next((item for item in actions if item.get("id") == action_id), None)
-                command = {"action": "sendInput", "input": input_text}
-                if action is None:
-                    actions.append({"command": command, "id": action_id})
-                else:
-                    action["command"] = command
+              rendered = json.dumps(data, indent=4) + "\n"
+              if path.read_text() != rendered:
+                  path.write_text(rendered)
+              PY
+              fi
+            '';
 
-            ensure_send_input("shift+enter", "User.sendInput.ShiftEnterNewline", "\u001b[13;2u")
-            ensure_send_input("ctrl+alt+v", "User.sendInput.CodexPasteImage", "\u0016")
+            programs.fish.shellInit = lib.mkAfter ''
+              # WSL imports Windows PATH entries verbatim. Some installers add an
+              # executable instead of its parent directory, which makes fish command
+              # lookup fail with "component ... is not a directory".
+              set -l clean_path
+              for path_entry in "$HOME/.local/bin" "$HOME/.nix-profile/bin" /nix/var/nix/profiles/default/bin $PATH
+                contains -- "$path_entry" $clean_path
+                and continue
 
-            rendered = json.dumps(data, indent=4) + "\n"
-            if path.read_text() != rendered:
-                path.write_text(rendered)
-            PY
-            fi
-          '';
-
-          programs.fish.shellInit = lib.mkAfter ''
-            # WSL imports Windows PATH entries verbatim. Some installers add an
-            # executable instead of its parent directory, which makes fish command
-            # lookup fail with "component ... is not a directory".
-            set -l clean_path
-            for path_entry in "$HOME/.local/bin" "$HOME/.nix-profile/bin" /nix/var/nix/profiles/default/bin $PATH
-              contains -- "$path_entry" $clean_path
-              and continue
-
-              if test ! -e "$path_entry"; or test -d "$path_entry"
-                set -a clean_path "$path_entry"
+                if test ! -e "$path_entry"; or test -d "$path_entry"
+                  set -a clean_path "$path_entry"
+                end
               end
-            end
-            set -gx PATH $clean_path
+              set -gx PATH $clean_path
 
-            set -gx HM_CONFIG_NAME Windows
-            set -gx EDITOR nvim
-            set -gx VISUAL nvim
-          '';
-        })
+              set -gx HM_CONFIG_NAME ${configName}
+              set -gx EDITOR nvim
+              set -gx VISUAL nvim
+            '';
+          })
+      ] ++ extraModules;
+    };
+in
+builtins.mapAttrs mkWindowsHome {
+
+  Windows-home = {
+    username = "imperaluna";
+    userConfig = ../.users/imperaluna;
+    windowsUser = "rbrez";
+  };
+
+  Windows-work = {
+    username = "rbrezeanu";
+    userConfig = ../.users/rbrezeanu;
+    windowsUser = "rbrezeanu";
+    extraModules = [
+      ({ config, pkgs, ... }: {
+        home.file."start-jira-tunnel.sh".source =
+          config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+
+        home.shellAliases = {
+          jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+          # Best-guess path, unverified; adjust here if the script lives elsewhere.
+          claude-auth = "${config.home.homeDirectory}/claude-auth";
+        };
+
+        home.sessionVariables.OBSIDIAN_VAULT =
+          "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
+
+        home.packages = [
+          pkgs.awscli2
+          pkgs.docker
+        ];
+      })
     ];
   };
+
 }
