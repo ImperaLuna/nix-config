@@ -63,12 +63,13 @@
         }
       '';
 
-      # Read-only staleness check at switch time; silent when current or offline
-      # and never fails the activation. Pulling stays manual via ./update.sh.
+      # Read-only staleness check at switch time; --quiet keeps it silent when
+      # current or offline, and it never fails the activation. Pulling stays
+      # manual via ./update.sh.
       home.activation.skillsUpdateStatus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if [ -x "${skillsRepo}/update.sh" ]; then
           PATH="${lib.makeBinPath (with pkgs; [ bash coreutils gawk git gnugrep jq curl gh ])}:$PATH" \
-            ${pkgs.coreutils}/bin/timeout 15 "${skillsRepo}/update.sh" status || true
+            ${pkgs.coreutils}/bin/timeout 15 "${skillsRepo}/update.sh" status --quiet || true
         fi
       '';
     };
