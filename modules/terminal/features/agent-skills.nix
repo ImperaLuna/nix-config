@@ -28,6 +28,34 @@
         // linksFor ".agents/skills"
         // linksFor ".pi/agent/skills";
 
+      # `skill check` is the quick read-only status; `skill update` is the
+      # interactive pull. A real script so it works from zsh and fish alike.
+      home.packages = [
+        (pkgs.writeShellScriptBin "skill" ''
+          case "''${1:-}" in
+            install) exec "${skillsRepo}/install.sh" ;;
+            check) exec "${skillsRepo}/update.sh" status ;;
+            update) exec "${skillsRepo}/update.sh" check ;;
+            add) shift; exec "${skillsRepo}/update.sh" add "$@" ;;
+            *) echo "usage: skill install | check | update | add <repo> <path> [name] [author]" >&2; exit 2 ;;
+          esac
+        '')
+      ];
+
+      # `skill` wraps the repo's scripts: check is the quick read-only status,
+      # update is the interactive pull.
+      programs.zsh.initContent = ''
+        skill() {
+          case "''${1:-}" in
+            install) "${skillsRepo}/install.sh" ;;
+            check) "${skillsRepo}/update.sh" status ;;
+            update) "${skillsRepo}/update.sh" check ;;
+            add) shift; "${skillsRepo}/update.sh" add "$@" ;;
+            *) echo "usage: skill install | check | update | add <repo> <path> [name] [author]" >&2; return 2 ;;
+          esac
+        }
+      '';
+
       # Read-only staleness check at switch time; silent when current or offline
       # and never fails the activation. Pulling stays manual via ./update.sh.
       home.activation.skillsUpdateStatus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
