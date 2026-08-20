@@ -2,9 +2,9 @@
 
 {
   Windows = mkHome {
-    username = "rbrezeanu";
-    homeDirectory = "/home/rbrezeanu";
-    userConfig = ../.users/rbrezeanu;
+    username = "imperaluna";
+    homeDirectory = "/home/imperaluna";
+    userConfig = ../.users/imperaluna;
     extraModules = [
       ({ config, lib, pkgs, ... }:
         let
