@@ -26,7 +26,15 @@
       home.file =
         linksFor ".claude/skills"
         // linksFor ".agents/skills"
-        // linksFor ".pi/agent/skills";
+        // linksFor ".pi/agent/skills"
+        // {
+          # Global Claude Code instructions live in the Skills repo so they sync
+          # like everything else. force replaces a hand-made file or link.
+          ".claude/CLAUDE.md" = {
+            source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/imperaluna/CLAUDE.md";
+            force = true;
+          };
+        };
 
       # `skill check` is the quick read-only status; `skill update` is the
       # interactive pull. A real script so it works from zsh and fish alike.
