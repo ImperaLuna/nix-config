@@ -149,8 +149,7 @@ builtins.mapAttrs mkWindowsHome {
 
         home.shellAliases = {
           jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
-          # Best-guess path, unverified; adjust here if the script lives elsewhere.
-          claude-auth = "${config.home.homeDirectory}/claude-auth";
+          claude-auth = "${config.home.homeDirectory}/claude-auth.sh";
         };
 
         home.sessionVariables.OBSIDIAN_VAULT =
