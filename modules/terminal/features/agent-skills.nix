@@ -11,7 +11,6 @@
         "imperaluna/synced-repos"
         "mattpocock/teach"
         "poteto/bro"
-        "poteto/unslop"
       ];
 
       linksFor = root:
@@ -28,9 +27,15 @@
         // linksFor ".agents/skills"
         // linksFor ".pi/agent/skills"
         // {
-          # Global Claude Code instructions live in the Skills repo so they sync
-          # like everything else. force replaces a hand-made file or link.
+          # Global agent instructions live in the Skills repo so they sync like
+          # everything else. Claude and Codex read the same file, so it must
+          # stay plain markdown (no Claude-only @includes). force replaces a
+          # hand-made file or link.
           ".claude/CLAUDE.md" = {
+            source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/imperaluna/CLAUDE.md";
+            force = true;
+          };
+          ".codex/AGENTS.md" = {
             source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/imperaluna/CLAUDE.md";
             force = true;
           };
