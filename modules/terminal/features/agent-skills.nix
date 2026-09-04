@@ -9,7 +9,13 @@
       skillsRepo = "${config.home.homeDirectory}/Skills";
       skills = [
         "imperaluna/synced-repos"
+        "mattpocock/domain-modeling"
+        "mattpocock/grilling"
+        "mattpocock/prototype"
+        "mattpocock/research"
+        "mattpocock/setup-matt-pocock-skills"
         "mattpocock/teach"
+        "mattpocock/wayfinder"
         "poteto/bro"
       ];
 
