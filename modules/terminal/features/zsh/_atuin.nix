@@ -15,7 +15,9 @@ let
       inherit version src;
       hash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
     };
-    postPatch = (old.postPatch or "") + ''
+    # Do not inherit nixpkgs' postPatch: it targets 18.19.0, which has
+    # crates/atuin-pty-proxy/tests/. That directory is absent in 18.18.0.
+    postPatch = ''
       substituteInPlace crates/atuin/src/command/client/search/history_list.rs \
         --replace-fail \
         'style = self.theme.as_style(Meaning::AlertError);' \
