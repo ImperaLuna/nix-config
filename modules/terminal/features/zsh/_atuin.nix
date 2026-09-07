@@ -2,29 +2,6 @@
 
 let
   theme = import ../../../_lib/theme.nix;
-  atuin = pkgs.atuin.overrideAttrs (old: rec {
-    version = "18.18.0";
-    src = pkgs.fetchFromGitHub {
-      owner = "atuinsh";
-      repo = "atuin";
-      tag = "v18.18.0";
-      hash = "sha256-o20MwzWItvKcUIwrfxY60v2jqLnqLRbQ9lIevQWgVPI=";
-    };
-    cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-      pname = "atuin";
-      inherit version src;
-      hash = "sha256-IoOIpcobVcmQBzDiSsT3WvVW6UiRpZ6NWE0GlzDLlYk=";
-    };
-    # Do not inherit nixpkgs' postPatch: it targets 18.19.0, which has
-    # crates/atuin-pty-proxy/tests/. That directory is absent in 18.18.0.
-    postPatch = ''
-      substituteInPlace crates/atuin/src/command/client/search/history_list.rs \
-        --replace-fail \
-        'style = self.theme.as_style(Meaning::AlertError);' \
-        'style = self.theme.as_style(Meaning::AlertInfo);'
-    '';
-    checkFlags = (old.checkFlags or [ ]) ++ [ "--skip=api_client" ];
-  });
 in
 {
   xdg.configFile."atuin/themes/carbonfox.toml".text = ''
@@ -54,8 +31,6 @@ in
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
-    # Remove this override once nixpkgs provides Atuin 18.18 or newer.
-    package = atuin;
 
     settings = {
       theme = {
