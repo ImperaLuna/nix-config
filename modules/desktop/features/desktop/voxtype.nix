@@ -1,13 +1,13 @@
 { inputs, ... }:
 {
   flake.modules.homeManager.desktop-feature-voxtype =
-    { ... }:
+    { pkgs, ... }:
     {
       imports = [ inputs.voxtype.homeManagerModules.default ];
 
       programs.voxtype = {
         enable = true;
-        package = inputs.voxtype.packages.x86_64-linux.vulkan;
+        package = pkgs.voxtype-vulkan;
         engine = "whisper";
         model.name = "large-v3-turbo";
         service.enable = true;

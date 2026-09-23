@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [ inputs.voxtype.nixosModules.default ];
 
   programs.voxtype = {
     enable = true;
-    package = inputs.voxtype.packages.x86_64-linux.vulkan;
+    package = pkgs.voxtype-vulkan;
   };
 
   users.users.imperaluna.extraGroups = [ "input" ];
