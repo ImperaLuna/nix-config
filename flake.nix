@@ -42,11 +42,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    herdr = {
-      url = "github:ogulcancelik/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
   };
 
   outputs =
