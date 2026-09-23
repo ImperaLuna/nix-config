@@ -164,7 +164,7 @@ builtins.mapAttrs mkWindowsHome {
               -u CLAUDE_CODE_USE_VERTEX \
               -u CLOUD_ML_REGION \
               CLAUDE_CONFIG_DIR="$HOME/.claude-personal" \
-              claude "$@"
+              claude --setting-sources user "$@"
           '';
         in
         {
