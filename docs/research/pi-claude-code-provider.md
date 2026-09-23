@@ -25,7 +25,7 @@ Question: Is "pi-claude-code-provider", a pi extension that routes model request
 | License | MIT | npm registry, GitHub `licenseInfo` |
 | Latest version | 0.4.0, published 2026-09-20T23:38:40Z, tag `v0.4.0` = commit `a8f89c19652338be28aab5bb80dd5c4a36e5a2b3` | npm `time`, `git log` |
 | First release | 0.1.0 on 2026-07-19 (8 versions total) | npm `time` |
-| Commit activity | 108 commits between 2026-07-19 and 2026-09-20; 58 of them in September | `git log` of a local clone |
+| Commit activity | 108 commits between 2026-07-19 and 2026-09-20; 76 of them in September | `git log` of a local clone |
 | GitHub | 25 stars, 7 forks, created 2026-07-19, last push 2026-09-20, not archived | `gh repo view` |
 | Issues | 1 open (#8), 4 closed; 5 PRs (2 merged) | `gh issue list`, `gh pr list` |
 | Downloads | 1,912 in 2026-08-23 to 2026-09-21 | api.npmjs.org/downloads/point/last-month |
@@ -76,7 +76,7 @@ The code backs this up:
   "--system-prompt-file", prepared.systemPromptPath,
   ```
   `--tools ""` disables all of Claude Code's built-in tools. `--system-prompt-file` replaces Claude Code's system prompt with pi's.
-- Auth check shells out to `claude auth status` (`src/auth.ts` line 87) and requires `authMethod === "claude.ai"`, `apiProvider === "firstParty"` and a subscription type in `pro | max | team | enterprise` (`parseAuthStatus`, lines 44 to 60). It never opens the credentials file.
+- Auth check shells out to `claude auth status` (`src/auth.ts` line 87) and requires `authMethod === "claude.ai"`, `apiProvider === "firstParty"` and a subscription type in `pro | max | team | enterprise` (`parseAuthStatus`, lines 43 to 60). It never opens the credentials file.
 - The child environment is an allowlist. `src/auth.ts` `DENIED_ENVIRONMENT` refuses to forward `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL`, `CLAUDE_CODE_OAUTH_TOKEN`, `CLAUDE_CODE_USE_BEDROCK`, `CLAUDE_CODE_USE_VERTEX`, and sets `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`, `CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS=1`.
 - Tools: pi's tool schemas are exposed to Claude through a local MCP server that only lists tools. `bridge/mcp-proposal-server.js` lines 97 to 102:
   ```js
@@ -138,9 +138,9 @@ Authentication rules. Claude Code docs, "Legal and compliance" (https://code.cla
 
 > OAuth authentication is intended exclusively for purchasers of Claude Free, Pro, Max, Team, and Enterprise subscription plans and is designed to support ordinary use of Claude Code and other native Anthropic applications.
 
-> Developers building products or services that interact with Claude's capabilities, including those using the Agent SDK, should use API key authentication through Claude Console or a supported cloud provider. Anthropic does not permit third-party developers to offer Claude.ai login into their own applications, or to route requests through Free, Pro, or Max plan credentials on behalf of their users. Moreover, developers may not collect, store, or intermediate Claude.ai credentials or session tokens — sign-in to a Claude account must complete through Anthropic's own flow.
+> Developers building products or services that interact with Claude's capabilities, including those using the Agent SDK, should use API key authentication through Claude Console or a supported cloud provider. Anthropic does not permit third-party developers to offer Claude.ai login into their own applications, or to route requests through Free, Pro, or Max plan credentials on behalf of their users. Moreover, developers may not collect, store, or intermediate Claude.ai credentials or session tokens
 
-(That dash is Anthropic's, quoted verbatim.)
+and, in the same sentence, "sign-in to a Claude account must complete through Anthropic's own flow."
 
 > Nor does it prevent an end user from signing in to the unmodified Claude Code binary with their own Claude subscription, including where a platform hosts Claude Code as described under *Can customers offer Claude Code in their products?* above.
 
