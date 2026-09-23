@@ -169,9 +169,6 @@ builtins.mapAttrs mkWindowsHome {
         in
         {
           home.file = {
-            "start-jira-tunnel.sh".source =
-              config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
-
             # Keep the personal account's credentials and history separate while
             # sharing the Nix-managed instructions, skills, and keybindings.
             ".claude-personal/CLAUDE.md".source =
@@ -183,8 +180,8 @@ builtins.mapAttrs mkWindowsHome {
           };
 
           home.shellAliases = {
-            jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
-            claude-auth = "${config.home.homeDirectory}/claude-auth.sh";
+            jira-tunnel = "${viasatDir}/start-jira-tunnel.sh";
+            claude-auth = "${viasatDir}/claude-auth.sh";
           };
 
           home.sessionVariables.OBSIDIAN_VAULT =
