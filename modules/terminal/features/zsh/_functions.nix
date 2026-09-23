@@ -129,7 +129,17 @@ in
 
       nix flake update --flake "$flakePath" "$@" || return $?
 
-      sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" || return $?
+      if [[ -e /etc/NIXOS ]]; then
+        sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" || return $?
+      else
+        local configName="''${HM_CONFIG_NAME:-$(hostname)}"
+        if ! command -v home-manager >/dev/null 2>&1; then
+          print -u2 "upgrade: home-manager is not available"
+          return 1
+        fi
+        home-manager switch --flake "$flakePath#$configName" || return $?
+      fi
+
       exec zsh
     }
 

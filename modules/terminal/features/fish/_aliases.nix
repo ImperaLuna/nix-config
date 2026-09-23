@@ -51,7 +51,21 @@
       nix flake update --flake "$flakePath" $argv
       or return $status
 
-      sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" nixos-rebuild switch --flake "$flakePath#"(hostname)
+      if test -e /etc/NIXOS
+        sudo SSH_AUTH_SOCK="$SSH_AUTH_SOCK" nixos-rebuild switch --flake "$flakePath#"(hostname)
+      else
+        set -l configName "$HM_CONFIG_NAME"
+        if test -z "$configName"
+          set configName (hostname)
+        end
+
+        if not type -q home-manager
+          echo "upgrade: home-manager is not available" >&2
+          return 1
+        end
+
+        home-manager switch --flake "$flakePath#$configName"
+      end
     '';
 
     functions.homeswitch = ''
