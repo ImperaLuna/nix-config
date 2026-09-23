@@ -122,7 +122,7 @@ From the repo's own records:
 - Features not exposed: fast mode, deliberately, because it bills usage credits (DESIGN.md; issue #6). Haiku has no effort control.
 - Users' own Claude Code settings, hooks, MCP servers and CLAUDE.md are ignored (`--setting-sources ""`), by design. Admin-managed policy still applies.
 
-Inference: the design is careful and heavily tested (about 8k lines of unit tests, paid live gates), but it sits on Claude Code's print-mode internals and pi's provider internals, both of which move weekly. Expect breakage after upgrades of either, and upgrade them together with this package.
+Inference: the design is careful and heavily tested (about 7.5k lines of unit tests, paid live gates), but it sits on Claude Code's print-mode internals and pi's provider internals, both of which move weekly. Expect breakage after upgrades of either, and upgrade them together with this package.
 
 ## 4. Compliance and billing
 
