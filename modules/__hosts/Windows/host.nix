@@ -148,23 +148,54 @@ builtins.mapAttrs mkWindowsHome {
     userConfig = ../.users/rbrezeanu;
     windowsUser = "rbrezeanu";
     extraModules = [
-      ({ config, pkgs, ... }: {
-        home.file."start-jira-tunnel.sh".source =
-          config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+      ({ config, pkgs, ... }:
+        let
+          claudePersonal = pkgs.writeShellScriptBin "claude-personal" ''
+            exec ${pkgs.coreutils}/bin/env \
+              -u ANTHROPIC_API_KEY \
+              -u ANTHROPIC_AUTH_TOKEN \
+              -u ANTHROPIC_BASE_URL \
+              -u ANTHROPIC_MODEL \
+              -u ANTHROPIC_SMALL_FAST_MODEL \
+              -u ANTHROPIC_VERTEX_BASE_URL \
+              -u ANTHROPIC_VERTEX_PROJECT_ID \
+              -u CLAUDE_CODE_OAUTH_TOKEN \
+              -u CLAUDE_CODE_SKIP_VERTEX_AUTH \
+              -u CLAUDE_CODE_USE_VERTEX \
+              -u CLOUD_ML_REGION \
+              CLAUDE_CONFIG_DIR="$HOME/.claude-personal" \
+              claude "$@"
+          '';
+        in
+        {
+          home.file = {
+            "start-jira-tunnel.sh".source =
+              config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
 
-        home.shellAliases = {
-          jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
-          claude-auth = "${config.home.homeDirectory}/claude-auth.sh";
-        };
+            # Keep the personal account's credentials and history separate while
+            # sharing the Nix-managed instructions, skills, and keybindings.
+            ".claude-personal/CLAUDE.md".source =
+              config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/CLAUDE.md";
+            ".claude-personal/keybindings.json".source =
+              config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/keybindings.json";
+            ".claude-personal/skills".source =
+              config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.claude/skills";
+          };
 
-        home.sessionVariables.OBSIDIAN_VAULT =
-          "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
+          home.shellAliases = {
+            jira-tunnel = "${config.home.homeDirectory}/.claude/start-jira-tunnel.sh";
+            claude-auth = "${config.home.homeDirectory}/claude-auth.sh";
+          };
 
-        home.packages = [
-          pkgs.awscli2
-          pkgs.docker
-        ];
-      })
+          home.sessionVariables.OBSIDIAN_VAULT =
+            "/mnt/c/Users/rbrezeanu/OneDrive - ENDAVA/Documents/vault";
+
+          home.packages = [
+            claudePersonal
+            pkgs.awscli2
+            pkgs.docker
+          ];
+        })
     ];
   };
 
