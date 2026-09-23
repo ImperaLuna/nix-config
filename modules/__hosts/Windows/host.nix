@@ -155,7 +155,7 @@ builtins.mapAttrs mkWindowsHome {
 
           # Work-only skills from the Skills repo, linked like agent-skills.nix
           # does for the global ones. They need the Viasat Jira MCP.
-          workSkills = [ "imperaluna/viasat-jira/jira-epic-backlog" ];
+          workSkills = [ "imperaluna/viasat-jira" ];
           workSkillLinks = builtins.listToAttrs (
             builtins.concatMap (root:
               map (skill: {
