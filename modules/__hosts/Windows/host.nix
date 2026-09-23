@@ -152,7 +152,7 @@ builtins.mapAttrs mkWindowsHome {
         let
           # Work-only helper scripts, kept outside the repo.
           viasatDir = "${config.home.homeDirectory}/.viasat";
-          claudePersonal =pkgs.writeShellScriptBin "claude-personal" ''
+          claudePersonal = pkgs.writeShellScriptBin "claude-personal" ''
             exec ${pkgs.coreutils}/bin/env \
               -u ANTHROPIC_API_KEY \
               -u ANTHROPIC_AUTH_TOKEN \
