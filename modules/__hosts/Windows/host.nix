@@ -150,7 +150,9 @@ builtins.mapAttrs mkWindowsHome {
     extraModules = [
       ({ config, pkgs, ... }:
         let
-          claudePersonal = pkgs.writeShellScriptBin "claude-personal" ''
+          # Work-only helper scripts, kept outside the repo.
+          viasatDir = "${config.home.homeDirectory}/.viasat";
+          claudePersonal =pkgs.writeShellScriptBin "claude-personal" ''
             exec ${pkgs.coreutils}/bin/env \
               -u ANTHROPIC_API_KEY \
               -u ANTHROPIC_AUTH_TOKEN \
