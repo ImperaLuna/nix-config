@@ -40,6 +40,7 @@
       config.flake.modules.homeManager.terminal-feature-yazi
 
       # AI/code assistants
+      config.flake.modules.homeManager.terminal-feature-claude-code
       config.flake.modules.homeManager.terminal-feature-llm-cli-tools
       config.flake.modules.homeManager.terminal-feature-agent-skills
     ];

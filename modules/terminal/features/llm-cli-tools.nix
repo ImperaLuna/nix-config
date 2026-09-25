@@ -7,29 +7,13 @@
 
       codexInsertNewline = ''insert_newline = ["ctrl-enter", "shift-enter"]'';
 
-      claudeKeybindings = builtins.toJSON {
-        "$schema" = "https://www.schemastore.org/claude-code-keybindings.json";
-        "$docs" = "https://code.claude.com/docs/en/keybindings";
-        bindings = [
-          {
-            context = "Chat";
-            bindings = {
-              "shift+enter" = "chat:newline";
-              "ctrl+j" = "chat:newline";
-            };
-          }
-        ];
-      };
 
     in
     {
       home.packages = [
-        agents.claude-code
         agents.codex
         (agents.pi.override { useBun = false; })
       ];
-
-      home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
 
       # Codex keeps trusted projects, hook hashes, and first-run state in the same
       # TOML file, so patch only the keymap entry instead of replacing the file.
