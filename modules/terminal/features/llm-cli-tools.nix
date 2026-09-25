@@ -6,8 +6,6 @@
       agents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
       codexInsertNewline = ''insert_newline = ["ctrl-enter", "shift-enter"]'';
-
-
     in
     {
       home.packages = [
