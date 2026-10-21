@@ -6,7 +6,6 @@
   flake.modules.homeManager.experimental = { pkgs, ... }:
     {
       home.packages = [
-        pkgs.t3code
         # pkgs.alacritty
         # pkgs.google-chrome
       ];

@@ -48,7 +48,7 @@
         };
 
       # `skills check` is the quick read-only status; `skills update` is the
-      # interactive pull. A real script so it works from zsh and fish alike.
+      # interactive pull. A real script so it also works outside zsh.
       home.packages = [
         (pkgs.writeShellScriptBin "skills" ''
           case "''${1:-}" in

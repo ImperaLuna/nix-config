@@ -25,8 +25,7 @@
     {
       home.packages = [
         # Claude Code's /voice uses a bundled native capture module that links
-        # libasound.so.2. Without it on the loader path it falls back to SoX's
-        # `rec`, which is slower to start and stream.
+        # libasound.so.2, so put alsa-lib on the loader path.
         (pkgs.symlinkJoin {
           name = "claude-code-alsa";
           paths = [ agents.claude-code ];
@@ -36,7 +35,6 @@
               --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.alsa-lib ]}
           '';
         })
-        pkgs.sox
         agents.codex
         (agents.pi.override { useBun = false; })
       ];
