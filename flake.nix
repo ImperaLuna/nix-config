@@ -31,11 +31,9 @@
       inputs.quickshell.follows = "quickshell";
     };
 
-    # nova-shell's lock pins quickshell 59e9c47 (2026-05), which fails against
-    # Qt 6.12 with "Meta Types must be fully defined". 2b4501a carries the
-    # MOC-include fix. Remove once nova-shell updates its own lock.
+    # Hand nova nixpkgs' quickshell (cached) instead of its own source pin.
     quickshell = {
-      url = "github:quickshell-mirror/quickshell/2b4501a282689792b62e94f3fb30d8f512324fe6";
+      url = "path:./modules/_lib/quickshell-nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
