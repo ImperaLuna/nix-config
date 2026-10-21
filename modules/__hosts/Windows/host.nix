@@ -143,7 +143,7 @@ builtins.mapAttrs mkWindowsHome {
                 value.source = config.lib.file.mkOutOfStoreSymlink
                   "${config.home.homeDirectory}/Skills/global/${skill}";
               }) workSkills
-            ) [ ".claude/skills" ".agents/skills" ".pi/agent/skills" ]
+            ) [ ".claude/skills" ".agents/skills" ]
           );
           claudePersonal = pkgs.writeShellScriptBin "claude-personal" ''
             exec ${pkgs.coreutils}/bin/env \

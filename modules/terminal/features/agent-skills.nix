@@ -31,7 +31,6 @@
       home.file =
         linksFor ".claude/skills"
         // linksFor ".agents/skills"
-        // linksFor ".pi/agent/skills"
         // {
           # Global agent instructions live in the Skills repo so they sync like
           # everything else. Claude and Codex read the same file, so it must

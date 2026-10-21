@@ -36,7 +36,6 @@
           '';
         })
         agents.codex
-        (agents.pi.override { useBun = false; })
       ];
 
       home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
