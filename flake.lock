@@ -284,19 +284,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1792214446,
-        "narHash": "sha256-tq6x6CRG8Qikrjri59tzu9+b2gri8TjnShkGeh8kUgQ=",
-        "owner": "quickshell-mirror",
-        "repo": "quickshell",
-        "rev": "2b4501a282689792b62e94f3fb30d8f512324fe6",
-        "type": "github"
+        "path": "./modules/_lib/quickshell-nixpkgs",
+        "type": "path"
       },
       "original": {
-        "owner": "quickshell-mirror",
-        "repo": "quickshell",
-        "rev": "2b4501a282689792b62e94f3fb30d8f512324fe6",
-        "type": "github"
-      }
+        "path": "./modules/_lib/quickshell-nixpkgs",
+        "type": "path"
+      },
+      "parent": []
     },
     "qylock": {
       "flake": false,
