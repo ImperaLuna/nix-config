@@ -127,7 +127,14 @@ in
         return 1
       fi
 
-      nix flake update --flake "$flakePath" "$@" || return $?
+      # Authenticated GitHub API calls get 5000 req/h instead of 60.
+      local nixConfig="''${NIX_CONFIG:-}"
+      local ghToken
+      if command -v gh >/dev/null 2>&1 && ghToken="$(gh auth token 2>/dev/null)" && [[ -n "$ghToken" ]]; then
+        nixConfig+=$'\n'"access-tokens = github.com=$ghToken"
+      fi
+
+      NIX_CONFIG="$nixConfig" nix flake update --flake "$flakePath" "$@" || return $?
 
       if [[ -e /etc/NIXOS ]]; then
         sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" || return $?

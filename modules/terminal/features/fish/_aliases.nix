@@ -48,7 +48,14 @@
         return 1
       end
 
-      nix flake update --flake "$flakePath" $argv
+      # Authenticated GitHub API calls get 5000 req/h instead of 60.
+      set -l nixConfig "$NIX_CONFIG"
+      set -l ghToken
+      if type -q gh; and set ghToken (gh auth token 2>/dev/null); and test -n "$ghToken"
+        set nixConfig "$nixConfig"\n"access-tokens = github.com=$ghToken"
+      end
+
+      NIX_CONFIG="$nixConfig" nix flake update --flake "$flakePath" $argv
       or return $status
 
       if test -e /etc/NIXOS
