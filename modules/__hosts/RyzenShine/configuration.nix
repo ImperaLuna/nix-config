@@ -30,6 +30,20 @@ in
   ];
 
   programs.nh.flake = "/home/imperaluna/nix-config";
+
+  # Let agents apply this repo, roll back, clean the store and restart units
+  # without a password. Arguments are pinned so only these exact forms match.
+  security.sudo.extraRules = [{
+    users = [ "imperaluna" ];
+    commands = map (command: { inherit command; options = [ "NOPASSWD" ]; }) [
+      "/run/current-system/sw/bin/nixos-rebuild switch --flake /home/imperaluna/nix-config"
+      "/run/current-system/sw/bin/nixos-rebuild switch --rollback"
+      "/run/current-system/sw/bin/nh clean all --keep-since 7d --keep 3"
+      "/run/current-system/sw/bin/systemctl restart *"
+      "/run/current-system/sw/bin/systemctl reset-failed *"
+    ];
+  }];
+
   programs.steam.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
