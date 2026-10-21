@@ -25,14 +25,16 @@
       const trackerReplacement = ${builtins.toJSON trackerList};
       source = source.replace(trackerMatches[0][0], trackerReplacement);
 
-      const mpvPath = 'path: [ "/usr/bin/mpv" ]';
+      // Patch only the inner array so it works whether or not upstream wraps
+      // the linux paths in asLinuxPaths() for flatpak discovery.
+      const mpvPath = '[ "/usr/bin/mpv" ]';
       if (source.split(mpvPath).length !== 2) {
         throw new Error("expected exactly one mpv path in " + serverPath);
       }
 
       source = source.replace(
         mpvPath,
-        'path: [ process.env.MPV_BIN || "/usr/bin/mpv" ]',
+        '[ process.env.MPV_BIN || "/usr/bin/mpv" ]',
       );
       fs.writeFileSync(serverPath, source);
     '';

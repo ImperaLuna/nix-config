@@ -11,9 +11,7 @@
       config.flake.modules.homeManager.apps-feature-excalidraw
       config.flake.modules.homeManager.apps-feature-proton-pass
       config.flake.modules.homeManager.apps-feature-spotify
-      # Disabled: upstream server.js now wraps the linux mpv path in
-      # asLinuxPaths(), so our MPV_BIN patch no longer matches and the build fails.
-      # config.flake.modules.homeManager.apps-feature-stremio
+      config.flake.modules.homeManager.apps-feature-stremio
       config.flake.modules.homeManager.desktop-feature-gtk
       config.flake.modules.homeManager.desktop-feature-cursor
       config.flake.modules.homeManager.desktop-feature-hyprland

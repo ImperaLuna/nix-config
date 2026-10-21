@@ -297,7 +297,9 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "quickshell": "quickshell"
+        "quickshell": [
+          "quickshell"
+        ]
       },
       "locked": {
         "lastModified": 1785515389,
@@ -316,22 +318,21 @@
     "quickshell": {
       "inputs": {
         "nixpkgs": [
-          "nova",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1777871389,
-        "narHash": "sha256-gU+VGpwGJ2vvg0mtYqVvj5u+2LteuHlpokH6JSAtueY=",
+        "lastModified": 1792214446,
+        "narHash": "sha256-tq6x6CRG8Qikrjri59tzu9+b2gri8TjnShkGeh8kUgQ=",
         "owner": "quickshell-mirror",
         "repo": "quickshell",
-        "rev": "59e9c47b0eb48a9e4bcf9631fa062ee939bd2e83",
+        "rev": "2b4501a282689792b62e94f3fb30d8f512324fe6",
         "type": "github"
       },
       "original": {
         "owner": "quickshell-mirror",
-        "ref": "v0.3.0",
         "repo": "quickshell",
+        "rev": "2b4501a282689792b62e94f3fb30d8f512324fe6",
         "type": "github"
       }
     },
@@ -362,6 +363,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "nova": "nova",
+        "quickshell": "quickshell",
         "qylock": "qylock",
         "voxtype": "voxtype",
         "zen-browser": "zen-browser"
