@@ -127,6 +127,13 @@ in
         return 1
       fi
 
+      # Start from the latest config and lock so the update can't diverge
+      # from what other machines already pushed.
+      if ! git -C "$flakePath" pull --rebase --autostash; then
+        print -u2 "upgrade: git pull failed in $flakePath, resolve it before upgrading"
+        return 1
+      fi
+
       # Authenticated GitHub API calls get 5000 req/h instead of 60.
       local nixConfig="''${NIX_CONFIG:-}"
       local ghToken

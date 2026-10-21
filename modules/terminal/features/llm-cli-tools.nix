@@ -1,8 +1,9 @@
 { inputs, ... }:
 
 {
-  flake.modules.homeManager.terminal-feature-llm-cli-tools = { lib, pkgs, ... }:
+  flake.modules.homeManager.terminal-feature-llm-cli-tools = { config, lib, pkgs, ... }:
     let
+      cfg = config.modules.llm-cli-tools;
       agents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
       codexInsertNewline = ''insert_newline = ["ctrl-enter", "shift-enter"]'';
@@ -23,88 +24,105 @@
 
     in
     {
-      home.packages = [
-        # Claude Code's /voice uses a bundled native capture module that links
-        # libasound.so.2, so put alsa-lib on the loader path.
-        (pkgs.symlinkJoin {
-          name = "claude-code-alsa";
-          paths = [ agents.claude-code ];
-          nativeBuildInputs = [ pkgs.makeWrapper ];
-          postBuild = ''
-            wrapProgram $out/bin/claude \
-              --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.alsa-lib ]}
-          '';
-        })
-        agents.codex
-      ];
+      options.modules.llm-cli-tools.nativeVoice = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Use Claude Code's native ALSA voice capture. Turn off where audio only reaches PulseAudio (WSLg), so /voice falls back to SoX.";
+      };
 
-      home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
+      config = {
+        home.packages =
+          if cfg.nativeVoice then
+            [
+              # Claude Code's /voice uses a bundled native capture module that
+              # links libasound.so.2, so put alsa-lib on the loader path.
+              (pkgs.symlinkJoin {
+                name = "claude-code-alsa";
+                paths = [ agents.claude-code ];
+                nativeBuildInputs = [ pkgs.makeWrapper ];
+                postBuild = ''
+                  wrapProgram $out/bin/claude \
+                    --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.alsa-lib ]}
+                '';
+              })
+              agents.codex
+            ]
+          else
+            [
+              # Without the native module, /voice records through SoX's `rec`.
+              agents.claude-code
+              pkgs.sox
+              agents.codex
+            ];
 
-      # Codex keeps trusted projects, hook hashes, and first-run state in the same
-      # TOML file, so patch only the keymap entry instead of replacing the file.
-      home.activation.codexNewlineKeymap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        config_file="$HOME/.codex/config.toml"
-        desired='${codexInsertNewline}'
+        home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
 
-        mkdir -p "$HOME/.codex"
+        # Codex keeps trusted projects, hook hashes, and first-run state in the same
+        # TOML file, so patch only the keymap entry instead of replacing the file.
+        home.activation.codexNewlineKeymap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          config_file="$HOME/.codex/config.toml"
+          desired='${codexInsertNewline}'
 
-        if [ ! -f "$config_file" ]; then
-          cat > "$config_file" <<EOF
-        [tui.keymap.editor]
-        $desired
-        EOF
-        fi
+          mkdir -p "$HOME/.codex"
 
-        tmp_file="$(mktemp)"
+          if [ ! -f "$config_file" ]; then
+            cat > "$config_file" <<EOF
+          [tui.keymap.editor]
+          $desired
+          EOF
+          fi
 
-        ${pkgs.gawk}/bin/awk -v desired="$desired" '
-          function is_header(line) {
-            return line ~ /^[[:space:]]*\[/
-          }
+          tmp_file="$(mktemp)"
 
-          /^[[:space:]]*\[tui\.keymap\.editor\][[:space:]]*$/ {
-            in_table = 1
-            seen_table = 1
-            print
-            next
-          }
-
-          in_table && is_header($0) {
-            if (!wrote) {
-              print desired
-              wrote = 1
+          ${pkgs.gawk}/bin/awk -v desired="$desired" '
+            function is_header(line) {
+              return line ~ /^[[:space:]]*\[/
             }
-            in_table = 0
-          }
 
-          in_table && /^[[:space:]]*insert_newline[[:space:]]*=/ {
-            if (!wrote) {
-              print desired
-              wrote = 1
+            /^[[:space:]]*\[tui\.keymap\.editor\][[:space:]]*$/ {
+              in_table = 1
+              seen_table = 1
+              print
+              next
             }
-            next
-          }
 
-          {
-            print
-          }
-
-          END {
-            if (!seen_table) {
-              print ""
-              print "[tui.keymap.editor]"
-              print desired
-            } else if (in_table && !wrote) {
-              print desired
+            in_table && is_header($0) {
+              if (!wrote) {
+                print desired
+                wrote = 1
+              }
+              in_table = 0
             }
-          }
-        ' "$config_file" > "$tmp_file"
 
-        if cmp -s "$tmp_file" "$config_file"; then
-          rm "$tmp_file"
-        else
-          mv "$tmp_file" "$config_file"
-        fi
-      '';
+            in_table && /^[[:space:]]*insert_newline[[:space:]]*=/ {
+              if (!wrote) {
+                print desired
+                wrote = 1
+              }
+              next
+            }
+
+            {
+              print
+            }
+
+            END {
+              if (!seen_table) {
+                print ""
+                print "[tui.keymap.editor]"
+                print desired
+              } else if (in_table && !wrote) {
+                print desired
+              }
+            }
+          ' "$config_file" > "$tmp_file"
+
+          if cmp -s "$tmp_file" "$config_file"; then
+            rm "$tmp_file"
+          else
+            mv "$tmp_file" "$config_file"
+          fi
+        '';
+      };
     };
 }

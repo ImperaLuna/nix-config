@@ -1,16 +1,19 @@
 { pkgs, lib, ... }:
 
 let
-  zshFzfTab = pkgs.zsh-fzf-tab.overrideAttrs {
-    postPatch = ''
-      substituteInPlace lib/-ftb-fzf \
+  # The WSL patch only touches a shell script, so apply it to a copy of the
+  # cached package. overrideAttrs would recompile fzf-tab's zsh module from
+  # the full zsh source on every nixpkgs bump.
+  zshFzfTab = pkgs.runCommand "zsh-fzf-tab-wsl" { } ''
+      cp -r ${pkgs.zsh-fzf-tab} $out
+      chmod -R u+w $out
+      substituteInPlace $out/share/fzf-tab/lib/-ftb-fzf \
         --replace-fail \
           '_ftb_query="''${_ftb_query}$(command "$dd" bs=1G count=1 status=none iflag=nonblock < /dev/tty 2>/dev/null)" || true' \
           'if [[ -z ''${WSL_DISTRO_NAME-} && -z ''${WSL_INTEROP-} ]]; then
             _ftb_query="''${_ftb_query}$(command "$dd" bs=1G count=1 status=none iflag=nonblock < /dev/tty 2>/dev/null)" || true
           fi'
-    '';
-  };
+  '';
 in
 
 {

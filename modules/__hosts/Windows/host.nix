@@ -48,6 +48,10 @@ let
               }
             '';
 
+            # WSLg only exposes audio through PulseAudio, which the native
+            # ALSA capture can't reach.
+            modules.llm-cli-tools.nativeVoice = false;
+
             home.packages = [
               windowsClipboardCopy
               windowsClipboardPaste
