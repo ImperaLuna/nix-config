@@ -8,6 +8,9 @@ let
     rm -f "$out/share/wayland-sessions/hyprland.desktop"
   '';
 
+  # Keep in sync with the lock screen theme in modules/desktop/features/desktop/qylock.
+  qylockTheme = "pixel-dusk-city";
+
   qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
     pname = "qylock-sddm-theme";
     version = "unstable-2026-04-09";
@@ -16,7 +19,7 @@ let
 
     installPhase = ''
       mkdir -p "$out/share/sddm/themes/qylock"
-      cp -r themes/pixel-dusk-city/* "$out/share/sddm/themes/qylock/"
+      cp -r themes/${qylockTheme}/* "$out/share/sddm/themes/qylock/"
       chmod -R u+w "$out/share/sddm/themes/qylock"
       substituteInPlace "$out/share/sddm/themes/qylock/Main.qml" \
         --replace-fail 'property string uName:  model.realName || model.name || ""' \
@@ -182,10 +185,6 @@ in
     WLR_NO_HARDWARE_CURSORS = "1";  # fixes invisible cursor on nvidia+wayland
     NIXOS_OZONE_WL = "1";           # native wayland for electron apps
   };
-
-  environment.systemPackages = [
-    qylockSddmTheme
-  ];
 
   # ===================================================================
   # FIREWALL
