@@ -53,21 +53,10 @@ in
   security.pam.services.login.enableGnomeKeyring = true;
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    settings.publish = {
-      disable-publishing = false;
-      publish-addresses = true;
-    };
-  };
 
   # ===================================================================
   # PERIPHERALS
   # ===================================================================
-  services.printing.enable = true; # Turns on printer support (so adding/using printers works)
-  services.ipp-usb.enable = true; # Makes many USB printers/scanners show up automatically
-  hardware.sane.enable = true; # Turns on scanner support
   services.fwupd.enable = true; # Lets you update firmware for devices (BIOS/docks/etc.)
   services.udisks2.enable = true; # Lets file managers mount/unmount USB drives
   services.gvfs.enable = true; # Makes external/network drives show up nicely in GUI apps
