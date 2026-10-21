@@ -9,7 +9,7 @@
         hash = "sha256-qz3w+nnvBgkpHT3E34dv4DvFuYlyzTAyg9tPYJFWs3o=";
       };
 
-      appimageContents = pkgs.appimageTools.extractType2 { inherit src version; pname = "helium"; };
+      appimageContents = pkgs.appimageTools.extract { inherit src version; pname = "helium"; };
 
       helium = pkgs.appimageTools.wrapType2 {
         pname = "helium";
