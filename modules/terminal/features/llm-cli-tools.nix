@@ -25,6 +25,9 @@
     {
       home.packages = [
         agents.claude-code
+        # Claude Code's /voice falls back to SoX's `rec` when its native audio
+        # module can't load, which is the case on NixOS.
+        pkgs.sox
         agents.codex
         (agents.pi.override { useBun = false; })
       ];
