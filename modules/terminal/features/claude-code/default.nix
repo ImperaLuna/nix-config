@@ -1,6 +1,9 @@
 { inputs, ... }:
 
 {
+  # A second Claude Code next to the llm-agents `claude`, pinned to the release
+  # in version.json and installed as `claude-pinned`. Change the pin with
+  # `claude-pin <version>` (or `claude-pin latest` / `claude-pin stable`).
   flake.modules.homeManager.terminal-feature-claude-code = { pkgs, ... }:
     let
       system = pkgs.stdenv.hostPlatform.system;
@@ -11,19 +14,23 @@
         aarch64-darwin = "darwin-arm64";
       };
 
-      # Pinned independently of the llm-agents input. Change it with
-      # `claude-pin <version>`, which rewrites version.json and switches.
       pin = builtins.fromJSON (builtins.readFile ./version.json);
 
       # Reuse the llm-agents build (wrapper, patching, auto-updater off) and
       # swap only the release binary.
-      claude-code = inputs.llm-agents.packages.${system}.claude-code.overrideAttrs {
+      pinned = inputs.llm-agents.packages.${system}.claude-code.overrideAttrs {
         inherit (pin) version;
         src = pkgs.fetchurl {
           url = "${releases}/${pin.version}/${platforms.${system}}/claude";
           hash = pin.hashes.${system};
         };
       };
+
+      # Expose only bin/claude-pinned so it does not collide with `claude`.
+      claude-pinned = pkgs.runCommand "claude-pinned-${pin.version}" { } ''
+        mkdir -p $out/bin
+        ln -s ${pinned}/bin/claude $out/bin/claude-pinned
+      '';
 
       claude-pin = pkgs.writeShellApplication {
         name = "claude-pin";
@@ -58,7 +65,6 @@
               "$(jq -r --arg p "$1" '.platforms[$p].checksum' <<<"$manifest")"
           }
 
-          versionFile="$flakePath/modules/terminal/features/claude-code/version.json"
           jq -n \
             --arg version "$version" \
             --arg darwinArm "$(sri darwin-arm64)" \
@@ -71,9 +77,9 @@
                 "aarch64-linux": $linuxArm,
                 "x86_64-linux": $linuxX64
               }
-            }' > "$versionFile"
+            }' > "$flakePath/modules/terminal/features/claude-code/version.json"
 
-          echo "claude-pin: pinned claude-code $version"
+          echo "claude-pin: pinned claude-pinned to $version"
 
           if [[ -e /etc/NIXOS ]]; then
             sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)"
@@ -82,27 +88,11 @@
           fi
         '';
       };
-
-      claudeKeybindings = builtins.toJSON {
-        "$schema" = "https://www.schemastore.org/claude-code-keybindings.json";
-        "$docs" = "https://code.claude.com/docs/en/keybindings";
-        bindings = [
-          {
-            context = "Chat";
-            bindings = {
-              "shift+enter" = "chat:newline";
-              "ctrl+j" = "chat:newline";
-            };
-          }
-        ];
-      };
     in
     {
       home.packages = [
-        claude-code
+        claude-pinned
         claude-pin
       ];
-
-      home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
     };
 }
