@@ -96,7 +96,7 @@ in
     function rebuild() {
       local flakePath
 
-      for candidate in ~/nix-config ~/homelab/nix-config; do
+      for candidate in ~/nix-config; do
         if [[ -f "$candidate/flake.nix" ]]; then
           flakePath="$candidate"
           break
@@ -104,7 +104,7 @@ in
       done
 
       if [[ -z "$flakePath" ]]; then
-        print -u2 "rebuild: no flake found at ~/nix-config or ~/homelab/nix-config"
+        print -u2 "rebuild: no flake found at ~/nix-config"
         return 1
       fi
 
@@ -115,7 +115,7 @@ in
     function upgrade() {
       local flakePath
 
-      for candidate in ~/nix-config ~/homelab/nix-config; do
+      for candidate in ~/nix-config; do
         if [[ -f "$candidate/flake.nix" ]]; then
           flakePath="$candidate"
           break
@@ -123,7 +123,7 @@ in
       done
 
       if [[ -z "$flakePath" ]]; then
-        print -u2 "upgrade: no flake found at ~/nix-config or ~/homelab/nix-config"
+        print -u2 "upgrade: no flake found at ~/nix-config"
         return 1
       fi
 
@@ -157,7 +157,7 @@ in
       local hmAttr
       local activationPkg
 
-      for candidate in ~/nix-config ~/homelab/nix-config; do
+      for candidate in ~/nix-config; do
         if [[ -f "$candidate/flake.nix" ]]; then
           flakePath="$candidate"
           break
@@ -165,7 +165,7 @@ in
       done
 
       if [[ -z "$flakePath" ]]; then
-        print -u2 "homeswitch: no flake found at ~/nix-config or ~/homelab/nix-config"
+        print -u2 "homeswitch: no flake found at ~/nix-config"
         return 1
       fi
 

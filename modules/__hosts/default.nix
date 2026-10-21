@@ -6,21 +6,14 @@ let
     hostPath,
     username,
     userConfig,
-    homeProfile ? "desktop",
     extraSystemModules ? [ ],
   }:
-    let
-      homeStackModule =
-        if homeProfile == "server"
-        then config.flake.nixosModules.home-lab
-        else config.flake.nixosModules.home-desktop;
-    in
     inputs.nixpkgs.lib.nixosSystem {
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
         hostPath
-        homeStackModule
+        config.flake.nixosModules.home-desktop
         ({ pkgs, ... }: {
           home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
             target="$1"
@@ -28,8 +21,7 @@ let
             exec ${pkgs.coreutils}/bin/mv -- "$target" "$target.hm-backup-$timestamp"
           '';
           home-manager.extraSpecialArgs = {
-            inherit inputs homeProfile;
-            inherit userConfig;
+            inherit inputs userConfig;
           };
           home-manager.users.${username} = import ../../modules/home.nix;
         })
@@ -51,7 +43,6 @@ let
 
       extraSpecialArgs = {
         inherit inputs userConfig;
-        homeProfile = "server";
       };
 
       modules = [
@@ -67,8 +58,7 @@ let
 in
 {
   flake.nixosConfigurations =
-    (import ./RyzenShine/host.nix { inherit mkHost config; })
-    // (import ./DuskNova/host.nix { inherit mkHost config; });
+    import ./RyzenShine/host.nix { inherit mkHost config; };
 
   flake.homeConfigurations =
     (import ./Windows/host.nix { inherit mkHome; })

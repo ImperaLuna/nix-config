@@ -1,4 +1,4 @@
-{ userConfig, homeProfile ? "desktop", ... }:
+{ userConfig, ... }:
 
 {
   imports = [

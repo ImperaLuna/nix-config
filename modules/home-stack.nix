@@ -14,15 +14,4 @@
       self.modules.homeManager.experimental
     ];
   };
-
-  flake.nixosModules.home-lab = { ... }: {
-    imports = [ inputs.home-manager.nixosModules.home-manager ];
-
-    home-manager.useGlobalPkgs = true;
-    home-manager.useUserPackages = true;
-    home-manager.sharedModules = [
-      self.modules.homeManager.terminal
-      self.modules.homeManager.dev
-    ];
-  };
 }

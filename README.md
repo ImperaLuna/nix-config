@@ -42,17 +42,6 @@ nix run github:nix-community/home-manager -- switch --flake ~/nix-config#Linux
 Use this for a normal Linux server where you only want the configured user
 environment.
 
-### NixOS server
-
-Install NixOS on the machine, copy this repository to it, and check or replace
-its hardware configuration. Then apply the server host:
-
-```bash
-sudo nixos-rebuild switch --flake ~/nix-config#DuskNova
-```
-
-`DuskNova` manages the complete NixOS system and uses the `home-lab` environment.
-
 ### Another bare-metal NixOS machine
 
 1. Install NixOS and generate its hardware configuration.
@@ -65,7 +54,7 @@ sudo nixos-rebuild switch --flake ~/nix-config#DuskNova
 sudo nixos-rebuild switch --flake ~/nix-config#YourHostName
 ```
 
-Use `RyzenShine` as the desktop example and `DuskNova` as the server example.
+Use `RyzenShine` as the example.
 
 ## Daily commands
 
