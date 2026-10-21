@@ -1,0 +1,5 @@
+evaluation warning: The option `services.avahi.publish.enable` is obsolete. Use
+                    `services.avahi.settings.publish."disable-publishing" = false;` instead.
+evaluation warning: The option `services.avahi.publish.userServices` is obsolete. Use
+                    `services.avahi.settings.publish.disable-user-service-publishing = false;`
+                    and `services.avahi.settings.publish.publish-addresses = true;` instead.
