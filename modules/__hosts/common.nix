@@ -23,14 +23,21 @@
     ];
     max-jobs = "auto";
     cores = 0;
-    keep-outputs = true;
-    keep-derivations = true;
+    # Collect garbage during builds when free space runs low, between weekly cleans.
+    min-free = 10 * 1024 * 1024 * 1024;
+    max-free = 50 * 1024 * 1024 * 1024;
   };
   nix.optimise.automatic = true;
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
+
+  # nh clean also prunes per-user profiles under ~/.local/state/nix/profiles,
+  # which nix.gc never sees. --keep 3 keeps a rollback after long breaks.
+  programs.nh = {
+    enable = true;
+    clean = {
+      enable = true;
+      dates = "weekly";
+      extraArgs = "--keep-since 7d --keep 3";
+    };
   };
 
   # ===================================================================

@@ -29,6 +29,7 @@ in
     ../common.nix
   ];
 
+  programs.nh.flake = "/home/imperaluna/nix-config";
   programs.steam.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
