@@ -5,6 +5,7 @@
 
   flake.modules.homeManager.desktop = {
     imports = [
+      config.flake.modules.homeManager.apps-feature-claude-desktop
       config.flake.modules.homeManager.apps-feature-discord
       config.flake.modules.homeManager.apps-feature-ferdium
       config.flake.modules.homeManager.apps-feature-excalidraw
