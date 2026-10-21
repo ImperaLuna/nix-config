@@ -7,35 +7,34 @@
 
     stremioSource = pkgs.stremio-linux-shell.src;
 
+    # Each patch is skipped with a warning when upstream's server.js no longer
+    # matches, so a Stremio update can't fail the whole system rebuild.
     patchStremioServer = pkgs.writeText "patch-stremio-server.js" ''
       const fs = require("fs");
 
       const serverPath = process.argv[2];
       let source = fs.readFileSync(serverPath, "utf8");
+      const skip = (what) =>
+        console.warn("warning: stremio: " + what + " not found in server.js, leaving it unpatched");
+
       const trackerModulePattern =
         /module\.exports = \[ (?:"(?:https?|udp):\/\/[^"\n]+\/announce"(?:, )?)+ \];/g;
       const trackerMatches = Array.from(source.matchAll(trackerModulePattern));
-
-      if (trackerMatches.length !== 1) {
-        throw new Error(
-          "expected exactly one tracker module in " + serverPath + ", found " + trackerMatches.length,
-        );
+      if (trackerMatches.length === 1) {
+        source = source.replace(trackerMatches[0][0], ${builtins.toJSON trackerList});
+      } else {
+        skip("a single tracker list (found " + trackerMatches.length + ")");
       }
-
-      const trackerReplacement = ${builtins.toJSON trackerList};
-      source = source.replace(trackerMatches[0][0], trackerReplacement);
 
       // Patch only the inner array so it works whether or not upstream wraps
       // the linux paths in asLinuxPaths() for flatpak discovery.
       const mpvPath = '[ "/usr/bin/mpv" ]';
-      if (source.split(mpvPath).length !== 2) {
-        throw new Error("expected exactly one mpv path in " + serverPath);
+      if (source.split(mpvPath).length === 2) {
+        source = source.replace(mpvPath, '[ process.env.MPV_BIN || "/usr/bin/mpv" ]');
+      } else {
+        skip("a single mpv path");
       }
 
-      source = source.replace(
-        mpvPath,
-        '[ process.env.MPV_BIN || "/usr/bin/mpv" ]',
-      );
       fs.writeFileSync(serverPath, source);
     '';
 
