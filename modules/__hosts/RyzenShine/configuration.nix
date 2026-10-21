@@ -119,9 +119,9 @@ in
   # GPU — nvidia proprietary driver
   # ===================================================================
   services.xserver.videoDrivers = [ "nvidia" ];
-  # UWSM is the recommended Hyprland session; keep the plain Hyprland
-  # launcher out of the default session choice.
-  services.displayManager.defaultSession = "hyprland-uwsm";
+  # Niri is the daily session. sddmSessionDir above hides the plain
+  # Hyprland entry so only the recommended UWSM one is offered.
+  services.displayManager.defaultSession = "niri";
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
