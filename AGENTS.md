@@ -3,10 +3,11 @@
 ## Repository workflow
 
 - Work directly on `main` unless a branch or worktree is requested.
-- In this repository, commit completed changes because the repository is synchronized across devices.
-- Check for uncommitted `flake.lock` changes before starting and preserve intentional updates.
-- Push any change you make to remote. 
-- git-sync auto-commits dirty files within seconds as "changes from <host>". Commit right after each edit with a descriptive message so git-sync only pushes.
+- git-sync runs on every machine. Within seconds of any file change it commits whatever is uncommitted as "changes from <host>", then pulls and pushes all local commits.
+- Commit your own edits with a descriptive message in the same command as the edit, so git-sync finds nothing left to commit and only pushes your commit. If git-sync gets there first, the change still lands, just under the generic message.
+- Never push. git-sync does it.
+- Don't commit changes you didn't make, such as a `flake.lock` updated by `upgrade`. git-sync commits those.
+- Keep build logs and temp files out of the repo, because git-sync commits anything it finds.
 
 ## Building and applying
 
