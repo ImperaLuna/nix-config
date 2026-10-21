@@ -100,7 +100,6 @@ binds {
     Mod+V hotkey-overlay-title="Clipboard History" { spawn "nova" "history"; }
     Mod+N hotkey-overlay-title="Quick Notes" { spawn "nova" "notes"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen" { spawn "qylock-lock"; }
-    Super+Alt+V hotkey-overlay-title="Toggle Voice Dictation" { spawn "voxtype" "record" "toggle"; }
 
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }

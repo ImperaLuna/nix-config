@@ -24,9 +24,18 @@
     in
     {
       home.packages = [
-        agents.claude-code
-        # Claude Code's /voice falls back to SoX's `rec` when its native audio
-        # module can't load, which is the case on NixOS.
+        # Claude Code's /voice uses a bundled native capture module that links
+        # libasound.so.2. Without it on the loader path it falls back to SoX's
+        # `rec`, which is slower to start and stream.
+        (pkgs.symlinkJoin {
+          name = "claude-code-alsa";
+          paths = [ agents.claude-code ];
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/claude \
+              --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.alsa-lib ]}
+          '';
+        })
         pkgs.sox
         agents.codex
         (agents.pi.override { useBun = false; })

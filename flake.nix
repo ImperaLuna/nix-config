@@ -44,11 +44,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    voxtype = {
-      url = "github:peteonrails/voxtype/dev";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Browser package consumed by modules/desktop/features/zen.
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
