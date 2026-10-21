@@ -7,7 +7,6 @@
     imports = [
       config.flake.modules.homeManager.dev-feature-opencode
       config.flake.modules.homeManager.dev-feature-python
-      config.flake.modules.homeManager.dev-feature-zed
     ];
 
     home.packages = [ pkgs.nodejs_24 ];

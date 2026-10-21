@@ -11,6 +11,7 @@
       config.flake.modules.homeManager.apps-feature-excalidraw
       config.flake.modules.homeManager.apps-feature-proton-pass
       config.flake.modules.homeManager.apps-feature-spotify
+      config.flake.modules.homeManager.apps-feature-vscode
       config.flake.modules.homeManager.apps-feature-stremio
       config.flake.modules.homeManager.desktop-feature-gtk
       config.flake.modules.homeManager.desktop-feature-cursor
