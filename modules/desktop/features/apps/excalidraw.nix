@@ -8,11 +8,11 @@
         hash = "sha256-QPlV2+tBJZgnU8+WvkNreaGXQez+LndL7y1hPE440Gg=";
       };
 
+      # Helium comes from desktop-feature-helium, so use it from PATH.
       excalidraw = pkgs.writeShellApplication {
         name = "excalidraw";
-        runtimeInputs = [ pkgs.google-chrome ];
         text = ''
-          exec google-chrome-stable --class=Excalidraw --app=https://excalidraw.com/ "$@"
+          exec helium --class=Excalidraw --app=https://excalidraw.com/ "$@"
         '';
       };
     in
