@@ -10,6 +10,7 @@
       ./features/remote-access.nix
       ./features/syncthing.nix
       ./features/voxtype.nix
+      ./features/nix-ld.nix
     ];
   };
 }
