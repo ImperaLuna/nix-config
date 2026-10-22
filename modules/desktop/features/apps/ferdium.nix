@@ -38,5 +38,17 @@
 EOF
       fi
     '';
+
+    # WhatsApp Web calling needs cross-origin isolation, which disablewebsecurity
+    # breaks. Upstream dropped the flag in recipe 3.5.8 (ferdium-recipes#739).
+    home.activation.ferdiumWhatsappCalls = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      recipe_file="$HOME/.config/Ferdium/recipes/whatsapp/package.json"
+
+      if [ -f "$recipe_file" ]; then
+        tmp_file="$(mktemp)"
+        ${lib.getExe pkgs.jq} 'del(.config.disablewebsecurity)' "$recipe_file" > "$tmp_file"
+        mv "$tmp_file" "$recipe_file"
+      fi
+    '';
   };
 }
