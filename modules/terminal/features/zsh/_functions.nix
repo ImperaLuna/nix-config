@@ -204,36 +204,16 @@ in
     }
 
     # Runs a Nova checkout in place of the running bar; Ctrl+C or closing the
-    # terminal puts the old bar back (Nova's scripts/run.sh does the swap).
-    # Usage: nova-dev [branch]. Uses the Nova checkout you're in, else
-    # ~/Projects/Nova. With a branch, switches to it and back afterwards.
+    # terminal puts the old bar back. Inside a Nova checkout (or worktree) it
+    # runs that one, from anywhere else it cds to $NOVA_DEV_DIR.
     function nova-dev() {
-      setopt localoptions localtraps
-      local repo branch previous
-      branch="''${1:-}"
-
+      local repo
       repo="$(git rev-parse --show-toplevel 2>/dev/null)"
       if [[ ! -f "$repo/crates/novad/Cargo.toml" ]]; then
-        repo=~/Projects/Nova
+        repo="''${NOVA_DEV_DIR:-$HOME/Projects/Nova}"
       fi
-      if [[ ! -f "$repo/justfile" ]]; then
-        print -u2 "nova-dev: no Nova checkout here or at ~/Projects/Nova"
-        return 1
-      fi
-
-      if [[ -n "$branch" ]]; then
-        previous="$(git -C "$repo" branch --show-current)"
-        git -C "$repo" fetch --quiet origin || return $?
-        git -C "$repo" switch "$branch" || return $?
-      fi
-
-      # Ctrl+C stops Nova, not this function, so the branch switch-back runs.
-      trap ':' INT
-      (cd "$repo" && nix develop --quiet -c just run)
-
-      if [[ -n "$previous" ]]; then
-        git -C "$repo" switch "$previous"
-      fi
+      cd "$repo" || return $?
+      nix develop --quiet -c just run
     }
 
     function ssh() {
