@@ -15,7 +15,7 @@
       iconThemeDataDirs = lib.makeSearchPath "share" iconThemePackages;
 
       novaWithIconSearchPath = pkgs.writeShellApplication {
-        name = "nova";
+        name = "nova-shell";
         runtimeInputs = [ nova ];
         text = ''
           prepend_xdg_data_dir() {
