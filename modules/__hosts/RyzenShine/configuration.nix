@@ -155,6 +155,11 @@ in
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1038", ATTR{idProduct}=="2253", ATTR{power/autosuspend}="-1"
   '';
 
+  # headsetcontrol sets the Nova 5X auto-off timer (headsetcontrol -i 0 = never).
+  # Its udev rules give the logged-in user access to the dongle's hidraw device.
+  environment.systemPackages = [ pkgs.headsetcontrol ];
+  services.udev.packages = [ pkgs.headsetcontrol ];
+
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
