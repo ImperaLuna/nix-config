@@ -19,7 +19,8 @@
           .enableSystemTray = true |
           .runInBackground = true |
           .hibernationStrategy = 2592000 |
-          .wakeUpHibernationStrategy = 2592000
+          .wakeUpHibernationStrategy = 2592000 |
+          .webRTCIPHandlingPolicy = "default_public_interface_only"
         ' "$settings_file" > "$tmp_file"
         mv "$tmp_file" "$settings_file"
       else
@@ -33,7 +34,8 @@
   "enableSystemTray": true,
   "runInBackground": true,
   "hibernationStrategy": 2592000,
-  "wakeUpHibernationStrategy": 2592000
+  "wakeUpHibernationStrategy": 2592000,
+  "webRTCIPHandlingPolicy": "default_public_interface_only"
 }
 EOF
       fi
