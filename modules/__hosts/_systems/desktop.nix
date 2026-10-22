@@ -10,6 +10,7 @@
       ./features/remote-access.nix
       ./features/syncthing.nix
       ./features/nix-ld.nix
+      ./features/github-runner-nova.nix
     ];
   };
 }
