@@ -29,6 +29,14 @@
       };
     in
     {
-      home.packages = [ qylockLock ];
+      # GStreamer plugins decode the theme's video background.
+      home.packages = [ qylockLock ] ++ (with pkgs.gst_all_1; [
+        gstreamer
+        gst-libav
+        gst-plugins-base
+        gst-plugins-good
+        gst-plugins-bad
+        gst-plugins-ugly
+      ]);
     };
 }
