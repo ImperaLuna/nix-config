@@ -87,6 +87,14 @@ window-rule {
     block-out-from "screen-capture"
 }
 
+// Stronger, more saturated blur, close to Nova's glass mockup
+// (CSS backdrop-filter: blur(30px) saturate(170%)).
+blur {
+    passes 4
+    offset 5
+    saturation 1.7
+}
+
 // Nova's glass blurs the windows behind it, not just the wallpaper (xray).
 layer-rule {
     match namespace="^quickshell$"
