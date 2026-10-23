@@ -77,6 +77,8 @@ in
     description = "Rares Brezeanu";
     extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
     shell = pkgs.zsh;
+    # Start user services at boot, before login (claude-remote-control).
+    linger = true;
   };
 
   # ===================================================================
