@@ -13,11 +13,6 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    claude-desktop = {
-      url = "github:poeck/claude-desktop-nix-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # set a dynamic SDDM lockscreen
     # check out https://github.com/Darkkal44/qylock for more information
     qylock = {
