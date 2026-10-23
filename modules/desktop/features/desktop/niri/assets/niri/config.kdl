@@ -87,6 +87,14 @@ window-rule {
     block-out-from "screen-capture"
 }
 
+// Nova's glass blurs the windows behind it, not just the wallpaper (xray).
+layer-rule {
+    match namespace="^quickshell$"
+    background-effect {
+        xray false
+    }
+}
+
 
 
 binds {
