@@ -206,6 +206,9 @@ binds {
     Ctrl+Print { screenshot-screen; }
     Alt+Print  { screenshot-window; }
     Mod+Shift+S hotkey-overlay-title="Screenshot Area" { spawn "nova-shell" "screenshot"; }
+    // Backup for when nova-shell is not running (e.g. while the Nova dev tool is open).
+    Shift+Print       hotkey-overlay-title="Screenshot (niri built-in)" { screenshot; }
+    Mod+Ctrl+Shift+S  hotkey-overlay-title="Screenshot (niri built-in)" { screenshot; }
 
     Mod+Shift+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+E { quit; }
