@@ -203,40 +203,49 @@ in
       exec zsh
     }
 
-    # Runs a Nova checkout in place of the running bar; Ctrl+C or closing the
-    # terminal puts the old bar back. Inside a Nova checkout (or worktree) it
-    # runs that one, from anywhere else it cds to $NOVA_DEV_DIR.
-    #
-    # `nova-dev <branch>` or `nova-dev <PR number>` runs that branch instead,
-    # from a worktree in $NOVA_DEV_DIR-worktrees moved to the fetched branch.
-    # A worktree with uncommitted changes is left alone. The main checkout
+    # `nova-dev <PR number>` runs that PR's branch in place of the running
+    # bar; Ctrl+C or closing the terminal puts the old bar back. Each PR gets
+    # a worktree at $NOVA_DEV_DIR/.worktrees/pr-<N>, ignored through
+    # .git/info/exclude. Each run first removes the worktrees of merged or
+    # closed PRs, keeping any with uncommitted changes. The main checkout
     # never switches branches.
     function nova-dev() {
       local main="''${NOVA_DEV_DIR:-$HOME/Projects/Nova}"
-      local repo branch
-      if (( $# )); then
-        branch="$1"
-        if [[ "$branch" == <-> ]]; then
-          branch="$(cd "$main" && gh pr view "$branch" --json headRefName --jq .headRefName)" || return $?
-        fi
-        git -C "$main" fetch --quiet origin "$branch" || return $?
-        repo="$main-worktrees/''${branch//\//-}"
-        if [[ -e "$repo" ]]; then
-          if [[ -n "$(git -C "$repo" status --porcelain)" ]]; then
-            print -u2 "nova-dev: $repo has uncommitted changes; commit or stash them first"
-            return 1
-          fi
-          git -C "$repo" checkout --quiet --detach "origin/$branch" || return $?
-        else
-          git -C "$main" worktree add --quiet --detach "$repo" "origin/$branch" || return $?
-        fi
-        print "nova-dev: $branch at $(git -C "$repo" log -1 --format='%h %s')"
-      else
-        repo="$(git rev-parse --show-toplevel 2>/dev/null)"
-        if [[ ! -f "$repo/crates/novad/Cargo.toml" ]]; then
-          repo="$main"
-        fi
+      local pr="$1"
+      if [[ $# -ne 1 || "$pr" != <-> ]]; then
+        print -u2 "usage: nova-dev <PR number>"
+        return 1
       fi
+      local worktrees="$main/.worktrees"
+      local exclude="$main/.git/info/exclude"
+      grep -qxF "/.worktrees/" "$exclude" 2>/dev/null || print "/.worktrees/" >>"$exclude"
+
+      local old old_pr state
+      for old in "$worktrees"/pr-<->(N); do
+        old_pr="''${old##*/pr-}"
+        state="$(cd "$main" && gh pr view "$old_pr" --json state --jq .state)" || continue
+        [[ "$state" == OPEN ]] && continue
+        if [[ -n "$(git -C "$old" status --porcelain)" ]]; then
+          print -u2 "nova-dev: keeping $old (PR $old_pr is $state): it has uncommitted changes"
+        else
+          git -C "$main" worktree remove "$old" && print "nova-dev: removed $old (PR $old_pr is $state)"
+        fi
+      done
+      git -C "$main" worktree prune
+
+      local branch repo="$worktrees/pr-$pr"
+      branch="$(cd "$main" && gh pr view "$pr" --json headRefName --jq .headRefName)" || return $?
+      git -C "$main" fetch --quiet origin "$branch" || return $?
+      if [[ -e "$repo" ]]; then
+        if [[ -n "$(git -C "$repo" status --porcelain)" ]]; then
+          print -u2 "nova-dev: $repo has uncommitted changes; commit or stash them first"
+          return 1
+        fi
+        git -C "$repo" checkout --quiet --detach "origin/$branch" || return $?
+      else
+        git -C "$main" worktree add --quiet --detach "$repo" "origin/$branch" || return $?
+      fi
+      print "nova-dev: PR $pr ($branch) at $(git -C "$repo" log -1 --format='%h %s')"
       cd "$repo" || return $?
       nix develop --quiet -c just run
     }
