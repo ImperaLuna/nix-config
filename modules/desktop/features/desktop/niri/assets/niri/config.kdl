@@ -87,8 +87,8 @@ window-rule {
     block-out-from "screen-capture"
 }
 
-// Stronger, more saturated blur, close to Nova's glass mockup
-// (CSS backdrop-filter: blur(30px) saturate(170%)).
+// Light, saturated blur for Nova's glass: shapes behind panels stay
+// faintly visible, text behind them doesn't.
 blur {
     passes 2
     offset 2

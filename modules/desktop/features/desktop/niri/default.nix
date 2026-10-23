@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.desktop-feature-niri = { config, pkgs, ... }:
+  flake.modules.homeManager.desktop-feature-niri = { pkgs, ... }:
     let
       zenFocusOrLaunch = pkgs.writeShellApplication {
         name = "zen-focus-or-launch";
@@ -55,9 +55,6 @@
         swaybg
       ];
 
-      # Live link into the checkout (not the store) so niri reloads on save
-      # while tuning Nova's glass blur.
-      xdg.configFile."niri".source = config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/nix-config/modules/desktop/features/desktop/niri/assets/niri";
+      xdg.configFile."niri".source = ./assets/niri;
     };
 }
