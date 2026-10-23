@@ -90,8 +90,8 @@ window-rule {
 // Stronger, more saturated blur, close to Nova's glass mockup
 // (CSS backdrop-filter: blur(30px) saturate(170%)).
 blur {
-    passes 1
-    offset 1
+    passes 2
+    offset 2
     saturation 1.8
 }
 
