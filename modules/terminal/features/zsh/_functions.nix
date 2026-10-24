@@ -207,8 +207,9 @@ in
     # bar; Ctrl+C or closing the terminal puts the old bar back. Each PR gets
     # a worktree at $NOVA_DEV_DIR/.worktrees/pr-<N>, ignored through
     # .git/info/exclude. Each run first removes the worktrees of merged or
-    # closed PRs, keeping any with uncommitted changes. The main checkout
-    # never switches branches.
+    # closed PRs, keeping any with uncommitted changes or with a process
+    # (such as a shell) working inside. The main checkout never switches
+    # branches.
     #
     # While nova-dev runs, `nova` works from any folder: it's a link in
     # $NOVA_DEV_BIN (on PATH) to the PR's build. The link goes away when
@@ -229,13 +230,23 @@ in
       local exclude="$main/.git/info/exclude"
       grep -qxF "/.worktrees/" "$exclude" 2>/dev/null || print "/.worktrees/" >>"$exclude"
 
-      local old old_pr state
+      local old old_pr state cwd in_use
       for old in "$worktrees"/pr-<->(N); do
         old_pr="''${old##*/pr-}"
         state="$(cd "$main" && gh pr view "$old_pr" --json state --jq .state)" || continue
         [[ "$state" == OPEN ]] && continue
+        in_use=
+        for cwd in /proc/<->/cwd(N); do
+          cwd="''${cwd:A}"
+          if [[ "$cwd" == "''${old:A}" || "$cwd" == "''${old:A}"/* ]]; then
+            in_use=1
+            break
+          fi
+        done
         if [[ -n "$(git -C "$old" status --porcelain)" ]]; then
           print -u2 "nova-dev: keeping $old (PR $old_pr is $state): it has uncommitted changes"
+        elif [[ -n "$in_use" ]]; then
+          print -u2 "nova-dev: keeping $old (PR $old_pr is $state): a process is working in it"
         else
           git -C "$main" worktree remove "$old" && print "nova-dev: removed $old (PR $old_pr is $state)"
         fi
