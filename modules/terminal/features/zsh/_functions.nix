@@ -214,11 +214,19 @@ in
     # While nova-dev runs, `nova` works from any folder: it's a link in
     # $NOVA_DEV_BIN (on PATH) to the PR's build. The link goes away when
     # nova-dev exits, so `nova` is the installed one again. Closing the
-    # terminal can skip that cleanup; the next run replaces the link. A
-    # checkout's own build still wins inside that checkout (direnv's PATH_add).
+    # terminal can skip that cleanup; the next run replaces the link. The
+    # latest run wins even inside another checkout: direnv's PATH_add puts
+    # that checkout's target/debug first, so a precmd hook (after direnv's,
+    # which runs first) moves $NOVA_DEV_BIN back in front at every prompt.
+    # With no run active the folder is empty and the checkout's build wins.
     NOVA_DEV_BIN="''${XDG_STATE_HOME:-$HOME/.local/state}/nova-dev/bin"
     typeset -U path
     path=("$NOVA_DEV_BIN" $path)
+    function _nova_dev_bin_first() {
+      path=("$NOVA_DEV_BIN" $path)
+    }
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd _nova_dev_bin_first
     function nova-dev() {
       local main="''${NOVA_DEV_DIR:-$HOME/Projects/Nova}"
       local pr="$1"
