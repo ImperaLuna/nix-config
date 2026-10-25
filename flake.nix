@@ -20,23 +20,9 @@
       flake = false;
     };
 
-    nova = {
-      url = "github:ImperaLuna/nova-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.quickshell.follows = "quickshell";
-    };
-
-    # The Nova rebuild (private repo; `upgrade` passes the gh token). The
-    # `nova` input above is the old nova-shell prototype, kept installed for
-    # rollback until the rebuild has notifications and the tray.
+    # The Nova rebuild (private repo; `upgrade` passes the gh token).
     nova-rebuild = {
       url = "github:ImperaLuna/Nova";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Hand nova nixpkgs' quickshell (cached) instead of its own source pin.
-    quickshell = {
-      url = "path:./modules/_lib/quickshell-nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

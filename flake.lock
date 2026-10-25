@@ -265,29 +265,6 @@
         "type": "github"
       }
     },
-    "nova": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "quickshell": [
-          "quickshell"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785515389,
-        "narHash": "sha256-mG7qr1ih4liv0B7bUDo/J0kT6MwFXB3yJvnzfi1Vi6E=",
-        "owner": "ImperaLuna",
-        "repo": "nova-shell",
-        "rev": "9983ecb36f51a35b2cf54c0c0ec1ce2b6fbc402d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ImperaLuna",
-        "repo": "nova-shell",
-        "type": "github"
-      }
-    },
     "nova-rebuild": {
       "inputs": {
         "advisory-db": "advisory-db",
@@ -310,22 +287,6 @@
         "repo": "Nova",
         "type": "github"
       }
-    },
-    "quickshell": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "path": "./modules/_lib/quickshell-nixpkgs",
-        "type": "path"
-      },
-      "original": {
-        "path": "./modules/_lib/quickshell-nixpkgs",
-        "type": "path"
-      },
-      "parent": []
     },
     "quickshell-newest": {
       "flake": false,
@@ -369,9 +330,7 @@
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
-        "nova": "nova",
         "nova-rebuild": "nova-rebuild",
-        "quickshell": "quickshell",
         "qylock": "qylock",
         "zen-browser": "zen-browser"
       }
