@@ -5,7 +5,6 @@
     let
       # Service name -> label and working directory.
       projects = {
-        claude-remote-control-nova = { label = "Nova"; dir = "%h/Projects/Nova"; };
         claude-remote-control-ummon = { label = "Ummon"; dir = "%h/Projects/DataAnnotation/Ummon"; };
       };
     in
