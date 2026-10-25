@@ -202,7 +202,7 @@ binds {
     Mod+Period       { expel-window-from-column; }
 
     Mod+R             { switch-preset-column-width; }
-    Mod+Shift+R       { switch-preset-column-width-back; }
+    Mod+Shift+R       hotkey-overlay-title="Record the Screen" { spawn "nova" "record"; }
     Mod+Ctrl+R        { reset-window-height; }
     Mod+Ctrl+Shift+R  { switch-preset-window-height; }
 

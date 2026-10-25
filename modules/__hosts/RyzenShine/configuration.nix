@@ -48,6 +48,8 @@ in
   }];
 
   programs.steam.enable = true;
+  # Nova's screen recording (NVENC); the module adds the KMS capture helper.
+  programs.gpu-screen-recorder.enable = true;
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
