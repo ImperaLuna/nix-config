@@ -87,7 +87,7 @@ host → role → feature
 - `modules/desktop/` is the desktop entry point. It contains two feature groups:
   - `features/apps/` — applications such as Discord, Spotify, and Obsidian.
   - `features/desktop/` — desktop essentials expected on any graphical PC,
-    including Hyprland, Niri, Ghostty, GTK, and related tools.
+    including Hyprland, Ghostty, GTK, and related tools.
 - `modules/gaming/` contains gaming support.
 - `modules/_experimental/` is for temporary package tests.
 - `modules/__hosts/.users/` contains per-user settings shared by that user's hosts.
