@@ -11,8 +11,8 @@
           global.hide_env_diff = true;
           # Load these .envrc files without `direnv allow`, so new Nova worktrees work on cd.
           whitelist.prefix = [
+            # Covers the worktrees in ~/Projects/Nova/.worktrees too.
             "${config.home.homeDirectory}/Projects/Nova"
-            "${config.home.homeDirectory}/Projects/Nova-worktrees"
           ];
         };
       };

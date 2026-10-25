@@ -1,7 +1,8 @@
 { ... }:
 
 {
-  # Removes Nova worktrees whose pull request is merged or closed. Claude
+  # Removes Nova worktrees (~/Projects/Nova/.worktrees and Claude Code's
+  # .claude/worktrees) whose pull request is merged or closed. Claude
   # threads add them to test on this machine and often end before their PR
   # does, so nobody removes them by hand (about 1 GB each). A worktree with
   # no PR (a local experiment) or an open one stays, and so does one a
@@ -30,7 +31,7 @@
           git -C "$repo" worktree list --porcelain | awk '/^worktree /{ print substr($0, 10) }' |
             while read -r worktree; do
               case "$worktree" in
-                "$HOME/Projects/Nova-worktrees/"* | "$repo/.worktrees/"* | "$repo/.claude/worktrees/"*) ;;
+                "$repo/.worktrees/"* | "$repo/.claude/worktrees/"*) ;;
                 *) continue ;;
               esac
               commit=$(git -C "$worktree" rev-parse HEAD) || continue
@@ -59,7 +60,6 @@
             done
 
           git -C "$repo" worktree prune
-          rmdir "$HOME/Projects/Nova-worktrees" 2>/dev/null || true
           find "$patches" -name '*.patch' -mtime +30 -delete
         '';
       };
