@@ -17,9 +17,10 @@ input {
 
 layout {
     gaps 10
-    // Nova keeps its own gap under the top pills; cancel niri's top outer gap so they don't add up.
+    // Nova keeps a 4 px gap under the top pills; cancel niri's top outer gap except room for the 3 px focus ring.
+    // top = -(gaps - focus-ring width) = -(10 - 3). Change it if either value changes.
     struts {
-        top -10
+        top -7
     }
     center-focused-column "never"
 
