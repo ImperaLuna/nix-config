@@ -6,10 +6,10 @@
       # One machine-wide remote control in $HOME, so remote sessions can run
       # commands anywhere. Project folders belong to Claude Desktop instead: a
       # folder can only be registered once, and a second claim fails with
-      # folder_taken. Session names default to the hostname.
-      systemd.user.services.claude-remote-control = {
+      # folder_taken. Remote session names start with the hostname.
+      systemd.user.services.claude-remote-connect = {
         Unit = {
-          Description = "Claude Code remote control (RyzenShine)";
+          Description = "Claude Remote Connect: lets remote Claude sessions run commands on this PC";
           After = [ "network-online.target" ];
           Wants = [ "network-online.target" ];
         };
