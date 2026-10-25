@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "advisory-db": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792766536,
+        "narHash": "sha256-IO2oOHRZ3yKjhBLzUYWsIV1gfwIrEZ77XDefHM98T3A=",
+        "owner": "rustsec",
+        "repo": "advisory-db",
+        "rev": "84d943a6deeb8cc6c6f632531aaf4f1c62275239",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rustsec",
+        "repo": "advisory-db",
+        "type": "github"
+      }
+    },
     "bun2nix": {
       "inputs": {
         "flake-parts": [
@@ -31,6 +47,21 @@
         "owner": "Mic92",
         "ref": "llm-agents",
         "repo": "bun2nix",
+        "type": "github"
+      }
+    },
+    "crane": {
+      "locked": {
+        "lastModified": 1787326676,
+        "narHash": "sha256-lWhBbBvC05/xwivKBBiM2YNizpmgqCgyOIzomvRuwxs=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "692f7e9ef2ece8125b466f66f2af532b3edaed0d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
         "type": "github"
       }
     },
@@ -257,6 +288,29 @@
         "type": "github"
       }
     },
+    "nova-rebuild": {
+      "inputs": {
+        "advisory-db": "advisory-db",
+        "crane": "crane",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "quickshell-newest": "quickshell-newest"
+      },
+      "locked": {
+        "lastModified": 1792950694,
+        "narHash": "sha256-KKC4P12+9QFKiN/WeBaRlx09chhCx0mZeGGcHNDhruw=",
+        "owner": "ImperaLuna",
+        "repo": "Nova",
+        "rev": "e6ba60ef7e3e855bc8de1af0a03479ca963ccbd2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ImperaLuna",
+        "repo": "Nova",
+        "type": "github"
+      }
+    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -272,6 +326,24 @@
         "type": "path"
       },
       "parent": []
+    },
+    "quickshell-newest": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791448974,
+        "narHash": "sha256-lPbqsyAD5ZoGFMZ1eqAlTULfeP5Nwhy+XvOowF7BE+E=",
+        "ref": "refs/tags/v0.3.2",
+        "rev": "4f508be500dea6e5732cc3d50382a0048b17e7b1",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/quickshell-mirror/quickshell"
+      },
+      "original": {
+        "ref": "refs/tags/v0.3.2",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/quickshell-mirror/quickshell"
+      }
     },
     "qylock": {
       "flake": false,
@@ -298,6 +370,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "nova": "nova",
+        "nova-rebuild": "nova-rebuild",
         "quickshell": "quickshell",
         "qylock": "qylock",
         "zen-browser": "zen-browser"

@@ -43,7 +43,7 @@ layout {
     }
 }
 
-spawn-at-startup "nova-shell"
+// Nova starts as nova.service with graphical-session.target.
 spawn-at-startup "env" "ELECTRON_OZONE_PLATFORM_HINT=x11" "ferdium"
 spawn-at-startup "Discord" "--enable-features=WebRTCPipeWireCapturer" "--start-minimized"
 spawn-at-startup "swaybg" "-i" "/home/imperaluna/Pictures/Wallpapers/wallhaven-3z3y2d.jpg" "-m" "fill"
@@ -116,15 +116,13 @@ binds {
     Mod+Return hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
     Mod+T hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
     Mod+B hotkey-overlay-title="Open Browser: Zen" { spawn "zen-focus-or-launch"; }
-    Mod+D hotkey-overlay-title="Run an Application" { spawn "nova-shell" "launcher"; }
-    Mod+Space hotkey-overlay-title="Run an Application" { spawn "nova-shell" "launcher"; }
-    Mod+V hotkey-overlay-title="Clipboard History" { spawn "nova-shell" "history"; }
-    Mod+N hotkey-overlay-title="Quick Notes" { spawn "nova-shell" "notes"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen" { spawn "qylock-lock"; }
+    Mod+D hotkey-overlay-title="Run an Application" { spawn "nova" "toggle" "launcher"; }
+    Mod+Space hotkey-overlay-title="Run an Application" { spawn "nova" "toggle" "launcher"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen" { spawn "nova" "lock"; }
 
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "nova" "volume" "up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "nova" "volume" "down"; }
+    XF86AudioMute        allow-when-locked=true { spawn "nova" "volume" "mute"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
 
     XF86AudioPlay allow-when-locked=true { spawn "playerctl" "play-pause"; }
@@ -223,11 +221,11 @@ binds {
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
     Mod+W       { toggle-column-tabbed-display; }
 
-    // niri's built-in picker, so Print still works when nova-shell is not running.
-    Print      hotkey-overlay-title="Screenshot" { screenshot; }
+    // Ctrl+Print and Alt+Print stay niri's own, so they work when Nova is not running.
+    Print      hotkey-overlay-title="Screenshot" { spawn "nova" "screenshot" "screen"; }
     Ctrl+Print { screenshot-screen; }
     Alt+Print  { screenshot-window; }
-    Mod+Shift+S hotkey-overlay-title="Screenshot Area" { spawn "nova-shell" "screenshot"; }
+    Mod+Shift+S hotkey-overlay-title="Screenshot Area" { spawn "nova" "screenshot" "region"; }
 
     Mod+Shift+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
     Mod+Shift+E { quit; }

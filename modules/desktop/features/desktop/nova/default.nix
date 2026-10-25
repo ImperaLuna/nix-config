@@ -4,6 +4,8 @@
   flake.modules.homeManager.desktop-feature-nova = { pkgs, ... }:
     let
       nova = inputs.nova.packages.${pkgs.stdenv.hostPlatform.system}.withCalculator;
+      novaRebuild = inputs.nova-rebuild.packages.${pkgs.stdenv.hostPlatform.system}.nova;
+      novaUnit = "${novaRebuild}/lib/systemd/user/nova.service";
 
       iconThemePackages = [
         pkgs.adwaita-icon-theme
@@ -47,9 +49,18 @@
       };
     in
     {
+      # nova-shell is the old prototype, installed but not started, so
+      # `nova-shell` brings it back if the rebuild misbehaves. The icon themes
+      # are on the profile so the rebuild's launcher finds app icons.
       home.packages = [
         novaWithIconSearchPath
-      ];
+        novaRebuild
+      ] ++ iconThemePackages;
+
+      # The package's own unit, started with the session (niri). Hyprland
+      # starts it through `exec-once = nova`.
+      xdg.configFile."systemd/user/nova.service".source = novaUnit;
+      xdg.configFile."systemd/user/graphical-session.target.wants/nova.service".source = novaUnit;
 
       # Bridge legacy XEmbed tray icons from Wine apps into Nova's SNI tray.
       systemd.user.services.xembedsniproxy = {
