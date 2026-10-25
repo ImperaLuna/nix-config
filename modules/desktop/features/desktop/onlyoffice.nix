@@ -15,20 +15,5 @@
       terminal = false;
       categories = [ "Office" "WordProcessor" "Spreadsheet" "Presentation" ];
     };
-
-    # Keep a highest-priority desktop file in XDG_DATA_HOME for launchers that
-    # merge duplicate app IDs from several profile directories differently.
-    home.file.".local/share/applications/onlyoffice-desktopeditors.desktop".text = ''
-      [Desktop Entry]
-      Type=Application
-      Version=1.5
-      Name=ONLYOFFICE
-      GenericName=Document Editor
-      Comment=Edit office documents
-      Exec=${pkgs.onlyoffice-desktopeditors}/bin/onlyoffice-desktopeditors %U
-      Icon=onlyoffice-desktopeditors
-      Terminal=false
-      Categories=Office;WordProcessor;Spreadsheet;Presentation;
-    '';
   };
 }
