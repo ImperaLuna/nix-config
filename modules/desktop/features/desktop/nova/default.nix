@@ -57,8 +57,8 @@
         novaRebuild
       ] ++ iconThemePackages;
 
-      # The package's own unit, wanted by graphical-session.target. Hyprland
-      # does not reach that target, so it starts Nova through `exec-once = nova`.
+      # The package's own unit, started with the session (niri). Hyprland
+      # starts it through `exec-once = nova`.
       xdg.configFile."systemd/user/nova.service".source = novaUnit;
       xdg.configFile."systemd/user/graphical-session.target.wants/nova.service".source = novaUnit;
 

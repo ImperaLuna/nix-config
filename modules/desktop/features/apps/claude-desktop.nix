@@ -8,7 +8,7 @@
   in
   {
     home.packages = [
-      # Electron picks its secret backend from XDG_CURRENT_DESKTOP, and Hyprland
+      # Electron picks its secret backend from XDG_CURRENT_DESKTOP, and niri
       # is unrecognised, so it stores no sign-in without being told.
       (agents.claude-desktop.override {
         commandLineArgs = "--password-store=gnome-libsecret";
