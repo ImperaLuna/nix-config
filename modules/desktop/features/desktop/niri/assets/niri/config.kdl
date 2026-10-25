@@ -92,12 +92,6 @@ window-rule {
     block-out-from "screen-capture"
 }
 
-// Claude Desktop restores a saved fullscreen state, and a fullscreen window covers the bar.
-window-rule {
-    match app-id=r#"^com\.anthropic\.Claude$"#
-    open-fullscreen false
-}
-
 // Light, saturated blur for Nova's glass: shapes behind panels stay
 // faintly visible, text behind them doesn't.
 blur {
