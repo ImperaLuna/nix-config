@@ -97,7 +97,7 @@ blur {
 
 // Nova's glass blurs the windows behind it, not just the wallpaper (xray).
 layer-rule {
-    match namespace="^quickshell$"
+    match namespace="^nova-"
     background-effect {
         xray false
     }
