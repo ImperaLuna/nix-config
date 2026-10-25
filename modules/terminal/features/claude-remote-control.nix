@@ -3,10 +3,13 @@
 {
   flake.modules.homeManager.terminal-feature-claude-remote-control = { pkgs, ... }:
     {
-      # One machine-wide remote control in $HOME, so remote sessions can run
-      # commands anywhere. Project folders belong to Claude Desktop instead: a
-      # folder can only be registered once, and a second claim fails with
-      # folder_taken. Remote session names start with the hostname.
+      # One machine-wide remote control, so remote sessions can run commands
+      # anywhere. It starts in ~/Remote because claude never saves trust for
+      # $HOME, and project folders belong to Claude Desktop: a folder can only
+      # be registered once, and a second claim fails with folder_taken.
+      # Remote session names start with the hostname.
+      systemd.user.tmpfiles.rules = [ "d %h/Remote 0755 - - -" ];
+
       systemd.user.services.claude-remote-connect = {
         Unit = {
           Description = "Claude Remote Connect: lets remote Claude sessions run commands on this PC";
@@ -14,7 +17,7 @@
           Wants = [ "network-online.target" ];
         };
         Service = {
-          WorkingDirectory = "%h";
+          WorkingDirectory = "%h/Remote";
           # Login shell, so PATH and the claude binary match the interactive shell.
           ExecStart = ''${pkgs.bash}/bin/bash -lc "claude remote-control"'';
           Restart = "always";
