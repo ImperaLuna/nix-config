@@ -11,7 +11,10 @@ in
 
       selection-background = ${hex theme.primary}
       selection-foreground = ${hex theme.bg}
-    '';
+    '' + (if theme ? terminal then ''
+      background = ${hex theme.terminal.background}
+      foreground = ${hex theme.terminal.foreground}
+    '' else "");
     xdg.configFile."ghostty/shaders/cursor_blaze.glsl".source = ./assets/shaders/cursor_blaze.glsl;
     xdg.configFile."ghostty/shaders/sparks-from-fire.glsl".source = ./assets/shaders/sparks-from-fire.glsl;
   };
