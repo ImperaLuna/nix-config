@@ -17,6 +17,10 @@ input {
 
 layout {
     gaps 10
+    // Nova keeps its own gap under the top pills; cancel niri's top outer gap so they don't add up.
+    struts {
+        top -10
+    }
     center-focused-column "never"
 
     preset-column-widths {
