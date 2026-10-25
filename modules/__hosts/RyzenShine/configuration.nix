@@ -118,6 +118,10 @@ in
     wayland.enable = true;
     theme = "${qylockSddmTheme}/share/sddm/themes/qylock";
     settings = {
+      # The theme's video background goes blank when Qt hands VA-API frames
+      # to the GPU ("vaExportSurfaceHandle failed" on nvidia-vaapi-driver).
+      # Decode in software and upload frames from CPU memory instead.
+      General.GreeterEnvironment = "QT_FFMPEG_DECODING_HW_DEVICE_TYPES=none,QT_DISABLE_HW_TEXTURES_CONVERSION=1";
       Wayland.SessionDir = "${sddmSessionDir}/share/wayland-sessions";
       X11.SessionDir = "${sddmSessionDir}/share/xsessions";
     };
