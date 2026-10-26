@@ -108,7 +108,7 @@ in
         return 1
       fi
 
-      sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" "$@" || return $?
+      sudo nixos-rebuild switch --flake "$flakePath" "$@" || return $?
       exec zsh
     }
 
@@ -144,7 +144,7 @@ in
       NIX_CONFIG="$nixConfig" nix flake update --flake "$flakePath" "$@" || return $?
 
       if [[ -e /etc/NIXOS ]]; then
-        sudo SSH_AUTH_SOCK="''${SSH_AUTH_SOCK:-}" nixos-rebuild switch --flake "$flakePath#$(hostname)" || return $?
+        sudo nixos-rebuild switch --flake "$flakePath" || return $?
       else
         local configName="''${HM_CONFIG_NAME:-$(hostname)}"
         if ! command -v home-manager >/dev/null 2>&1; then
