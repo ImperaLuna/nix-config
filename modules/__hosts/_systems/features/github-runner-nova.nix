@@ -27,6 +27,11 @@ in
     tokenFile = "/var/lib/secrets/github-runner-nova.token";
     extraLabels = [ "nova" ];
     replace = true;
+    # One job per registration: after each job the runner de-registers,
+    # systemd wipes its workspace and it registers again. So nothing a PR
+    # branch leaves behind (a git hook in the checkout, say) reaches the next
+    # job. Needs the token file to hold a PAT, which it does.
+    ephemeral = true;
     # CI calls `nix flake check` and `nix develop`; the rest comes from the flake.
     extraPackages = [ pkgs.nix ];
   });
