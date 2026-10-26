@@ -134,10 +134,14 @@ in
         return 1
       fi
 
-      # Authenticated GitHub API calls get 5000 req/h instead of 60.
+      # Authenticated GitHub API calls get 5000 req/h instead of 60. Prefer
+      # the personal account, since the work laptop's active one is the work's.
       local nixConfig="''${NIX_CONFIG:-}"
       local ghToken
-      if command -v gh >/dev/null 2>&1 && ghToken="$(gh auth token 2>/dev/null)" && [[ -n "$ghToken" ]]; then
+      if command -v gh >/dev/null 2>&1 && {
+        ghToken="$(gh auth token --user ImperaLuna 2>/dev/null)" ||
+          ghToken="$(gh auth token 2>/dev/null)"
+      } && [[ -n "$ghToken" ]]; then
         nixConfig+=$'\n'"access-tokens = github.com=$ghToken"
       fi
 
