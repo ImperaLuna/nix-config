@@ -15,7 +15,7 @@
 - Show the package diff before switching: `nix store diff-closures /run/current-system <built path>`.
 - On RyzenShine, apply with `sudo nixos-rebuild switch --flake /home/imperaluna/nix-config`. It is passwordless. Only switch after a successful build, and report any failed units from the output.
 - If the new generation breaks something, roll back with `sudo nixos-rebuild switch --rollback`.
-- Inside the Claude desktop app sudo fails with "no new privileges". Use `systemctl start nixos-apply` and `systemctl start nixos-rollback` instead, without sudo. They block until done. Read the output with `journalctl -u nixos-apply -b --no-pager -n 100`.
+- Inside the Claude desktop app sudo fails with "no new privileges". Use `systemctl start nixos-apply` and `systemctl start nixos-rollback` instead, without sudo. They block until done. Read the output with `cat /var/log/nixos-apply.log`, since the app also cannot read the system journal.
 - `sudo nh clean all --keep-since 7d --keep 3`, `sudo systemctl restart <unit>` and `sudo systemctl reset-failed <unit>` are also passwordless. Anything else needing sudo goes to the user.
 
 ## Repository structure

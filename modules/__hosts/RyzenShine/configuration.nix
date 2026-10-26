@@ -50,12 +50,16 @@ in
   # The Claude desktop app runs in a bwrap FHS env that sets no_new_privs,
   # so sudo can't work from it. These units run the same commands as root,
   # and polkit lets imperaluna start only them, with `systemctl start`.
-  # Output goes to the journal: `journalctl -u nixos-apply -b`.
+  # Output goes to the journal and to /var/log/<unit>.log, because bwrap
+  # also drops the wheel group that grants journal access.
   systemd.services = builtins.mapAttrs (name: args: {
     description = "nixos-rebuild ${args}";
     path = [ config.nix.package pkgs.git ];
     serviceConfig.Type = "oneshot";
-    script = "${config.system.build.nixos-rebuild}/bin/nixos-rebuild ${args}";
+    script = ''
+      set -o pipefail
+      ${config.system.build.nixos-rebuild}/bin/nixos-rebuild ${args} 2>&1 | tee /var/log/${name}.log
+    '';
     # Switching would otherwise restart the unit that is doing the switch.
     restartIfChanged = false;
     stopIfChanged = false;
