@@ -17,8 +17,9 @@
       # The icon themes are on the profile so the launcher finds app icons.
       home.packages = [ novaRebuild ] ++ iconThemePackages;
 
-      # The package's own unit, started with the session (niri). Hyprland
-      # starts it through `exec-once = nova`.
+      # The package's own unit, started with graphical-session.target (niri,
+      # and Hyprland through UWSM). hyprland.conf's `exec-once = nova` is the
+      # fallback for Hyprland without UWSM.
       xdg.configFile."systemd/user/nova.service".source = novaUnit;
       xdg.configFile."systemd/user/graphical-session.target.wants/nova.service".source = novaUnit;
 
