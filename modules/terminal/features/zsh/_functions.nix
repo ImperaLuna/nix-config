@@ -141,7 +141,19 @@ in
         nixConfig+=$'\n'"access-tokens = github.com=$ghToken"
       fi
 
-      NIX_CONFIG="$nixConfig" nix flake update --flake "$flakePath" "$@" || return $?
+      # Only the NixOS desktop uses nova-rebuild, and it is a private repo the
+      # work GitHub account can't see. Elsewhere, update every other input and
+      # leave its lock entry as is. Home Manager configs never fetch it.
+      local -a inputs=("$@")
+      if [[ ! -e /etc/NIXOS && ''${#inputs} -eq 0 ]]; then
+        inputs=(''${(z)"$(nix eval --raw --impure --expr "
+          builtins.concatStringsSep \" \" (builtins.attrNames (builtins.removeAttrs
+            (builtins.fromJSON (builtins.readFile $flakePath/flake.lock)).nodes.root.inputs
+            [ \"nova-rebuild\" ]))
+        ")"})
+      fi
+
+      NIX_CONFIG="$nixConfig" nix flake update --flake "$flakePath" "''${inputs[@]}" || return $?
 
       if [[ -e /etc/NIXOS ]]; then
         sudo nixos-rebuild switch --flake "$flakePath" || return $?
