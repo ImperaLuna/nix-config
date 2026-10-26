@@ -4,6 +4,21 @@
   flake.modules.homeManager.apps-feature-ferdium = { pkgs, lib, ... }: {
     home.packages = [ pkgs.ferdium ];
 
+    # Starts at login from ~/.config/autostart, so systemd runs it after
+    # nova.service is ready and Ferdium finds Nova's tray. It starts
+    # minimized through its own settings (startMinimized below).
+    xdg.autostart = {
+      enable = true;
+      entries = [
+        "${pkgs.makeDesktopItem {
+          name = "ferdium";
+          desktopName = "Ferdium";
+          exec = "env ELECTRON_OZONE_PLATFORM_HINT=x11 ferdium";
+          icon = "ferdium";
+        }}/share/applications/ferdium.desktop"
+      ];
+    };
+
     home.activation.ferdiumTraySettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       settings_file="$HOME/.config/Ferdium/config/settings.json"
       mkdir -p "$HOME/.config/Ferdium/config"

@@ -22,6 +22,10 @@
       # fallback for Hyprland without UWSM.
       xdg.configFile."systemd/user/nova.service".source = novaUnit;
       xdg.configFile."systemd/user/graphical-session.target.wants/nova.service".source = novaUnit;
+      # Orders every app-*.service (XDG autostart's units) after nova.service,
+      # so login apps start once Nova's tray is up.
+      xdg.configFile."systemd/user/app-.service.d/nova.conf".source =
+        "${novaRebuild}/lib/systemd/user/app-.service.d/nova.conf";
 
       # Bridge legacy XEmbed tray icons from Wine apps into Nova's SNI tray.
       systemd.user.services.xembedsniproxy = {

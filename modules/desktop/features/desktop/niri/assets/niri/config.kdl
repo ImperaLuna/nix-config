@@ -44,8 +44,7 @@ layout {
 }
 
 // Nova starts as nova.service with graphical-session.target.
-spawn-at-startup "env" "ELECTRON_OZONE_PLATFORM_HINT=x11" "ferdium"
-spawn-at-startup "Discord" "--enable-features=WebRTCPipeWireCapturer" "--start-minimized"
+// Tray apps (Discord, Ferdium) start from ~/.config/autostart, after Nova.
 
 hotkey-overlay {
     skip-at-startup

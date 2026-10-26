@@ -13,5 +13,19 @@
       icon = "discord";
       settings.StartupWMClass = "discord";
     };
+
+    # Starts at login from ~/.config/autostart, so systemd runs it after
+    # nova.service is ready and Discord finds Nova's tray.
+    xdg.autostart = {
+      enable = true;
+      entries = [
+        "${pkgs.makeDesktopItem {
+          name = "discord";
+          desktopName = "Discord";
+          exec = "Discord --enable-features=WebRTCPipeWireCapturer --start-minimized";
+          icon = "discord";
+        }}/share/applications/discord.desktop"
+      ];
+    };
   };
 }
