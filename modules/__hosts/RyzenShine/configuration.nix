@@ -59,9 +59,9 @@ in
     script = ''
       set -o pipefail
       # libgit2 refuses a repo root doesn't own, unless SUDO_UID names the
-      # owner. sudo sets it, so do the same here. Pinned to imperaluna's
-      # uid so the unit fails if the repo ever changes owner.
-      export SUDO_UID=1000
+      # owner. sudo sets it, so do the same here. Use imperaluna's uid,
+      # not the repo's owner, so the unit fails if the repo changes owner.
+      export SUDO_UID=$(id -u imperaluna)
       ${config.system.build.nixos-rebuild}/bin/nixos-rebuild ${args} 2>&1 | tee /var/log/${name}.log
     '';
     # Switching would otherwise restart the unit that is doing the switch.
