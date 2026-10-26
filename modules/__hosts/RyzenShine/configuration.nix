@@ -47,6 +47,34 @@ in
     ];
   }];
 
+  # The Claude desktop app runs in a bwrap FHS env that sets no_new_privs,
+  # so sudo can't work from it. These units run the same commands as root,
+  # and polkit lets imperaluna start only them, with `systemctl start`.
+  # Output goes to the journal: `journalctl -u nixos-apply -b`.
+  systemd.services = builtins.mapAttrs (name: args: {
+    description = "nixos-rebuild ${args}";
+    path = [ config.nix.package pkgs.git ];
+    serviceConfig.Type = "oneshot";
+    script = "${config.system.build.nixos-rebuild}/bin/nixos-rebuild ${args}";
+    # Switching would otherwise restart the unit that is doing the switch.
+    restartIfChanged = false;
+    stopIfChanged = false;
+  }) {
+    nixos-apply = "switch --flake /home/imperaluna/nix-config";
+    nixos-rollback = "switch --rollback";
+  };
+
+  security.polkit.extraConfig = ''
+    polkit.addRule(function (action, subject) {
+      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+          subject.user == "imperaluna" &&
+          action.lookup("verb") == "start" &&
+          ["nixos-apply.service", "nixos-rollback.service"].indexOf(action.lookup("unit")) >= 0) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   programs.steam.enable = true;
   # Nova's screen recording (NVENC); the module adds the KMS capture helper.
   programs.gpu-screen-recorder.enable = true;
