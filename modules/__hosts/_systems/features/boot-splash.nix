@@ -39,5 +39,26 @@ in
       # so without this the splash never got a screen before SDDM started.
       "plymouth.use-simpledrm"
     ];
+
+    # Shutdown text around the splash.
+    # logind broadcasts "The system will reboot now!" to every terminal when
+    # anything asks it to reboot (Nova's power menu calls it directly), and
+    # the console shows it once the desktop closes. `systemctl --no-wall`
+    # turns the broadcast off the same way, per call; this does it for all.
+    systemd.services.logind-no-wall = {
+      description = "Turn off logind's shutdown broadcast";
+      after = [ "systemd-logind.service" ];
+      bindsTo = [ "systemd-logind.service" ];
+      wantedBy = [ "systemd-logind.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${config.systemd.package}/bin/busctl call org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager SetWallMessage sb \"\" false";
+      };
+    };
+    # systemd arms the board's watchdog during reboot, to force one if the
+    # shutdown hangs for 10 minutes. Handing it over prints "watchdog did not
+    # stop!" over the screen. A hung shutdown now waits for the power button.
+    systemd.settings.Manager.RebootWatchdogSec = "0";
   };
 }
