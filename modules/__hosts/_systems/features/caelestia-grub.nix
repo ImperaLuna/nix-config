@@ -26,6 +26,13 @@ let
     # Orange badge for the default entry, picked by the nixos-current class.
     ${recolour [ 185 223 255 ] cfg.currentColour "nixos.png" "nixos-current.png"}
     ${recolour [ 188 235 220 ] cfg.windowsColour "windows.png" "windows.png"}
+    cd $out
+    # GRUB won't draw the 9-slice bar images shorter than their borders, which
+    # made the 6 px timeout bar about 28 px tall. Flat colours keep the height.
+    substituteInPlace carousel.txt \
+      --replace-fail 'bar_style = "progress_*.png"' 'fg_color = "#d0bcff"' \
+      --replace-fail 'highlight_style = "track_*.png"' 'bg_color = "#393143"
+      border_color = "#393143"'
   '';
 in
 {
@@ -53,6 +60,14 @@ in
       (_final: prev: {
         grub2 = prev.grub2.overrideAttrs (old: {
           patches = (old.patches or [ ]) ++ [ "${src}/src/grub.patch" ];
+          # GRUB's printf has no `*` precision, so long titles such as
+          # "NixOS - Configuration 807 (...)" came out as "s...". Copy the
+          # first `end` bytes and the dots by hand.
+          postPatch = (old.postPatch or "") + ''
+            substituteInPlace grub-core/gfxmenu/carousel.inc --replace-fail \
+              'title = grub_xasprintf ("%.*s...", (int) end, entry->title);' \
+              'title = grub_malloc (end + 4); if (title) { grub_memcpy (title, entry->title, end); grub_strcpy (title + end, "..."); }'
+          '';
         });
       })
     ];
