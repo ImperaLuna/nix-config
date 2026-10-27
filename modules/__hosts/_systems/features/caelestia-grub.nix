@@ -4,12 +4,6 @@ let
   cfg = config.boot.loader.grub.caelestia;
   src = inputs.caelestia-grub;
 
-  # The carousel lives in GRUB's C code, so the theme only works with this build.
-  # nixpkgs ships the same GRUB 2.14 the patch targets.
-  grub = pkgs.grub2.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [ "${src}/src/grub.patch" ];
-  });
-
   # Badges are a flat fill with a dark glyph (#171322). Moving each channel
   # linearly from the old fill to the new one keeps the anti-aliased edges.
   recolour = from: to: input: output:
@@ -52,8 +46,18 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # The carousel lives in GRUB's C code, so the theme only works with this build.
+    # nixpkgs ships the same GRUB 2.14 the patch targets. The GRUB module has no
+    # package option and reads pkgs.grub2 directly.
+    nixpkgs.overlays = [
+      (_final: prev: {
+        grub2 = prev.grub2.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [ "${src}/src/grub.patch" ];
+        });
+      })
+    ];
+
     boot.loader.grub = {
-      package = grub;
       inherit theme;
       # Classes pick the badge. GRUB uses the first class that has an icon.
       entryOptions = "--class nixos-current --class nixos --unrestricted";
