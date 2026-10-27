@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, config, ... }:
+{ pkgs, inputs, config, ... }:
 
 let
   sddmSessionDir = pkgs.runCommand "sddm-sessions" { } ''
@@ -125,34 +125,27 @@ in
   boot.loader = {
     timeout = 60;
     systemd-boot.enable = false;
-    limine = {
-      enable = true;
-      efiSupport = true;
-      efiInstallAsRemovable = true;
-      maxGenerations = 5;
-      # Windows EFI partition on the SK hynix SSD.
-      extraEntries = ''
-        /Windows 11
-          protocol: efi
-          path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/EFI/Microsoft/Boot/bootmgfw.efi
-      '';
-    };
-  };
-
-  # Trial of the Caelestia GRUB carousel before it replaces Limine. Build and
-  # boot with `nixos-rebuild build-vm-with-bootloader --flake .#RyzenShine`.
-  virtualisation.vmVariantWithBootLoader = {
-    boot.loader.limine.enable = lib.mkForce false;
-    boot.loader.efi.canTouchEfiVariables = true;
-    boot.loader.grub = {
+    # GRUB installs to /EFI/NixOS-boot and adds its own firmware boot entry.
+    # Limine's last install stays on the ESP (/EFI/BOOT/BOOTX64.EFI and
+    # /boot/limine) as a fallback, reachable from F12 or the Limine card.
+    efi.canTouchEfiVariables = true;
+    grub = {
       enable = true;
       efiSupport = true;
       device = "nodev";
       caelestia.enable = true;
+      configurationLimit = 5;
+      gfxmodeEfi = "2560x1440,auto";
       # Windows left, NixOS in the middle as the default, generations right.
+      # Limine sits one further left, off screen until you scroll to it.
       extraEntriesBeforeNixOS = true;
-      default = 1;
+      default = 2;
       extraEntries = ''
+        menuentry "Limine" --class efi {
+          search --no-floppy --fs-uuid --set=root CB9D-03B8
+          chainloader /EFI/BOOT/BOOTX64.EFI
+        }
+        # Windows EFI partition on the SK hynix SSD.
         menuentry "Windows 11" --class windows {
           insmod part_gpt
           insmod fat
@@ -161,8 +154,13 @@ in
         }
       '';
     };
-    virtualisation.memorySize = 4096;
-    virtualisation.resolution = { x = 1920; y = 1080; };
+  };
+
+  # Boots this config through GRUB in QEMU, to try boot menu changes first:
+  # `nix build .#nixosConfigurations.RyzenShine.config.system.build.vmWithBootLoader`.
+  virtualisation.vmVariantWithBootLoader.virtualisation = {
+    memorySize = 4096;
+    resolution = { x = 1920; y = 1080; };
   };
 
   # DELAY_INIT quirk for SteelSeries Arctis Nova 5X (1038:2253) — 6.18.x regression
