@@ -34,6 +34,10 @@ in
       "rd.udev.log_level=3"
       "rd.systemd.show_status=auto"
       "systemd.show_status=auto"
+      # Plymouth skips the firmware framebuffer (simpledrm) unless told to,
+      # and waits for a real GPU driver instead. Nvidia only loads in stage 2,
+      # so without this the splash never got a screen before SDDM started.
+      "plymouth.use-simpledrm"
     ];
   };
 }
