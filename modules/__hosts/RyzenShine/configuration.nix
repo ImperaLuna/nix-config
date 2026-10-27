@@ -156,6 +156,10 @@ in
     };
   };
 
+  # Plymouth "loader" splash over the boot log. Needs the early Nvidia
+  # modules below, or the splash only shows once the desktop is nearly up.
+  boot.splash.enable = true;
+
   # Boots this config through GRUB in QEMU, to try boot menu changes first:
   # `nix build .#nixosConfigurations.RyzenShine.config.system.build.vmWithBootLoader`.
   virtualisation.vmVariantWithBootLoader.virtualisation = {
@@ -194,6 +198,10 @@ in
       qtsvg
     ];
   };
+
+  # Load the driver in the initrd so Plymouth gets the screen at full
+  # resolution from the start. Adds the Nvidia modules to every initrd.
+  boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
   hardware.nvidia = {
     modesetting.enable = true;
