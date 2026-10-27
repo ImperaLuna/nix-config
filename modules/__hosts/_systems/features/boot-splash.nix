@@ -56,6 +56,21 @@ in
         ExecStart = "${config.systemd.package}/bin/busctl call org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager SetWallMessage sb \"\" false";
       };
     };
+    # systemd-shutdown, the last step, raises the console log level so its
+    # warnings show ("Failed to unmount ...", "Unable to finalize remaining
+    # file systems"), unless its log target is null. It inherits the target
+    # from systemd, so switch that to null once the final step starts. The
+    # journal only misses systemd's own last few lines.
+    systemd.services.quiet-final-shutdown = {
+      description = "Silence systemd-shutdown's console output";
+      unitConfig.DefaultDependencies = false;
+      wantedBy = [ "final.target" ];
+      before = [ "final.target" "systemd-reboot.service" "systemd-poweroff.service" "systemd-halt.service" "systemd-kexec.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${config.systemd.package}/bin/systemctl log-target null";
+      };
+    };
     # systemd arms the board's watchdog during reboot, to force one if the
     # shutdown hangs for 10 minutes. Handing it over prints "watchdog did not
     # stop!" over the screen. A hung shutdown now waits for the power button.
