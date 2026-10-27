@@ -1,4 +1,4 @@
-{ pkgs, inputs, config, ... }:
+{ pkgs, lib, inputs, config, ... }:
 
 let
   sddmSessionDir = pkgs.runCommand "sddm-sessions" { } ''
@@ -201,7 +201,9 @@ in
 
   # Load the driver in the initrd so Plymouth gets the screen at full
   # resolution from the start. Adds the Nvidia modules to every initrd.
-  boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+  # The VM variant swaps the driver for modesetting, so it skips them.
+  boot.initrd.kernelModules = lib.mkIf (builtins.elem "nvidia" config.services.xserver.videoDrivers)
+    [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
   hardware.nvidia = {
     modesetting.enable = true;
