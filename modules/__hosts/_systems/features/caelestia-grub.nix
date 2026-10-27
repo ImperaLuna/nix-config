@@ -27,8 +27,8 @@ let
     ${recolour [ 185 223 255 ] cfg.currentColour "nixos.png" "nixos-current.png"}
     ${recolour [ 188 235 220 ] cfg.windowsColour "windows.png" "windows.png"}
     cd $out
-    # GRUB won't draw the 9-slice bar images shorter than their borders, which
-    # made the 6 px timeout bar about 28 px tall. Flat colours keep the height.
+    # The 9-slice bar images add their borders to the bar's minimum height,
+    # which is more than the theme's 6 px. Flat colours add nothing.
     substituteInPlace carousel.txt \
       --replace-fail 'bar_style = "progress_*.png"' 'fg_color = "#d0bcff"' \
       --replace-fail 'highlight_style = "track_*.png"' 'bg_color = "#393143"
@@ -67,6 +67,10 @@ in
             substituteInPlace grub-core/gfxmenu/carousel.inc --replace-fail \
               'title = grub_xasprintf ("%.*s...", (int) end, entry->title);' \
               'title = grub_malloc (end + 4); if (title) { grub_memcpy (title, entry->title, end); grub_strcpy (title + end, "..."); }'
+            # Progress bars have a hard 28 px minimum height, so the theme's
+            # 6 px timeout bar came out as a thick slab.
+            substituteInPlace grub-core/gfxmenu/gui_progress_bar.c \
+              --replace-fail '*height = 28;' '*height = 4;'
           '';
         });
       })
