@@ -74,8 +74,10 @@ in
     # The boot splash runs on the firmware framebuffer (card0) until the
     # Nvidia driver loads and replaces it with card1. If SDDM starts in
     # between, the greeter loses its screen and restarts, asking for the
-    # password twice. Wait for the Nvidia card; after 15 s SDDM starts anyway.
-    display-manager.serviceConfig.ExecStartPre = [
+    # password twice. SDDM starts after Plymouth quits, so hold the quit
+    # until the Nvidia card is there and the spinner covers the wait.
+    # After 15 s Plymouth quits anyway.
+    plymouth-quit.serviceConfig.ExecStartPre = [
       "-${config.systemd.package}/bin/udevadm wait --timeout=15 /dev/dri/by-path/pci-0000:01:00.0-card"
     ];
   };
