@@ -98,13 +98,6 @@ blur {
     saturation 1.8
 }
 
-// linux-wallpaperengine stops getting frame callbacks on a screen with no
-// windows, so its wallpaper freezes until the cursor moves there. Direct
-// scanout of its fullscreen buffer on NVIDIA is the suspect.
-debug {
-    disable-direct-scanout
-}
-
 // Nova's glass blurs the windows behind it, not just the wallpaper (xray).
 layer-rule {
     match namespace="^nova-"
