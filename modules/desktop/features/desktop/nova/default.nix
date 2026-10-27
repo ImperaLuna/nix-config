@@ -1,33 +1,19 @@
-{ inputs, lib, ... }:
+{ inputs, ... }:
 
 {
-  flake.modules.homeManager.desktop-feature-nova = { pkgs, ... }:
-    let
-      novaRebuild = inputs.nova-rebuild.packages.${pkgs.stdenv.hostPlatform.system}.nova;
-      novaUnit = "${novaRebuild}/lib/systemd/user/nova.service";
+  flake.modules.homeManager.desktop-feature-nova = { pkgs, lib, ... }:
+    {
+      # Nova's own module: Nova, its user unit, and the packages of the features that are on. Turn features on or off here, e.g. programs.nova.features.wallpaper-engine.enable = true;
+      imports = [ inputs.nova-rebuild.homeManagerModules.default ];
+      programs.nova.enable = true;
 
-      iconThemePackages = [
+      home.packages = [
         pkgs.adwaita-icon-theme
         pkgs.hicolor-icon-theme
         pkgs.kdePackages.breeze-icons
         pkgs.nixos-icons
       ];
-    in
-    {
-      # The icon themes are on the profile so the launcher finds app icons.
-      home.packages = [ novaRebuild ] ++ iconThemePackages;
 
-      # The package's own unit, started with graphical-session.target (niri,
-      # and Hyprland through UWSM). hyprland.conf's `exec-once = nova` is the
-      # fallback for Hyprland without UWSM.
-      xdg.configFile."systemd/user/nova.service".source = novaUnit;
-      xdg.configFile."systemd/user/graphical-session.target.wants/nova.service".source = novaUnit;
-      # Orders every app-*.service (XDG autostart's units) after nova.service,
-      # so login apps start once Nova's tray is up.
-      xdg.configFile."systemd/user/app-.service.d/nova.conf".source =
-        "${novaRebuild}/lib/systemd/user/app-.service.d/nova.conf";
-
-      # Bridge legacy XEmbed tray icons from Wine apps into Nova's SNI tray.
       systemd.user.services.xembedsniproxy = {
         Unit = {
           Description = "Convert XEmbed tray icons to StatusNotifierItems";
