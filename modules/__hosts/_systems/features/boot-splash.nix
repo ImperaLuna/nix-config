@@ -24,14 +24,9 @@ in
       ];
     };
 
-    # systemd in stage 1 hands the screen to Plymouth from the start of the
-    # initrd, so the splash covers the whole boot instead of appearing late.
-    boot.initrd.systemd.enable = true;
-
     # Hide the routine log. Errors still reach the console, and Esc during
     # boot swaps the splash for the log.
     boot.consoleLogLevel = 3;
-    boot.initrd.verbose = false;
     boot.kernelParams = [
       "quiet"
       "splash"
