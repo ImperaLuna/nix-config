@@ -1,4 +1,4 @@
-{ pkgs, inputs, config, ... }:
+{ pkgs, lib, inputs, config, ... }:
 
 let
   sddmSessionDir = pkgs.runCommand "sddm-sessions" { } ''
@@ -137,6 +137,32 @@ in
           path: uuid(7f69578c-6084-4cb1-8888-b68a14857395):/EFI/Microsoft/Boot/bootmgfw.efi
       '';
     };
+  };
+
+  # Trial of the Caelestia GRUB carousel before it replaces Limine. Build and
+  # boot with `nixos-rebuild build-vm-with-bootloader --flake .#RyzenShine`.
+  virtualisation.vmVariantWithBootLoader = {
+    boot.loader.limine.enable = lib.mkForce false;
+    boot.loader.efi.canTouchEfiVariables = true;
+    boot.loader.grub = {
+      enable = true;
+      efiSupport = true;
+      device = "nodev";
+      caelestia.enable = true;
+      # Windows left, NixOS in the middle as the default, generations right.
+      extraEntriesBeforeNixOS = true;
+      default = 1;
+      extraEntries = ''
+        menuentry "Windows 11" --class windows {
+          insmod part_gpt
+          insmod fat
+          search --no-floppy --fs-uuid --set=root 32D4-82C0
+          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
+    };
+    virtualisation.memorySize = 4096;
+    virtualisation.resolution = { x = 1920; y = 1080; };
   };
 
   # DELAY_INIT quirk for SteelSeries Arctis Nova 5X (1038:2253) — 6.18.x regression

@@ -11,6 +11,7 @@
       ./features/syncthing.nix
       ./features/nix-ld.nix
       ./features/github-runner-nova.nix
+      ./features/caelestia-grub.nix
     ];
   };
 }

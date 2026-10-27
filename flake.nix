@@ -20,6 +20,13 @@
       flake = false;
     };
 
+    # Patched GRUB carousel and theme, built by modules/__hosts/_systems/features/caelestia-grub.nix
+    # check out https://github.com/Jvr2022/caelestia-grub for more information
+    caelestia-grub = {
+      url = "github:Jvr2022/caelestia-grub";
+      flake = false;
+    };
+
     # The Nova rebuild (private repo; `upgrade` passes the gh token).
     nova-rebuild = {
       url = "github:ImperaLuna/Nova";

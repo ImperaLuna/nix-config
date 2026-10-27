@@ -50,6 +50,22 @@
         "type": "github"
       }
     },
+    "caelestia-grub": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792875448,
+        "narHash": "sha256-H4rKeS0mJrvqm6bywS8A0CxqUlxxxTplHw4h6zHQioc=",
+        "owner": "Jvr2022",
+        "repo": "caelestia-grub",
+        "rev": "2a3f982754016fc2103a9228c0d9be1175e6d39b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Jvr2022",
+        "repo": "caelestia-grub",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1787326676,
@@ -324,6 +340,7 @@
     },
     "root": {
       "inputs": {
+        "caelestia-grub": "caelestia-grub",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
