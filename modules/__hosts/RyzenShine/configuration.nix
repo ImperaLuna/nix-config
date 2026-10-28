@@ -136,8 +136,6 @@ in
     timeout = 60;
     systemd-boot.enable = false;
     # GRUB installs to /EFI/NixOS-boot and adds its own firmware boot entry.
-    # Limine's last install stays on the ESP (/EFI/BOOT/BOOTX64.EFI and
-    # /boot/limine) as a fallback, reachable from F12 or the Limine card.
     efi.canTouchEfiVariables = true;
     grub = {
       enable = true;
@@ -147,14 +145,9 @@ in
       configurationLimit = 5;
       gfxmodeEfi = "2560x1440,auto";
       # Windows left, NixOS in the middle as the default, generations right.
-      # Limine sits one further left, off screen until you scroll to it.
       extraEntriesBeforeNixOS = true;
-      default = 2;
+      default = 1;
       extraEntries = ''
-        menuentry "Limine" --class efi {
-          search --no-floppy --fs-uuid --set=root CB9D-03B8
-          chainloader /EFI/BOOT/BOOTX64.EFI
-        }
         # Windows EFI partition on the SK hynix SSD.
         menuentry "Windows 11" --class windows {
           insmod part_gpt
