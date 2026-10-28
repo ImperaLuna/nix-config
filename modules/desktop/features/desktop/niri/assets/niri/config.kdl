@@ -17,8 +17,9 @@ input {
 
 layout {
     gaps 10
-    // Nova keeps a 4 px gap under the top pills; cancel niri's top outer gap except room for the 3 px focus ring.
-    // top = -(gaps - focus-ring width) = -(10 - 3). Change it if either value changes.
+    // Keep the existing spacing below Nova's top pills. The -7 offset was
+    // originally calculated as -(10 px gaps - 3 px focus ring), but the ring
+    // is now disabled. Review the spacing separately if gaps change.
     struts {
         top -7
     }
@@ -32,6 +33,10 @@ layout {
 
     default-column-width { proportion 0.5; }
 
+    // Keep the focus ring and border disabled. Reported on this setup:
+    // enabling them creates a rectangular background artifact that intercepts
+    // clicks. Giving it a color reveals the box; making it transparent hides
+    // the box but still leaves it intercepting clicks. Transparency is not a fix.
     focus-ring {
         off
         width 3
@@ -63,8 +68,8 @@ animations {
 }
 
 window-rule {
-    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
-    open-floating true
+    geometry-corner-radius 14
+    clip-to-geometry true
 }
 
 window-rule {
@@ -83,12 +88,6 @@ window-rule {
     default-window-height { fixed 1; }
     default-floating-position x=0 y=0 relative-to="bottom-right"
     opacity 0.0
-}
-
-window-rule {
-    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
-    match app-id=r#"^org\.gnome\.World\.Secrets$"#
-    block-out-from "screen-capture"
 }
 
 // Light, saturated blur for Nova's glass: shapes behind panels stay
