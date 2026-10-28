@@ -84,7 +84,15 @@ hl.animation({ leaf = "border", enabled = true, speed = 3, bezier = "default" })
 -- Shell integration. Nova does not install this rule itself yet.
 hl.layer_rule({ match = { namespace = "^(nova-.*)$" }, no_anim = true })
 
--- Window rules. Preserve the existing Steam matching and behavior.
+-- Window rules
+-- Keep Steam's loading popup from showing wallpaper through its main window
+-- during the handoff. Normal blur and animations remain enabled.
+hl.window_rule({
+    name = "steam-loading-no-xray",
+    match = { class = "^steam$", title = "^Sign in to Steam$" },
+    xray = false,
+})
+
 hl.window_rule({ match = { class = "^(blueman-manager)$" }, float = true })
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, no_initial_focus = true })
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, pin = true })
