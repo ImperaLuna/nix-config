@@ -245,13 +245,8 @@ in
   environment.systemPackages = [ pkgs.headsetcontrol ];
   services.udev.packages = [
     pkgs.headsetcontrol
-    # Nova (IMP-206): Logitech HID++ batteries over hidraw for the logged-in user.
-    # A 70- file, since a uaccess tag added in 99-local.rules comes after
-    # 73-seat-late.rules has already applied the seat ACLs.
-    (pkgs.writeTextDir "lib/udev/rules.d/70-nova-logitech-hidpp.rules" ''
-      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", TAG+="uaccess"
-      SUBSYSTEM=="hidraw", KERNELS=="0005:046D:*", TAG+="uaccess"
-    '')
+    # Nova's udev rule (Logitech HID++ batteries); home-manager can't install udev rules.
+    inputs.nova-rebuild.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   services.pulseaudio.enable = false;
