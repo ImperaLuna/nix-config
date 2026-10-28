@@ -16,6 +16,7 @@ input {
 }
 
 layout {
+    background-color "transparent"
     gaps 10
     // Keep the existing spacing below Nova's top pills. The -7 offset was
     // originally calculated as -(10 px gaps - 3 px focus ring), but the ring
@@ -96,6 +97,14 @@ blur {
     passes 2
     offset 2
     saturation 1.8
+}
+
+// Keep wallpapers full-size behind the overview and its workspace previews.
+// awww supplies the still fallback underneath Wallpaper Engine.
+layer-rule {
+    match namespace="^awww-daemonnova$"
+    match namespace="^linux-wallpaperengine$"
+    place-within-backdrop true
 }
 
 // Nova's glass blurs the windows behind it, not just the wallpaper (xray).
