@@ -27,6 +27,7 @@
           postBuild = ''
             rm $out/bin/linux-wallpaperengine
             makeWrapper ${patched}/bin/linux-wallpaperengine $out/bin/linux-wallpaperengine \
+              --set SDL_AUDIODRIVER dummy \
               --add-flags --fullscreen-pause-per-monitor
           '';
           inherit (patched) meta;
