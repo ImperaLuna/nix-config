@@ -111,6 +111,7 @@ hl.bind("SUPER + B", hl.dsp.exec_cmd(dropcaps .. browser))
 hl.bind("SUPER + Space", hl.dsp.exec_cmd("nova toggle launcher"), { release = true })
 
 -- Window management
+hl.bind("SUPER + Return", hl.dsp.layout("swapwithmaster master"))
 hl.bind("SUPER + Q", hl.dsp.window.close())
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "maximized" }))
 hl.bind("SUPER + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
