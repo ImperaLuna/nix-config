@@ -6,6 +6,9 @@ let
     cp -RL ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/. "$out/share/wayland-sessions/"
     cp -RL ${config.services.displayManager.sessionData.desktops}/share/xsessions/. "$out/share/xsessions/"
     rm -f "$out/share/wayland-sessions/hyprland.desktop"
+    chmod u+w "$out/share/wayland-sessions/hyprland-uwsm.desktop"
+    substituteInPlace "$out/share/wayland-sessions/hyprland-uwsm.desktop" \
+      --replace-fail 'Name=Hyprland (uwsm-managed)' 'Name=Hyprland'
   '';
 
   # Keep in sync with the lock screen theme in modules/desktop/features/desktop/qylock.
