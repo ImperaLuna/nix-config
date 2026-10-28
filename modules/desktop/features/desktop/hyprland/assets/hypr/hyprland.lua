@@ -107,7 +107,24 @@ end
 
 -- Applications
 hl.bind("SUPER + T", hl.dsp.exec_cmd(dropcaps .. terminal))
-hl.bind("SUPER + B", hl.dsp.exec_cmd(dropcaps .. browser))
+-- Focus an existing Zen window, or launch it when none is open.
+local function focus_or_launch_browser()
+    local windows = hl.get_windows({ class = browser })
+    local target
+    for _, window in ipairs(windows) do
+        if window.title ~= "Picture-in-Picture"
+            and (not target or window.focus_history_id < target.focus_history_id) then
+            target = window
+        end
+    end
+    if target then
+        hl.dispatch(hl.dsp.focus({ window = target }))
+    else
+        hl.exec_cmd(dropcaps .. browser)
+    end
+end
+
+hl.bind("SUPER + B", focus_or_launch_browser)
 hl.bind("SUPER + Space", hl.dsp.exec_cmd("nova toggle launcher"), { release = true })
 
 -- Window management
