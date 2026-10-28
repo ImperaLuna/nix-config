@@ -31,6 +31,7 @@
       config.flake.modules.homeManager.terminal-feature-git-sync
 
       # Terminal apps and monitoring
+      config.flake.modules.homeManager.terminal-feature-tmux
       config.flake.modules.homeManager.terminal-feature-btop
       config.flake.modules.homeManager.terminal-feature-witr
       config.flake.modules.homeManager.terminal-feature-herdr
