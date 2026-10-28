@@ -14,9 +14,9 @@
             src = prev.fetchFromGitHub {
               owner = "ImperaLuna";
               repo = "linux-wallpaperengine";
-              rev = "4c4473d77270d37094c6882fd67d91c223f98779";
+              rev = "452aa63735f6909045c4ffe40f65859f42ef8888";
               fetchSubmodules = true;
-              hash = "sha256-kb9q9Yh+TY6tx0ydOD9kztqa7BUAcJ/d2cXsI5SmS/4=";
+              hash = "sha256-C3NHOIfaWncVDIDL3++3OX/pnjvBtfb4FNKnWggrKTY=";
             };
           });
         in
