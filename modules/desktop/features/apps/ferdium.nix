@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.apps-feature-ferdium = { pkgs, lib, ... }:
+  flake.modules.homeManager.apps-feature-ferdium = { config, pkgs, lib, ... }:
     let
       # Icons come from ferdium-recipes; the recipes bundled with Ferdium have none.
       recipesRev = "d606edecc575a08a22f05d8f6113e8906e3d1012";
@@ -67,10 +67,12 @@
 
       exec = "env ELECTRON_OZONE_PLATFORM_HINT=x11 ${lib.getExe' ferdium "ferdium"}";
 
-      # A running Ferdium switches to the service right away. A cold one starts
-      # minimized and drops a link that arrives before its services load, so
-      # start it through its autostart unit and repeat the link for a while.
-      # Once one lands, the rest change nothing.
+      # Ferdium shows its window for a link, but niri gives that window no
+      # focus, so Nova shows and focuses it first (from the tray too) and the
+      # link then switches the service. A cold Ferdium starts minimized and
+      # drops a link that arrives before its services load, so start it
+      # through its autostart unit and repeat the link for a while. Once one
+      # lands, the rest change nothing.
       openService = pkgs.writeShellApplication {
         name = "ferdium-open-service";
         runtimeInputs = [ pkgs.coreutils ];
@@ -85,7 +87,12 @@
             kill -0 "''${target##*-}" 2>/dev/null
           }
 
+          focus() {
+            ${lib.getExe' config.programs.nova.package "nova"} ipc launch_app '{"id": "ferdium.desktop"}' >/dev/null || true
+          }
+
           if running; then
+            focus
             exec ${exec} "$link"
           fi
 
@@ -95,9 +102,13 @@
             sleep 0.1
           done
 
-          for _ in $(seq 8); do
+          # The window shows about 2 s in, so focus it on the third round.
+          for round in $(seq 8); do
             sleep 1
             ${exec} "$link"
+            if [ "$round" = 3 ]; then
+              focus
+            fi
           done
         '';
       };
@@ -145,8 +156,8 @@
         ];
       };
 
-      # One launcher entry per service. Ferdium shows its window and switches
-      # to that service.
+      # One launcher entry per service. No StartupWMClass: Nova would take the
+      # Ferdium window for the service's and focus it instead of running Exec.
       xdg.desktopEntries = lib.listToAttrs (map (service: {
         name = "ferdium-${service.recipe}";
         value = {
@@ -159,10 +170,7 @@
             hash = service.iconHash;
           }}";
           categories = [ "Network" ];
-          settings = {
-            Keywords = lib.concatMapStrings (keyword: "${keyword};") ([ "ferdium" ] ++ service.keywords);
-            StartupWMClass = "ferdium";
-          };
+          settings.Keywords = lib.concatMapStrings (keyword: "${keyword};") ([ "ferdium" ] ++ service.keywords);
         };
       }) services);
 
