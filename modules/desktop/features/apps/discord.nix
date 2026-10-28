@@ -2,7 +2,10 @@
 
 {
   flake.modules.homeManager.apps-feature-discord = { pkgs, ... }: {
-    home.packages = [ pkgs.discord ];
+    home.packages = [
+      pkgs.discord
+      pkgs.vesktop
+    ];
 
     # WebRTCPipeWireCapturer enables PipeWire-based screen capture for WebRTC
     # calls. The NixOS wrapper adds --ozone-platform=wayland but omits this
