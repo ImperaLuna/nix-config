@@ -67,6 +67,41 @@
 
       exec = "env ELECTRON_OZONE_PLATFORM_HINT=x11 ${lib.getExe' ferdium "ferdium"}";
 
+      # A running Ferdium switches to the service right away. A cold one starts
+      # minimized and drops a link that arrives before its services load, so
+      # start it through its autostart unit and repeat the link for a while.
+      # Once one lands, the rest change nothing.
+      openService = pkgs.writeShellApplication {
+        name = "ferdium-open-service";
+        runtimeInputs = [ pkgs.coreutils ];
+        text = ''
+          link="ferdium://service/$1"
+          lock="$HOME/.config/Ferdium/SingletonLock"
+
+          # The lock is a symlink to <host>-<pid> while Ferdium runs.
+          running() {
+            local target
+            target="$(readlink "$lock")" || return 1
+            kill -0 "''${target##*-}" 2>/dev/null
+          }
+
+          if running; then
+            exec ${exec} "$link"
+          fi
+
+          systemctl --user start app-ferdium@autostart.service
+          for _ in $(seq 50); do
+            running && break
+            sleep 0.1
+          done
+
+          for _ in $(seq 8); do
+            sleep 1
+            ${exec} "$link"
+          done
+        '';
+      };
+
       sqlString = s: "'${lib.replaceStrings [ "'" ] [ "''" ] s}'";
 
       serviceSettings = index: service: builtins.toJSON {
@@ -110,14 +145,14 @@
         ];
       };
 
-      # One launcher entry per service. Launching it hands the link to the
-      # running Ferdium, which shows its window and switches to that service.
+      # One launcher entry per service. Ferdium shows its window and switches
+      # to that service.
       xdg.desktopEntries = lib.listToAttrs (map (service: {
         name = "ferdium-${service.recipe}";
         value = {
           inherit (service) name;
           comment = "${service.name} in Ferdium";
-          exec = "${exec} ferdium://service/${service.id}";
+          exec = "${lib.getExe openService} ${service.id}";
           icon = "${pkgs.fetchurl {
             name = "ferdium-${service.recipe}-icon.svg";
             url = "https://raw.githubusercontent.com/ferdium/ferdium-recipes/${recipesRev}/recipes/${service.recipe}/icon.svg";
