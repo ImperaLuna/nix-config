@@ -2,19 +2,18 @@
 
 {
   flake.modules.homeManager.apps-feature-discord = { pkgs, ... }: {
-    home.packages = [
-      pkgs.discord
-      pkgs.vesktop
-    ];
+    home.packages = [ pkgs.vesktop ];
 
-    # WebRTCPipeWireCapturer enables PipeWire-based screen capture for WebRTC
-    # calls. The NixOS wrapper adds --ozone-platform=wayland but omits this
-    # flag, so the portal picker never appears when trying to share a window.
-    xdg.desktopEntries.discord = {
+    xdg.dataFile."icons/hicolor/256x256/apps/discord.png".source = ./assets/discord.png;
+
+    xdg.desktopEntries.vesktop = {
       name = "Discord";
-      exec = "Discord --enable-features=WebRTCPipeWireCapturer";
+      genericName = "Internet Messenger";
+      exec = "vesktop %U";
       icon = "discord";
-      settings.StartupWMClass = "discord";
+      categories = [ "Network" "InstantMessaging" "Chat" ];
+      mimeType = [ "x-scheme-handler/discord" ];
+      settings.StartupWMClass = "Vesktop";
     };
 
     # Starts at login from ~/.config/autostart, so systemd runs it after
@@ -23,11 +22,11 @@
       enable = true;
       entries = [
         "${pkgs.makeDesktopItem {
-          name = "discord";
+          name = "vesktop";
           desktopName = "Discord";
-          exec = "Discord --enable-features=WebRTCPipeWireCapturer --start-minimized";
+          exec = "vesktop --start-minimized";
           icon = "discord";
-        }}/share/applications/discord.desktop"
+        }}/share/applications/vesktop.desktop"
       ];
     };
   };
