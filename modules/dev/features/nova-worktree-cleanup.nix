@@ -7,6 +7,9 @@
   # does, so nobody removes them by hand (about 1 GB each). A worktree with
   # no PR (a local experiment) or an open one stays, and so does one a
   # process is working in. Uncommitted changes are saved as a patch first.
+  # It also empties Nova's git-ignored scratch dir (~/Projects/Nova/.scratch)
+  # of entries untouched for a week, and removes stray ~/Projects/nova-*
+  # folders, which Nova's AGENTS.md forbids, after the same week.
   flake.modules.homeManager.dev-feature-nova-worktree-cleanup = { pkgs, ... }:
     let
       cleanup = pkgs.writeShellApplication {
@@ -61,6 +64,19 @@
 
           git -C "$repo" worktree prune
           find "$patches" -name '*.patch' -mtime +30 -delete
+
+          # Scratch that nobody touched for a week: the thread that made it is done.
+          stale_days=7
+          for dir in "$repo/.scratch"/* "$HOME/Projects"/nova-*; do
+            [ -d "$dir" ] || continue
+            [ -z "$(find "$dir" -newermt "$stale_days days ago" -print -quit)" ] || continue
+            if in_use "$dir"; then
+              echo "keep $dir: a process is working in it"
+              continue
+            fi
+            rm -rf "$dir"
+            echo "removed $dir"
+          done
         '';
       };
     in
@@ -68,7 +84,7 @@
       home.packages = [ cleanup ];
 
       systemd.user.services.nova-worktree-cleanup = {
-        Unit.Description = "Remove Nova worktrees whose pull request is merged or closed";
+        Unit.Description = "Remove finished Nova worktrees and stale Nova scratch";
         Service = {
           Type = "oneshot";
           ExecStart = "${cleanup}/bin/nova-worktree-cleanup";
