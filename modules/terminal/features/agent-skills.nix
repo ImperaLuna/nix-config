@@ -14,6 +14,7 @@
         "imperaluna/html-artifact"
         "imperaluna/synced-repos"
         "mattpocock/retro"
+        "mattpocock/writing-for-agents"
       ];
 
       linksFor = root:
