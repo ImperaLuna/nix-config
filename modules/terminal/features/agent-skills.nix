@@ -38,11 +38,11 @@
           # stay plain markdown (no Claude-only @includes). force replaces a
           # hand-made file or link.
           ".claude/CLAUDE.md" = {
-            source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/imperaluna/CLAUDE.md";
+            source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/AGENTS.md";
             force = true;
           };
           ".codex/AGENTS.md" = {
-            source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/imperaluna/CLAUDE.md";
+            source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/AGENTS.md";
             force = true;
           };
         };
