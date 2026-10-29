@@ -19,7 +19,9 @@
         Service = {
           WorkingDirectory = "%h/Remote";
           # Login shell, so PATH and the claude binary match the interactive shell.
-          ExecStart = ''${pkgs.bash}/bin/bash -lc "claude remote-control"'';
+          # No pre-created session: each start would add one, and it is left
+          # behind with a deleted environment after every restart.
+          ExecStart = ''${pkgs.bash}/bin/bash -lc "claude remote-control --no-create-session-in-dir"'';
           Restart = "always";
           RestartSec = 10;
         };
