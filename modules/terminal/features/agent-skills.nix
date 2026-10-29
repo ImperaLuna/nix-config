@@ -13,14 +13,7 @@
         "imperaluna/github"
         "imperaluna/html-artifact"
         "imperaluna/synced-repos"
-        "mattpocock/domain-modeling"
-        "mattpocock/grilling"
-        "mattpocock/prototype"
-        "mattpocock/research"
-        "mattpocock/setup-matt-pocock-skills"
-        "mattpocock/teach"
-        "mattpocock/wayfinder"
-        "poteto/bro"
+        "mattpocock/retro"
       ];
 
       linksFor = root:
@@ -90,9 +83,8 @@
         ${pkgs.jq}/bin/jq '
           .enabledPlugins = ((.enabledPlugins // {}) + {
             "imperaluna@synced": false,
-            "imperaluna-work@synced": false,
             "mattpocock@synced": false,
-            "poteto@synced": false
+            "viasat@synced": false
           })
         ' "$settings" > "$tmp_file"
         if cmp -s "$tmp_file" "$settings"; then
