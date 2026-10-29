@@ -139,13 +139,13 @@ builtins.mapAttrs mkWindowsHome {
 
           # Work-only skills from the Skills repo, linked like agent-skills.nix
           # does for the global ones. They need the Viasat Jira MCP.
-          workSkills = [ "imperaluna/viasat-jira" ];
+          workSkills = [ "imperaluna-work/viasat-jira" ];
           workSkillLinks = builtins.listToAttrs (
             builtins.concatMap (root:
               map (skill: {
                 name = "${root}/${baseNameOf skill}";
                 value.source = config.lib.file.mkOutOfStoreSymlink
-                  "${config.home.homeDirectory}/Skills/global/${skill}";
+                  "${config.home.homeDirectory}/Skills/global/${dirOf skill}/skills/${baseNameOf skill}";
               }) workSkills
             ) [ ".claude/skills" ".agents/skills" ]
           );

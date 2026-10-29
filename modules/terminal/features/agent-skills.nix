@@ -5,7 +5,9 @@
     let
       # Links point into the live checkout so skill edits and ./update.sh pulls
       # apply without a rebuild; the repo must be cloned at ~/Skills.
-      # Entries are "<author>/<skill>"; the link is named after the skill alone.
+      # Entries are "<author>/<skill>" and resolve to global/<author>/skills/<skill>,
+      # the plugin layout the repo's marketplace uses; the link is named after
+      # the skill alone.
       skillsRepo = "${config.home.homeDirectory}/Skills";
       skills = [
         "imperaluna/github"
@@ -25,7 +27,8 @@
         builtins.listToAttrs (
           map (skill: {
             name = "${root}/${baseNameOf skill}";
-            value.source = config.lib.file.mkOutOfStoreSymlink "${skillsRepo}/global/${skill}";
+            value.source = config.lib.file.mkOutOfStoreSymlink
+              "${skillsRepo}/global/${dirOf skill}/skills/${baseNameOf skill}";
           }) skills
         );
     in
@@ -73,6 +76,30 @@
             *) echo "usage: skills install | check | update | add <repo> <path> [name] [author]" >&2; return 2 ;;
           esac
         }
+      '';
+
+      # The Skills repo is also a plugin marketplace, so an account that installed
+      # it on claude.ai gets the same skills synced into Claude Code. The links
+      # above already provide them here, so keep the synced copies off.
+      # Claude Code owns settings.json, so only these keys are touched.
+      home.activation.skillsSyncedPluginsOff = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        settings="$HOME/.claude/settings.json"
+        mkdir -p "$HOME/.claude"
+        [ -s "$settings" ] || echo '{}' > "$settings"
+        tmp_file="$(mktemp)"
+        ${pkgs.jq}/bin/jq '
+          .enabledPlugins = ((.enabledPlugins // {}) + {
+            "imperaluna@synced": false,
+            "imperaluna-work@synced": false,
+            "mattpocock@synced": false,
+            "poteto@synced": false
+          })
+        ' "$settings" > "$tmp_file"
+        if cmp -s "$tmp_file" "$settings"; then
+          rm "$tmp_file"
+        else
+          mv "$tmp_file" "$settings"
+        fi
       '';
 
       # Read-only staleness check at switch time; --quiet keeps it silent when
