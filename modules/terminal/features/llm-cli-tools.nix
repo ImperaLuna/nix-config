@@ -30,6 +30,13 @@
         description = "Use Claude Code's native ALSA voice capture. Turn off where audio only reaches PulseAudio (WSLg), so /voice falls back to SoX.";
       };
 
+      options.modules.llm-cli-tools.claudeAllow = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = [ "Bash(systemctl start nixos-apply)" ];
+        description = "Claude Code permission rules added to permissions.allow in ~/.claude/settings.json, so sessions run these without asking.";
+      };
+
       config = {
         home.packages =
           if cfg.nativeVoice then
@@ -56,6 +63,34 @@
             ];
 
         home.file.".claude/keybindings.json".text = claudeKeybindings + "\n";
+
+        # Claude Code writes its own settings.json (model, plugins, /config), so
+        # merge only the allow rules from this module. The rules written last
+        # time are kept in a state file, so a rule removed here is removed there.
+        home.activation.claudeAllowRules = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          settings="$HOME/.claude/settings.json"
+          state="''${XDG_STATE_HOME:-$HOME/.local/state}/claude-allow-rules.json"
+          desired='${builtins.toJSON cfg.claudeAllow}'
+
+          # Hosts that never set any rules leave settings.json alone.
+          if [ "$desired" != "[]" ] || [ -s "$state" ]; then
+            mkdir -p "$HOME/.claude" "$(dirname "$state")"
+            [ -s "$settings" ] || echo '{}' > "$settings"
+            [ -s "$state" ] || echo '[]' > "$state"
+
+            tmp_file="$(mktemp)"
+            ${pkgs.jq}/bin/jq --argjson desired "$desired" --slurpfile previous "$state" '
+              .permissions.allow = ((.permissions.allow // []) - $previous[0] - $desired) + $desired
+            ' "$settings" > "$tmp_file"
+
+            if cmp -s "$tmp_file" "$settings"; then
+              rm "$tmp_file"
+            else
+              mv "$tmp_file" "$settings"
+            fi
+            echo "$desired" > "$state"
+          fi
+        '';
 
         # Codex keeps trusted projects, hook hashes, and first-run state in the same
         # TOML file, so patch only the keymap entry instead of replacing the file.
