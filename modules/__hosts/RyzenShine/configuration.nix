@@ -33,7 +33,17 @@ in
 {
   imports = [
     ../common.nix
+    # Nova's own NixOS module: Nova, its user unit, the packages of the
+    # features that are on, and the system parts home-manager can't install
+    # (udev rules for device batteries, upower, gpu-screen-recorder's helper).
+    inputs.nova-rebuild.nixosModules.default
   ];
+
+  programs.nova = {
+    enable = true;
+    # Workshop wallpapers through linux-wallpaperengine, on this PC only.
+    features.wallpaper-engine.enable = true;
+  };
 
   programs.nh.flake = "/home/imperaluna/nix-config";
 
@@ -235,12 +245,7 @@ in
   # headsetcontrol sets the Nova 5X auto-off timer (headsetcontrol -i 0 = never).
   # Its udev rules give the logged-in user access to the dongle's hidraw device.
   environment.systemPackages = [ pkgs.headsetcontrol ];
-  services.udev.packages = [
-    pkgs.headsetcontrol
-    # Nova's udev rules (Logitech HID++ and Keychron raw-HID batteries, which also
-    # let Keychron Launcher open the keyboard); home-manager can't install udev rules.
-    inputs.nova-rebuild.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+  services.udev.packages = [ pkgs.headsetcontrol ];
 
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;

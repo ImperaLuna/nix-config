@@ -11,8 +11,6 @@
       {
         home-manager.users.imperaluna.imports = [
           config.flake.modules.homeManager.terminal-feature-claude-remote-control
-          # Workshop wallpapers through linux-wallpaperengine, on this PC only.
-          { programs.nova.features.wallpaper-engine.enable = true; }
         ];
       }
     ];

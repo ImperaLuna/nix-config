@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  flake.modules.homeManager.apps-feature-ferdium = { config, pkgs, lib, ... }:
+  flake.modules.homeManager.apps-feature-ferdium = { osConfig, pkgs, lib, ... }:
     let
       # Icons come from ferdium-recipes; the recipes bundled with Ferdium have none.
       recipesRev = "d606edecc575a08a22f05d8f6113e8906e3d1012";
@@ -88,7 +88,7 @@
           }
 
           focus() {
-            ${lib.getExe' config.programs.nova.package "nova"} ipc launch_app '{"id": "ferdium.desktop"}' >/dev/null || true
+            ${lib.getExe' osConfig.programs.nova.package "nova"} ipc launch_app '{"id": "ferdium.desktop"}' >/dev/null || true
           }
 
           if running; then

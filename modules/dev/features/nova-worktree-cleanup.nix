@@ -10,17 +10,42 @@
   # It also empties Nova's git-ignored scratch dir (~/Projects/Nova/.scratch)
   # of entries untouched for a week, and removes stray ~/Projects/nova-*
   # folders, which Nova's AGENTS.md forbids, after the same week.
+  # And it fast-forwards ~/Projects/Nova to GitHub's main, so local Claude
+  # sessions read the current AGENTS.md (IMP-220); when it can't (another
+  # branch checked out, uncommitted changes, local commits), it warns in the
+  # journal and with a notification instead.
   flake.modules.homeManager.dev-feature-nova-worktree-cleanup = { pkgs, ... }:
     let
       cleanup = pkgs.writeShellApplication {
         name = "nova-worktree-cleanup";
-        runtimeInputs = with pkgs; [ coreutils findutils gawk gh git gnugrep ];
+        runtimeInputs = with pkgs; [ coreutils findutils gawk gh git gnugrep libnotify ];
         text = ''
           repo="$HOME/Projects/Nova"
           github_repo="ImperaLuna/Nova"
           patches="''${XDG_STATE_HOME:-$HOME/.local/state}/nova-worktree-cleanup"
           [ -e "$repo/.git" ] || exit 0
           mkdir -p "$patches"
+
+          # A journal warning (systemd reads the <4> prefix) and a notification.
+          warn() {
+            echo "<4>$1"
+            notify-send --app-name "Nova checkout" "Nova checkout isn't on main" "$1" || true
+          }
+
+          # Over HTTPS with gh's login: this machine's SSH setup needs
+          # `-F /dev/null` and an agent a timer may not have.
+          if ! git -C "$repo" -c credential.helper= -c credential.helper='!gh auth git-credential' \
+            fetch --quiet "https://github.com/$github_repo.git" main:refs/remotes/origin/main; then
+            warn "Can't fetch main from GitHub; ~/Projects/Nova stays where it is."
+          elif branch=$(git -C "$repo" branch --show-current) && [ "$branch" != main ]; then
+            warn "$repo has ''${branch:-a detached HEAD} checked out, not main, so it isn't kept current. Check out main there."
+          elif [ -n "$(git -C "$repo" status --porcelain --untracked-files=no)" ]; then
+            warn "$repo has uncommitted changes, so it can't fast-forward to main. Commit, stash or drop them."
+          elif ! git -C "$repo" merge --quiet --ff-only origin/main; then
+            warn "$repo's main can't fast-forward to GitHub's main (local commits?)."
+          else
+            echo "$repo is at main $(git -C "$repo" rev-parse --short HEAD)"
+          fi
 
           in_use() {
             local cwd
@@ -84,7 +109,7 @@
       home.packages = [ cleanup ];
 
       systemd.user.services.nova-worktree-cleanup = {
-        Unit.Description = "Remove finished Nova worktrees and stale Nova scratch";
+        Unit.Description = "Remove finished Nova worktrees and stale Nova scratch, fast-forward the Nova checkout";
         Service = {
           Type = "oneshot";
           ExecStart = "${cleanup}/bin/nova-worktree-cleanup";
@@ -92,9 +117,11 @@
       };
 
       systemd.user.timers.nova-worktree-cleanup = {
-        Unit.Description = "Remove finished Nova worktrees daily";
+        # Hourly, so a merge reaches the checkout about as soon as it reaches
+        # the installed Nova (nova-auto-update).
+        Unit.Description = "Remove finished Nova worktrees and update the Nova checkout hourly";
         Timer = {
-          OnCalendar = "daily";
+          OnCalendar = "hourly";
           Persistent = true;
         };
         Install.WantedBy = [ "timers.target" ];

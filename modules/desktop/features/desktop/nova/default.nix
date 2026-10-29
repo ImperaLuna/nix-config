@@ -1,12 +1,11 @@
-{ inputs, ... }:
+{ ... }:
 
 {
+  # What Nova's session needs beside Nova itself. Nova comes from its NixOS
+  # module on RyzenShine (modules/__hosts/RyzenShine/configuration.nix,
+  # programs.nova), which also installs its udev rules.
   flake.modules.homeManager.desktop-feature-nova = { pkgs, lib, ... }:
     {
-      # Nova's own module: Nova, its user unit, and the packages of the features that are on. Turn features on or off here, e.g. programs.nova.features.wallpaper-engine.enable = true;
-      imports = [ inputs.nova-rebuild.homeManagerModules.default ];
-      programs.nova.enable = true;
-
       home.packages = [
         pkgs.adwaita-icon-theme
         pkgs.hicolor-icon-theme
