@@ -22,14 +22,14 @@
         buildInputs = [ pkgs.libxkbcommon pkgs.stdenv.cc.cc.lib ];
 
         # Loaded with dlopen at runtime, so autoPatchelf adds them to RPATH.
-        runtimeDependencies = with pkgs; [
+        runtimeDependencies = map pkgs.lib.getLib (with pkgs; [
           wayland
           vulkan-loader
           libxkbcommon
           fontconfig
           freetype
           linux-pam
-        ];
+        ]);
 
         dontStrip = true;
 
