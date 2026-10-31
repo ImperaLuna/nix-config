@@ -291,11 +291,11 @@
         "quickshell-newest": "quickshell-newest"
       },
       "locked": {
-        "lastModified": 1793408965,
-        "narHash": "sha256-VLquooyB4iZ9+D5bdlKWWsVkK4tD5/bLkeOD9WIvE3o=",
+        "lastModified": 1793415203,
+        "narHash": "sha256-cpYQ4tw6fp1i6gl1voqCro9teNA083QSKinfDFxk3c8=",
         "owner": "ImperaLuna",
         "repo": "Nova",
-        "rev": "4ad861570a070688f9d8967047056bbd358f694d",
+        "rev": "518280df73eb32e9a607fbd1c4563c7bc3a0b1f0",
         "type": "github"
       },
       "original": {
