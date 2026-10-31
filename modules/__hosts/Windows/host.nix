@@ -137,18 +137,6 @@ builtins.mapAttrs mkWindowsHome {
           # Work-only helper scripts, kept outside the repo.
           viasatDir = "${config.home.homeDirectory}/.viasat";
 
-          # Work-only skills from the Skills repo, linked like agent-skills.nix
-          # does for the global ones. They need the Viasat Jira MCP.
-          workSkills = [ "viasat/viasat-jira" ];
-          workSkillLinks = builtins.listToAttrs (
-            builtins.concatMap (root:
-              map (skill: {
-                name = "${root}/${baseNameOf skill}";
-                value.source = config.lib.file.mkOutOfStoreSymlink
-                  "${config.home.homeDirectory}/Skills/global/${dirOf skill}/skills/${baseNameOf skill}";
-              }) workSkills
-            ) [ ".claude/skills" ".agents/skills" ]
-          );
           claudePersonal = pkgs.writeShellScriptBin "claude-personal" ''
             exec ${pkgs.coreutils}/bin/env \
               -u ANTHROPIC_API_KEY \
@@ -167,7 +155,11 @@ builtins.mapAttrs mkWindowsHome {
           '';
         in
         {
-          home.file = workSkillLinks // {
+          # Work-only skills from the Skills repo, on top of the global
+          # authors. They need the Viasat Jira MCP.
+          agentSkills.authors = [ "viasat" ];
+
+          home.file = {
             # Keep the personal account's credentials and history separate while
             # sharing the Nix-managed instructions, skills, and keybindings.
             ".claude-personal/CLAUDE.md".source =
