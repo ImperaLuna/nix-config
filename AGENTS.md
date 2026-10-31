@@ -8,6 +8,8 @@
 - Never push. git-sync does it.
 - Don't commit changes you didn't make, such as a `flake.lock` updated by `upgrade`. git-sync commits those.
 - Keep build logs and temp files out of the repo, because git-sync commits anything it finds.
+- Anywhere git-sync doesn't run, such as a cloud session with a fresh clone: commit and push to `main` yourself. Don't open branches or PRs; work off `main` isn't seen anywhere.
+- If local and remote have diverged, stop and ask the user. Never merge, rebase, or force-push on your own.
 
 ## Building and applying
 
