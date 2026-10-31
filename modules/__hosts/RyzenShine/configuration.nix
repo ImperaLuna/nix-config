@@ -113,7 +113,6 @@ in
   security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
   # ===================================================================
   # PERIPHERALS
