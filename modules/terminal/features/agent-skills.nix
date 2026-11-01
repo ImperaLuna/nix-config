@@ -17,7 +17,7 @@
       };
 
       config = {
-        agentSkills.authors = [ "imperaluna" ];
+        agentSkills.authors = [ "imperaluna" "cathrynlavery" ];
 
         # Nix can't list ~/Skills while evaluating, so the skills are found at
         # switch time: a new skill needs a rebuild, not an edit here. Only links
@@ -106,7 +106,8 @@
           ${pkgs.jq}/bin/jq '
             .enabledPlugins = ((.enabledPlugins // {}) + {
               "imperaluna@synced": false,
-              "viasat@synced": false
+              "viasat@synced": false,
+              "diagram-design@synced": false
             })
           ' "$settings" > "$tmp_file"
           if cmp -s "$tmp_file" "$settings"; then
