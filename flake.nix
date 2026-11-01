@@ -28,6 +28,10 @@
     };
 
     # The Nova rebuild (private repo; `upgrade` passes the gh token).
+    # Its UI runs a patched Quickshell (Nova's packaging/nix/nova-ui.nix,
+    # IMP-262), built from source on this nixpkgs: expect a few minutes of
+    # Quickshell compiling after each nixpkgs update, until Nova drops the
+    # patch once a fixed Quickshell reaches nixpkgs.
     nova-rebuild = {
       url = "github:ImperaLuna/Nova";
       inputs.nixpkgs.follows = "nixpkgs";
