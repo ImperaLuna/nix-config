@@ -80,6 +80,12 @@ window-rule {
     default-floating-position x=10 y=10 relative-to="bottom-right"
 }
 
+// Proton games get a steam_app_<id> class. Open them on the main monitor.
+window-rule {
+    match app-id=r#"^steam_app_\d+$"#
+    open-on-output "DP-1"
+}
+
 // xwayland-satellite does not honor the proxy container's X11 opacity.
 window-rule {
     match app-id=r#"^xembedsniproxy$"#

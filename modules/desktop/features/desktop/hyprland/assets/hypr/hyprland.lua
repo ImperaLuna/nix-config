@@ -96,6 +96,8 @@ hl.window_rule({
 hl.window_rule({ match = { class = "^(blueman-manager)$" }, float = true })
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, no_initial_focus = true })
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, pin = true })
+-- Proton games get a steam_app_<id> class. Open them on the main monitor.
+hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, monitor = "DP-1" })
 
 -- The Lua resize dispatcher accepts pixels, so calculate the existing
 -- 10% size steps from the focused window when the shortcut is pressed.
