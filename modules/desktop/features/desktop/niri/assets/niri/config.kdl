@@ -73,6 +73,11 @@ window-rule {
     clip-to-geometry true
 }
 
+// Nova's own rules, linked from the Nova input by the niri module: its
+// glass blur, xembedsniproxy's hidden window, Nova Files' corners, and
+// apps' Open and Save dialogs (Nova Files' picker) floating.
+include "nova.kdl"
+
 window-rule {
     match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
     open-floating true
@@ -86,39 +91,12 @@ window-rule {
     open-on-output "DP-1"
 }
 
-// xwayland-satellite does not honor the proxy container's X11 opacity.
-window-rule {
-    match app-id=r#"^xembedsniproxy$"#
-    open-floating true
-    open-focused false
-    default-column-width { fixed 1; }
-    default-window-height { fixed 1; }
-    default-floating-position x=0 y=0 relative-to="bottom-right"
-    opacity 0.0
-}
-
-// Light, saturated blur for Nova's glass: shapes behind panels stay
-// faintly visible, text behind them doesn't.
-blur {
-    passes 2
-    offset 2
-    saturation 1.8
-}
-
 // Keep wallpapers full-size behind the overview and its workspace previews.
 // awww supplies the still fallback underneath Wallpaper Engine.
 layer-rule {
     match namespace="^awww-daemonnova$"
     match namespace="^linux-wallpaperengine$"
     place-within-backdrop true
-}
-
-// Nova's glass blurs the windows behind it, not just the wallpaper (xray).
-layer-rule {
-    match namespace="^nova-"
-    background-effect {
-        xray false
-    }
 }
 
 

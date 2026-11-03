@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   flake.modules.homeManager.desktop-feature-niri = { pkgs, ... }:
@@ -21,6 +21,13 @@
     {
       home.packages = [ zenFocusOrLaunch ];
 
-      xdg.configFile."niri".source = ./assets/niri;
+      # Linked file by file, so Nova's rules can sit beside config.kdl.
+      xdg.configFile."niri" = {
+        source = ./assets/niri;
+        recursive = true;
+      };
+      # Included from config.kdl. Nova's home-manager module would link it to
+      # ~/.config/nova, but Nova comes from its NixOS module here.
+      xdg.configFile."niri/nova.kdl".source = "${inputs.nova-rebuild}/packaging/compositor/niri.kdl";
     };
 }
