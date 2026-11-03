@@ -18,6 +18,10 @@
         };
         Service = {
           WorkingDirectory = "%h/Remote";
+          # A user unit can't wait on the system's network-online.target, so
+          # at boot claude started before DNS and failed. Wait for it here.
+          ExecStartPre = ''${pkgs.bash}/bin/bash -c "until ${pkgs.getent}/bin/getent hosts api.anthropic.com >/dev/null; do sleep 2; done"'';
+          TimeoutStartSec = "5min";
           # Login shell, so PATH and the claude binary match the interactive shell.
           # No pre-created session: each start would add one, and it is left
           # behind with a deleted environment after every restart.
