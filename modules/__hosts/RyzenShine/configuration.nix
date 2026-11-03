@@ -43,6 +43,8 @@ in
     enable = true;
     # Workshop wallpapers through linux-wallpaperengine, on this PC only.
     features.wallpaper-engine.enable = true;
+    # Nova Files: the file manager, default for folders (adds udisks2).
+    features.files.enable = true;
   };
 
   programs.nh.flake = "/home/imperaluna/nix-config";
