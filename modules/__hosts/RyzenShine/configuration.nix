@@ -1,4 +1,4 @@
-{ pkgs, inputs, config, ... }:
+{ lib, pkgs, inputs, config, ... }:
 
 let
   sddmSessionDir = pkgs.runCommand "sddm-sessions" { } ''
@@ -46,6 +46,11 @@ in
     # Nova Files: the file manager, default for folders (adds udisks2).
     features.files.enable = true;
   };
+
+  # Nova Files sets niri's FileChooser to "nova;gtk", and nixpkgs' niri module
+  # sets "gtk" at the same priority because useNautilus is off (niri.nix).
+  # Drop this once Nova sets its value with a higher priority.
+  xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce "nova;gtk";
 
   programs.nh.flake = "/home/imperaluna/nix-config";
 
