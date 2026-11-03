@@ -3,7 +3,15 @@
 {
   flake.modules.homeManager.desktop-feature-zen = { pkgs, ... }: {
     home.packages = [
-      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+      (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+        # Open and Save dialogs (uploads, downloads) go through
+        # xdg-desktop-portal, which hands them to Nova Files. Unset, Zen
+        # only uses the portal inside Flatpak or Snap.
+        extraPolicies.Preferences."widget.use-xdg-desktop-portal.file-picker" = {
+          Value = 1;
+          Status = "default";
+        };
+      })
     ];
 
     xdg = {
