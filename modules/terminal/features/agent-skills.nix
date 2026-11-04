@@ -97,24 +97,29 @@
         # The Skills repo is also a plugin marketplace, so an account that installed
         # it on claude.ai gets the same skills synced into Claude Code. The links
         # above already provide them here, so keep the synced copies off.
-        # Claude Code owns settings.json, so only these keys are touched.
+        # Claude Code owns settings.json, so only these keys are touched. A
+        # second account's config dir (~/.claude-personal) gets the same, when
+        # the host has one.
         home.activation.skillsSyncedPluginsOff = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          settings="$HOME/.claude/settings.json"
           mkdir -p "$HOME/.claude"
-          [ -s "$settings" ] || echo '{}' > "$settings"
-          tmp_file="$(mktemp)"
-          ${pkgs.jq}/bin/jq '
-            .enabledPlugins = ((.enabledPlugins // {}) + {
-              "imperaluna@synced": false,
-              "viasat@synced": false,
-              "diagram-design@synced": false
-            })
-          ' "$settings" > "$tmp_file"
-          if cmp -s "$tmp_file" "$settings"; then
-            rm "$tmp_file"
-          else
-            mv "$tmp_file" "$settings"
-          fi
+          for dir in "$HOME/.claude" "$HOME/.claude-personal"; do
+            [ -d "$dir" ] || continue
+            settings="$dir/settings.json"
+            [ -s "$settings" ] || echo '{}' > "$settings"
+            tmp_file="$(mktemp)"
+            ${pkgs.jq}/bin/jq '
+              .enabledPlugins = ((.enabledPlugins // {}) + {
+                "imperaluna@synced": false,
+                "viasat@synced": false,
+                "diagram-design@synced": false
+              })
+            ' "$settings" > "$tmp_file"
+            if cmp -s "$tmp_file" "$settings"; then
+              rm "$tmp_file"
+            else
+              mv "$tmp_file" "$settings"
+            fi
+          done
         '';
 
         # Read-only staleness check at switch time; --quiet keeps it silent when
