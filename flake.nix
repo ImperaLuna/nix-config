@@ -37,6 +37,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Nova Files, a GPUI file manager, tried out in modules/_experimental.
+    nova-files = {
+      url = "github:ImperaLuna/Nova-Files";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Browser package consumed by modules/desktop/features/zen.
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";

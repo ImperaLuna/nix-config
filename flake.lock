@@ -281,6 +281,26 @@
         "type": "github"
       }
     },
+    "nova-files": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793761213,
+        "narHash": "sha256-EpAHD7BcIl5P7TYVSh5OAjwlPHjROiD5Frb+45zyQlA=",
+        "owner": "ImperaLuna",
+        "repo": "Nova-Files",
+        "rev": "41451541a8a09dc943701e1e8771cd054372df2b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ImperaLuna",
+        "repo": "Nova-Files",
+        "type": "github"
+      }
+    },
     "nova-rebuild": {
       "inputs": {
         "advisory-db": "advisory-db",
@@ -347,6 +367,7 @@
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
+        "nova-files": "nova-files",
         "nova-rebuild": "nova-rebuild",
         "qylock": "qylock",
         "zen-browser": "zen-browser"
