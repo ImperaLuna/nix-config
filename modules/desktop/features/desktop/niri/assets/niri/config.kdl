@@ -93,8 +93,9 @@ window-rule {
 
 // Battle.net's Agent.exe flashes short-lived windows while WoW runs. Tiled,
 // each one scrolls the view away from the game and back. Float them unfocused.
+// Their title is either the exe path or just "Agent".
 window-rule {
-    match app-id=r#"^steam_app_\d+$"# title=r#"\\Agent\.exe$"#
+    match app-id=r#"^steam_app_\d+$"# title=r#"(\\Agent\.exe|^Agent)$"#
     open-floating true
     open-focused false
 }
