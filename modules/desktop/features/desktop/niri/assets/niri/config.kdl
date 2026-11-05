@@ -91,6 +91,9 @@ window-rule {
     open-on-output "DP-1"
 }
 
+// Make the 1440p monitor the X11 primary, so Wine games size for it.
+spawn-at-startup "xwayland-primary"
+
 // WoW starts in a small window and resizes itself, which flickers. Open its
 // game window fullscreen straight away. The Battle.net launcher shares the
 // app id but has a different title.
