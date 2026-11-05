@@ -100,6 +100,9 @@ spawn-at-startup "xwayland-primary"
 window-rule {
     match app-id=r#"^steam_app_\d+$"# title="^World of Warcraft$"
     open-fullscreen true
+    // WoW leaves fullscreen when its resolution changes. Fall back to a
+    // full-width column, not niri's default half.
+    default-column-width { proportion 1.0; }
 }
 
 // Keep wallpapers full-size behind the overview and its workspace previews.
