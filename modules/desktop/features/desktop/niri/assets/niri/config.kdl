@@ -91,6 +91,14 @@ window-rule {
     open-on-output "DP-1"
 }
 
+// WoW starts in a small window and resizes itself, which flickers. Open its
+// game window fullscreen straight away. The Battle.net launcher shares the
+// app id but has a different title.
+window-rule {
+    match app-id=r#"^steam_app_\d+$"# title="^World of Warcraft$"
+    open-fullscreen true
+}
+
 // Keep wallpapers full-size behind the overview and its workspace previews.
 // awww supplies the still fallback underneath Wallpaper Engine.
 layer-rule {
