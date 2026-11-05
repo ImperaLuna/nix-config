@@ -91,6 +91,14 @@ window-rule {
     open-on-output "DP-1"
 }
 
+// Battle.net's Agent.exe flashes short-lived windows while WoW runs. Tiled,
+// each one scrolls the view away from the game and back. Float them unfocused.
+window-rule {
+    match app-id=r#"^steam_app_\d+$"# title=r#"\\Agent\.exe$"#
+    open-floating true
+    open-focused false
+}
+
 // Make the 1440p monitor the X11 primary, so Wine games size for it.
 spawn-at-startup "xwayland-primary"
 
