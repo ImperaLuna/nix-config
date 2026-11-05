@@ -93,9 +93,17 @@ window-rule {
 
 // Battle.net's Agent.exe flashes short-lived windows while WoW runs. Tiled,
 // each one scrolls the view away from the game and back. Float them unfocused.
-// Their title is either the exe path or just "Agent".
+// Older ones are titled with the exe path. Newer ones open with no title and
+// are named "Agent" only after niri has placed them, so the exclude catches
+// untitled steam_app windows: a window without a title never matches it.
 window-rule {
-    match app-id=r#"^steam_app_\d+$"# title=r#"(\\Agent\.exe|^Agent)$"#
+    match app-id=r#"^steam_app_\d+$"# title=r#"\\Agent\.exe$"#
+    open-floating true
+    open-focused false
+}
+window-rule {
+    match app-id=r#"^steam_app_\d+$"#
+    exclude title=".*"
     open-floating true
     open-focused false
 }
