@@ -20,7 +20,8 @@
   poppler,
   vulkan-loader,
   wayland,
-  xorg,
+  libx11,
+  libxcb,
   # Runtime tools from the PKGBUILD's depends.
   bat,
   bubblewrap,
@@ -68,8 +69,8 @@ let
     poppler
     vulkan-loader
     wayland
-    xorg.libX11
-    xorg.libxcb
+    libx11
+    libxcb
   ];
 
   unwrapped = rustPlatform.buildRustPackage {
