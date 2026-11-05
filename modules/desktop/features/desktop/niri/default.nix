@@ -19,20 +19,22 @@
       };
 
       # xwayland-satellite makes the 1080p DP-2 the X11 primary, so Wine
-      # games size themselves for it. Make the 1440p DP-1 primary. Run at
-      # niri startup; retries while xwayland-satellite starts on demand.
+      # games size themselves for it. Keep the 1440p DP-1 primary. Run at
+      # niri startup and keep watching: when DP-1 disconnects and returns
+      # (monitor sleep), satellite loses track of it and leaves DP-2
+      # primary until it restarts.
       xwaylandPrimary = pkgs.writeShellApplication {
         name = "xwayland-primary";
         runtimeInputs = with pkgs; [ xrandr gnugrep coreutils ];
         text = ''
-          for _ in $(seq 20); do
-            if xrandr 2>/dev/null | grep -q '^DP-1 connected'; then
-              exec xrandr --output DP-1 --primary
+          while true; do
+            monitors=$(xrandr --listmonitors 2>/dev/null || true)
+            if grep -q ' DP-1$' <<<"$monitors" \
+              && ! grep -q '^ *[0-9]*: +\*DP-1 ' <<<"$monitors"; then
+              xrandr --output DP-1 --primary 2>/dev/null || true
             fi
-            sleep 0.5
+            sleep 2
           done
-          echo "xwayland-primary: DP-1 not found" >&2
-          exit 1
         '';
       };
     in
