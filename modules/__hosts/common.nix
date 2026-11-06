@@ -17,9 +17,13 @@
   nixpkgs.config.nvidia.acceptLicense = true;
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-substituters = [
+      "https://cache.numtide.com"
+      "https://nova-de.cachix.org"
+    ];
     extra-trusted-public-keys = [
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+      "nova-de.cachix.org-1:PSKB85+3Z9v+SpwEymGAclH5gYWjiqOWHFgXJicy4FQ="
     ];
     max-jobs = "auto";
     cores = 0;
