@@ -269,17 +269,30 @@ hl.bind("SUPER + I", hl.dsp.focus({ workspace = "e-1" }))
 -- The binds take every wheel tick, so nothing reaches the app, and act at
 -- most once per 150 ms like the niri cooldown.
 local wheel_cooling = false
-local function wheel(dispatcher)
+
+-- The scrolling focus message wraps around and warps the cursor to the new
+-- window's middle, so on a single column it only jumps the cursor. Windows
+-- stacked in one column share an x position.
+local function has_other_columns()
+    local active = hl.get_active_window()
+    if not active or active.floating then return false end
+    for _, w in ipairs(hl.get_workspace_windows(active.workspace.name)) do
+        if not w.floating and w.at.x ~= active.at.x then return true end
+    end
+    return false
+end
+
+local function wheel(dispatcher, needs_columns)
     return function()
-        if wheel_cooling then return end
+        if wheel_cooling or (needs_columns and not has_other_columns()) then return end
         wheel_cooling = true
         hl.timer(function() wheel_cooling = false end, { timeout = 150, type = "oneshot" })
         hl.dispatch(dispatcher)
     end
 end
 
-hl.bind("SUPER + mouse_down", wheel(hl.dsp.layout("focus r")))
-hl.bind("SUPER + mouse_up", wheel(hl.dsp.layout("focus l")))
+hl.bind("SUPER + mouse_down", wheel(hl.dsp.layout("focus r"), true))
+hl.bind("SUPER + mouse_up", wheel(hl.dsp.layout("focus l"), true))
 hl.bind("SUPER + SHIFT + mouse_down", wheel(hl.dsp.focus({ workspace = "e+1" })))
 hl.bind("SUPER + SHIFT + mouse_up", wheel(hl.dsp.focus({ workspace = "e-1" })))
 hl.bind("SUPER + CTRL + mouse_down", wheel(hl.dsp.window.move({ workspace = "e+1", follow = true })))
