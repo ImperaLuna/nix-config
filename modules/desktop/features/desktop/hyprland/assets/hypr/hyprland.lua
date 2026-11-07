@@ -68,9 +68,12 @@ hl.config({
     -- 1/2, 2/3 and full, and the view scrolls just enough to fit focus.
     -- Leave binds.movefocus_cycles_fullscreen off, so SUPER + arrows on a
     -- fullscreen game jump to the other monitor instead of scrolling away.
+    -- No wrap: scrolling right from WoW wrapped to a fullscreen Steam window
+    -- in the first column and knocked WoW out of fullscreen.
     scrolling = {
         column_width = 0.5,
         focus_fit_method = 1,
+        wrap_focus = false,
     },
     -- Hyprland passes wheel ticks that arrive inside scroll_event_delay to
     -- the app under the cursor, even with SUPER held. Take every tick and
@@ -270,9 +273,12 @@ hl.bind("SUPER + I", hl.dsp.focus({ workspace = "e-1" }))
 -- most once per 150 ms like the niri cooldown.
 local wheel_cooling = false
 
--- The scrolling focus message wraps around and warps the cursor to the new
--- window's middle, so on a single column it only jumps the cursor. Windows
--- stacked in one column share an x position.
+-- The scrolling focus message warps the cursor to the new window's middle
+-- before the view scrolls. For a column off screen next to fullscreen WoW,
+-- the cursor lands on WoW, focus follows the mouse back, and the view snaps
+-- back. Turn warps off while the wheel dispatches. On a single column the
+-- message only moves the cursor, so skip it. Windows stacked in one column
+-- share an x position.
 local function has_other_columns()
     local active = hl.get_active_window()
     if not active or active.floating then return false end
@@ -287,7 +293,13 @@ local function wheel(dispatcher, needs_columns)
         if wheel_cooling or (needs_columns and not has_other_columns()) then return end
         wheel_cooling = true
         hl.timer(function() wheel_cooling = false end, { timeout = 150, type = "oneshot" })
-        hl.dispatch(dispatcher)
+        if needs_columns then
+            hl.config({ cursor = { no_warps = true } })
+            hl.dispatch(dispatcher)
+            hl.config({ cursor = { no_warps = false } })
+        else
+            hl.dispatch(dispatcher)
+        end
     end
 end
 
