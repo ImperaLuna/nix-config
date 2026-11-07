@@ -114,8 +114,10 @@ hl.window_rule({
 hl.window_rule({ match = { class = "^(blueman-manager)$" }, float = true })
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, no_initial_focus = true })
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, pin = true })
--- Proton games get a steam_app_<id> class. Open them on the main monitor.
-hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, monitor = "DP-1" })
+-- Proton games get a steam_app_<id> class. Open them on workspace 1, which
+-- lives on the main monitor.
+hl.workspace_rule({ workspace = "1", monitor = "DP-1", default = true })
+hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, workspace = "1" })
 -- WoW asks to be maximized, which leaves it inside the gaps below Nova's
 -- bar. It still renders at 2560x1440 and gets squashed into the smaller
 -- window. Make it a real fullscreen, and ignore its maximize request, which
@@ -138,30 +140,25 @@ hl.window_rule({
     no_initial_focus = true,
 })
 
--- Keep WoW alone on its workspace. Scrolling focus away from fullscreen
--- WoW to a neighbouring column drops it out of fullscreen and focus snaps
--- straight back, so no other column may sit next to it. Other windows go to
--- the other monitor's active workspace: new ones as they open, and Steam and
--- the Battle.net launcher when WoW itself opens or gets its title.
+-- Keep a fullscreen Steam game alone on its workspace. A window opening
+-- next to it scrolls the view off the game, and scrolling focus away from
+-- fullscreen WoW to a neighbouring column dropped it out of fullscreen with
+-- focus snapping straight back. Other tiled windows go to the other
+-- monitor's active workspace: new ones as they open, and launchers such as
+-- Battle.net once the game goes fullscreen. Floating windows, like the
+-- Battle.net Agent popups and game dialogs, never form a column and stay.
 local function is_steam_game(w)
     return w.class ~= nil and w.class:match("^steam_app_%d+$") ~= nil
 end
 
-local function is_wow(w)
-    return is_steam_game(w) and w.title == "World of Warcraft"
+local function is_fullscreen_game(w)
+    return is_steam_game(w) and w.fullscreen ~= 0
 end
 
--- Battle.net's Agent.exe popups, matching the battlenet-agent-popups rule.
--- They float, so they never form a column.
-local function is_agent_popup(w)
-    return is_steam_game(w) and (w.title == "" or w.title == "Agent" or w.title:match("\\Agent%.exe$") ~= nil)
-end
-
-local function has_wow(workspace)
+local function workspace_game(workspace)
     for _, w in ipairs(hl.get_workspace_windows(workspace.name)) do
-        if is_wow(w) then return true end
+        if is_fullscreen_game(w) then return w end
     end
-    return false
 end
 
 local function move_off_workspace(w, workspace)
@@ -179,30 +176,34 @@ local function move_off_workspace(w, workspace)
     }))
 end
 
+-- Before rules apply, only non-game apps are known to be unwanted. Windows
+-- from the game's own class wait for window.open, when floating is known.
 hl.on("window.open_early", function(w)
     local workspace = w and w.workspace
-    if not workspace or workspace.special or is_wow(w) or is_agent_popup(w) or not has_wow(workspace) then return end
+    if not workspace or workspace.special or is_steam_game(w) or not workspace_game(workspace) then return end
     move_off_workspace(w, workspace)
 end)
 
--- Wine windows often open untitled and get their title afterwards, so check
--- again on every title change, both for WoW and for windows next to it.
-local function keep_wow_alone(w)
+-- Wine windows often open untitled and change title or fullscreen state
+-- afterwards, so check again on each of those.
+local function keep_game_alone(w)
     local workspace = w and w.workspace
     if not workspace or workspace.special then return end
-    if is_wow(w) then
+    if is_fullscreen_game(w) then
         for _, other in ipairs(hl.get_workspace_windows(workspace.name)) do
-            if other.address ~= w.address and not other.floating and not is_agent_popup(other) then
+            if other.address ~= w.address and not other.floating then
                 move_off_workspace(other, workspace)
             end
         end
-    elseif not w.floating and not is_agent_popup(w) and has_wow(workspace) then
-        move_off_workspace(w, workspace)
+    elseif not w.floating then
+        local game = workspace_game(workspace)
+        if game and game.address ~= w.address then move_off_workspace(w, workspace) end
     end
 end
 
-hl.on("window.open", keep_wow_alone)
-hl.on("window.title", keep_wow_alone)
+hl.on("window.open", keep_game_alone)
+hl.on("window.title", keep_game_alone)
+hl.on("window.fullscreen", keep_game_alone)
 
 -- The Lua resize dispatcher accepts pixels, so calculate the existing
 -- 10% size steps from the focused window when the shortcut is pressed.
