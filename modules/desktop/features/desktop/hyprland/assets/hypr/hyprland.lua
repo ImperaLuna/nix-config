@@ -70,10 +70,6 @@ hl.config({
         disable_splash_rendering = true,
         animate_manual_resizes = false,
         animate_mouse_windowdragging = true,
-        -- A window opening on a fullscreen workspace stays behind it. The
-        -- default un-fullscreens the game, and WoW keeps rendering at
-        -- 2560x1440 into the smaller window, distorted until it restarts.
-        on_focus_under_fullscreen = 0,
     },
 })
 
@@ -121,6 +117,37 @@ hl.window_rule({
     float = true,
     no_initial_focus = true,
 })
+
+-- A window opening on WoW's workspace un-fullscreens it, and WoW keeps
+-- rendering at 2560x1440 into the smaller window, distorted until it
+-- restarts. Send other apps to the other monitor's active workspace instead.
+local function is_steam_game(w)
+    return w.class ~= nil and w.class:match("^steam_app_%d+$") ~= nil
+end
+
+local function has_wow(workspace)
+    for _, w in ipairs(hl.get_workspace_windows(workspace.name)) do
+        if is_steam_game(w) and w.title == "World of Warcraft" then return true end
+    end
+    return false
+end
+
+hl.on("window.open_early", function(w)
+    local workspace = w and w.workspace
+    if not workspace or workspace.special or is_steam_game(w) or not has_wow(workspace) then return end
+    local target
+    for _, monitor in ipairs(hl.get_monitors()) do
+        if not workspace.monitor or monitor.name ~= workspace.monitor.name then
+            target = hl.get_active_workspace(monitor.name)
+            break
+        end
+    end
+    hl.dispatch(hl.dsp.window.move({
+        workspace = target and target.name or "empty",
+        follow = false,
+        window = "address:" .. w.address,
+    }))
+end)
 
 -- The Lua resize dispatcher accepts pixels, so calculate the existing
 -- 10% size steps from the focused window when the shortcut is pressed.
