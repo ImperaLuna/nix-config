@@ -104,11 +104,13 @@ hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" 
 hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, monitor = "DP-1" })
 -- WoW asks to be maximized, which leaves it inside the gaps below Nova's
 -- bar. It still renders at 2560x1440 and gets squashed into the smaller
--- window. Make it a real fullscreen.
+-- window. Make it a real fullscreen, and ignore its maximize request, which
+-- Hyprland otherwise reapplies on a config reload.
 hl.window_rule({
     name = "wow-fullscreen",
     match = { class = "^(steam_app_\\d+)$", title = "^World of Warcraft$" },
     fullscreen = true,
+    suppress_event = "maximize",
 })
 -- Battle.net's Agent.exe flashes short-lived windows while WoW runs. They
 -- open untitled, or titled "Agent" or with the exe path. Float them unfocused
