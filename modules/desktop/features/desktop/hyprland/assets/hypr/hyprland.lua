@@ -138,25 +138,33 @@ hl.window_rule({
     no_initial_focus = true,
 })
 
--- On the scrolling layout WoW uses the layout's fullscreen handler, so a
--- second window on its workspace no longer un-fullscreens it. The view
--- still scrolls to show the new column and pushes part of the game off
--- screen until WoW is focused again. Send other apps to the other monitor's
--- active workspace instead.
+-- Keep WoW alone on its workspace. Scrolling focus away from fullscreen
+-- WoW to a neighbouring column drops it out of fullscreen and focus snaps
+-- straight back, so no other column may sit next to it. Other windows go to
+-- the other monitor's active workspace: new ones as they open, and Steam and
+-- the Battle.net launcher when WoW itself opens or gets its title.
 local function is_steam_game(w)
     return w.class ~= nil and w.class:match("^steam_app_%d+$") ~= nil
 end
 
+local function is_wow(w)
+    return is_steam_game(w) and w.title == "World of Warcraft"
+end
+
+-- Battle.net's Agent.exe popups, matching the battlenet-agent-popups rule.
+-- They float, so they never form a column.
+local function is_agent_popup(w)
+    return is_steam_game(w) and (w.title == "" or w.title == "Agent" or w.title:match("\\Agent%.exe$") ~= nil)
+end
+
 local function has_wow(workspace)
     for _, w in ipairs(hl.get_workspace_windows(workspace.name)) do
-        if is_steam_game(w) and w.title == "World of Warcraft" then return true end
+        if is_wow(w) then return true end
     end
     return false
 end
 
-hl.on("window.open_early", function(w)
-    local workspace = w and w.workspace
-    if not workspace or workspace.special or is_steam_game(w) or not has_wow(workspace) then return end
+local function move_off_workspace(w, workspace)
     local target
     for _, monitor in ipairs(hl.get_monitors()) do
         if not workspace.monitor or monitor.name ~= workspace.monitor.name then
@@ -169,7 +177,32 @@ hl.on("window.open_early", function(w)
         follow = false,
         window = "address:" .. w.address,
     }))
+end
+
+hl.on("window.open_early", function(w)
+    local workspace = w and w.workspace
+    if not workspace or workspace.special or is_wow(w) or is_agent_popup(w) or not has_wow(workspace) then return end
+    move_off_workspace(w, workspace)
 end)
+
+-- Wine windows often open untitled and get their title afterwards, so check
+-- again on every title change, both for WoW and for windows next to it.
+local function keep_wow_alone(w)
+    local workspace = w and w.workspace
+    if not workspace or workspace.special then return end
+    if is_wow(w) then
+        for _, other in ipairs(hl.get_workspace_windows(workspace.name)) do
+            if other.address ~= w.address and not other.floating and not is_agent_popup(other) then
+                move_off_workspace(other, workspace)
+            end
+        end
+    elseif not w.floating and not is_agent_popup(w) and has_wow(workspace) then
+        move_off_workspace(w, workspace)
+    end
+end
+
+hl.on("window.open", keep_wow_alone)
+hl.on("window.title", keep_wow_alone)
 
 -- The Lua resize dispatcher accepts pixels, so calculate the existing
 -- 10% size steps from the focused window when the shortcut is pressed.
