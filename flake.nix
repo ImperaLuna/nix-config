@@ -37,6 +37,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nova-bench, the Nova Files benchmark (private repo, fetched like
+    # nova-rebuild). Its NixOS module lets RyzenShine drop the page cache
+    # between runs without a password.
+    nova-bench = {
+      url = "github:ImperaLuna/nova-benchmark";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Nova Files, a GPUI file manager, tried out in modules/_experimental.
     nova-files = {
       url = "github:ImperaLuna/Nova-Files";

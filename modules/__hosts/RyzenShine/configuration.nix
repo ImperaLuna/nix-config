@@ -37,6 +37,8 @@ in
     # features that are on, and the system parts home-manager can't install
     # (udev rules for device batteries, upower, gpu-screen-recorder's helper).
     inputs.nova-rebuild.nixosModules.default
+    # nova-bench's cache-dropping helper and its test folder root.
+    inputs.nova-bench.nixosModules.default
   ];
 
   programs.nova = {
@@ -45,6 +47,11 @@ in
     features.wallpaper-engine.enable = true;
     # Nova Files: the file manager, default for folders (adds udisks2).
     features.files.enable = true;
+  };
+
+  programs.nova-bench = {
+    enable = true;
+    user = "imperaluna";
   };
 
   # Nova Files sets niri's FileChooser to "nova;gtk", and nixpkgs' niri module
