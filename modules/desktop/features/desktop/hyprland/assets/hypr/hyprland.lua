@@ -70,6 +70,10 @@ hl.config({
         disable_splash_rendering = true,
         animate_manual_resizes = false,
         animate_mouse_windowdragging = true,
+        -- A window opening on a fullscreen workspace stays behind it. The
+        -- default un-fullscreens the game, and WoW keeps rendering at
+        -- 2560x1440 into the smaller window, distorted until it restarts.
+        on_focus_under_fullscreen = 0,
     },
 })
 
