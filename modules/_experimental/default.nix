@@ -14,6 +14,10 @@
 
         # Trying Nova Files, the GPUI file manager.
         inputs.nova-files.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+        # Trying Dolphin and Thunar for comparison.
+        pkgs.kdePackages.dolphin
+        pkgs.thunar
       ];
 
     };
