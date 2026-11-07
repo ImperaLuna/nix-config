@@ -306,38 +306,34 @@ hl.bind("SUPER + I", hl.dsp.focus({ workspace = "e-1" }))
 -- most once per 150 ms like the niri cooldown.
 local wheel_cooling = false
 
--- The scrolling focus message warps the cursor to the new window's middle
--- before the view scrolls. For a column off screen next to fullscreen WoW,
--- the cursor lands on WoW, focus follows the mouse back, and the view snaps
--- back. Turn warps off while the wheel dispatches. On a single column the
--- message only moves the cursor, so skip it. Windows stacked in one column
--- share an x position.
-local function has_other_columns()
+-- The scrolling focus message warps the cursor to the new window's middle,
+-- which keeps focus-follows-mouse from handing focus straight back. At the
+-- last column it would only jump the cursor to the middle of the current
+-- window, so stop there. Columns are ordered by x on the tape, and windows
+-- stacked in one column share an x position.
+local function has_column_toward(direction)
     local active = hl.get_active_window()
     if not active or active.floating then return false end
     for _, w in ipairs(hl.get_workspace_windows(active.workspace.name)) do
-        if not w.floating and w.at.x ~= active.at.x then return true end
+        if not w.floating and w.at.x ~= active.at.x
+            and (w.at.x > active.at.x) == (direction == "r") then
+            return true
+        end
     end
     return false
 end
 
-local function wheel(dispatcher, needs_columns)
+local function wheel(dispatcher, direction)
     return function()
-        if wheel_cooling or (needs_columns and not has_other_columns()) then return end
+        if wheel_cooling or (direction and not has_column_toward(direction)) then return end
         wheel_cooling = true
         hl.timer(function() wheel_cooling = false end, { timeout = 150, type = "oneshot" })
-        if needs_columns then
-            hl.config({ cursor = { no_warps = true } })
-            hl.dispatch(dispatcher)
-            hl.config({ cursor = { no_warps = false } })
-        else
-            hl.dispatch(dispatcher)
-        end
+        hl.dispatch(dispatcher)
     end
 end
 
-hl.bind("SUPER + mouse_down", wheel(hl.dsp.layout("focus r"), true))
-hl.bind("SUPER + mouse_up", wheel(hl.dsp.layout("focus l"), true))
+hl.bind("SUPER + mouse_down", wheel(hl.dsp.layout("focus r"), "r"))
+hl.bind("SUPER + mouse_up", wheel(hl.dsp.layout("focus l"), "l"))
 hl.bind("SUPER + SHIFT + mouse_down", wheel(hl.dsp.focus({ workspace = "e+1" })))
 hl.bind("SUPER + SHIFT + mouse_up", wheel(hl.dsp.focus({ workspace = "e-1" })))
 hl.bind("SUPER + CTRL + mouse_down", wheel(hl.dsp.window.move({ workspace = "e+1", follow = true })))
