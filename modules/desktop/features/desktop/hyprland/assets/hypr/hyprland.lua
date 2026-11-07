@@ -72,6 +72,14 @@ hl.config({
         column_width = 0.5,
         focus_fit_method = 1,
     },
+    -- Hyprland passes wheel ticks that arrive inside scroll_event_delay to
+    -- the app under the cursor, even with SUPER held. Take every tick and
+    -- rate-limit in the wheel binds below instead.
+    binds = { scroll_event_delay = 0 },
+    -- Auto HDR offered HDR to every fullscreen window. Apps accepted it, so
+    -- SUPER + F made the SDR monitors blink while switching modes and warn
+    -- about wide color without 10-bit.
+    render = { cm_auto_hdr = 0 },
     misc = {
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
@@ -258,12 +266,24 @@ hl.bind("SUPER + Page_Up", hl.dsp.focus({ workspace = "e-1" }))
 hl.bind("SUPER + U", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind("SUPER + I", hl.dsp.focus({ workspace = "e-1" }))
 -- SUPER + wheel walks the scrolling columns; add SHIFT to switch workspaces.
-hl.bind("SUPER + mouse_down", hl.dsp.layout("focus r"))
-hl.bind("SUPER + mouse_up", hl.dsp.layout("focus l"))
-hl.bind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
-hl.bind("SUPER + CTRL + mouse_down", hl.dsp.window.move({ workspace = "e+1", follow = true }))
-hl.bind("SUPER + CTRL + mouse_up", hl.dsp.window.move({ workspace = "e-1", follow = true }))
+-- The binds take every wheel tick, so nothing reaches the app, and act at
+-- most once per 150 ms like the niri cooldown.
+local wheel_cooling = false
+local function wheel(dispatcher)
+    return function()
+        if wheel_cooling then return end
+        wheel_cooling = true
+        hl.timer(function() wheel_cooling = false end, { timeout = 150, type = "oneshot" })
+        hl.dispatch(dispatcher)
+    end
+end
+
+hl.bind("SUPER + mouse_down", wheel(hl.dsp.layout("focus r")))
+hl.bind("SUPER + mouse_up", wheel(hl.dsp.layout("focus l")))
+hl.bind("SUPER + SHIFT + mouse_down", wheel(hl.dsp.focus({ workspace = "e+1" })))
+hl.bind("SUPER + SHIFT + mouse_up", wheel(hl.dsp.focus({ workspace = "e-1" })))
+hl.bind("SUPER + CTRL + mouse_down", wheel(hl.dsp.window.move({ workspace = "e+1", follow = true })))
+hl.bind("SUPER + CTRL + mouse_up", wheel(hl.dsp.window.move({ workspace = "e-1", follow = true })))
 hl.bind("SUPER + 1", hl.dsp.focus({ workspace = "1" }))
 hl.bind("SUPER + 2", hl.dsp.focus({ workspace = "2" }))
 hl.bind("SUPER + 3", hl.dsp.focus({ workspace = "3" }))
