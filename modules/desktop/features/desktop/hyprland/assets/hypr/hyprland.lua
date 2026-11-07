@@ -31,7 +31,7 @@ hl.config({
         resize_on_border = true,
         extend_border_grab_area = 15,
         hover_icon_on_border = true,
-        layout = "master",
+        layout = "scrolling",
         col = {
             active_border = "rgba(adc6ffff)",
             inactive_border = "rgba(1d2026ff)",
@@ -64,7 +64,14 @@ hl.config({
         },
     },
     animations = { enabled = true },
-    master = { mfact = 0.6 },
+    -- Defaults match the niri config: half-width columns, presets of 1/3,
+    -- 1/2, 2/3 and full, and the view scrolls just enough to fit focus.
+    -- Leave binds.movefocus_cycles_fullscreen off, so SUPER + arrows on a
+    -- fullscreen game jump to the other monitor instead of scrolling away.
+    scrolling = {
+        column_width = 0.5,
+        focus_fit_method = 1,
+    },
     misc = {
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
@@ -101,12 +108,14 @@ hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, monitor = "DP-1" })
 -- WoW asks to be maximized, which leaves it inside the gaps below Nova's
 -- bar. It still renders at 2560x1440 and gets squashed into the smaller
 -- window. Make it a real fullscreen, and ignore its maximize request, which
--- Hyprland otherwise reapplies on a config reload.
+-- Hyprland otherwise reapplies on a config reload. If it ever leaves
+-- fullscreen, keep it a full-width column rather than the default half.
 hl.window_rule({
     name = "wow-fullscreen",
     match = { class = "^(steam_app_\\d+)$", title = "^World of Warcraft$" },
     fullscreen = true,
     suppress_event = "maximize",
+    scrolling_width = 1.0,
 })
 -- Battle.net's Agent.exe flashes short-lived windows while WoW runs. They
 -- open untitled, or titled "Agent" or with the exe path. Float them unfocused
@@ -118,9 +127,11 @@ hl.window_rule({
     no_initial_focus = true,
 })
 
--- A window opening on WoW's workspace un-fullscreens it, and WoW keeps
--- rendering at 2560x1440 into the smaller window, distorted until it
--- restarts. Send other apps to the other monitor's active workspace instead.
+-- On the scrolling layout WoW uses the layout's fullscreen handler, so a
+-- second window on its workspace no longer un-fullscreens it. The view
+-- still scrolls to show the new column and pushes part of the game off
+-- screen until WoW is focused again. Send other apps to the other monitor's
+-- active workspace instead.
 local function is_steam_game(w)
     return w.class ~= nil and w.class:match("^steam_app_%d+$") ~= nil
 end
@@ -188,7 +199,6 @@ hl.bind("SUPER + B", focus_or_launch_browser)
 hl.bind("SUPER + Space", hl.dsp.exec_cmd("nova toggle launcher"), { release = true })
 
 -- Window management
-hl.bind("SUPER + Return", hl.dsp.layout("swapwithmaster master"))
 hl.bind("SUPER + Q", hl.dsp.window.close())
 hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "maximized" }))
 hl.bind("SUPER + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
@@ -226,8 +236,16 @@ hl.bind("SUPER + SHIFT + CTRL + K", hl.dsp.window.move({ monitor = "u", follow =
 hl.bind("SUPER + SHIFT + CTRL + L", hl.dsp.window.move({ monitor = "r", follow = true }))
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { description = "Move window", mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { description = "Resize window", mouse = true })
-hl.bind("SUPER + minus", resize_by_fraction(-0.1, 0.0), { repeating = true })
-hl.bind("SUPER + equal", resize_by_fraction(0.1, 0.0), { repeating = true })
+-- Scrolling columns, on the same keys as the niri config.
+hl.bind("SUPER + minus", hl.dsp.layout("colresize -0.1"), { repeating = true })
+hl.bind("SUPER + equal", hl.dsp.layout("colresize +0.1"), { repeating = true })
+hl.bind("SUPER + R", hl.dsp.layout("colresize +conf"))
+hl.bind("SUPER + C", hl.dsp.layout("center"))
+hl.bind("SUPER + CTRL + F", hl.dsp.layout("fit expand"))
+hl.bind("SUPER + comma", hl.dsp.layout("consume"))
+hl.bind("SUPER + period", hl.dsp.layout("expel"))
+hl.bind("SUPER + bracketleft", hl.dsp.layout("consume_or_expel prev"))
+hl.bind("SUPER + bracketright", hl.dsp.layout("consume_or_expel next"))
 hl.bind("SUPER + SHIFT + minus", resize_by_fraction(0.0, -0.1), { repeating = true })
 hl.bind("SUPER + SHIFT + equal", resize_by_fraction(0.0, 0.1), { repeating = true })
 
