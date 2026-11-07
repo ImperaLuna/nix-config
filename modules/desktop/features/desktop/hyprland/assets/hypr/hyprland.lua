@@ -98,6 +98,23 @@ hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" 
 hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" }, pin = true })
 -- Proton games get a steam_app_<id> class. Open them on the main monitor.
 hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, monitor = "DP-1" })
+-- WoW asks to be maximized, which leaves it inside the gaps below Nova's
+-- bar. It still renders at 2560x1440 and gets squashed into the smaller
+-- window. Make it a real fullscreen.
+hl.window_rule({
+    name = "wow-fullscreen",
+    match = { class = "^(steam_app_\\d+)$", title = "^World of Warcraft$" },
+    fullscreen = true,
+})
+-- Battle.net's Agent.exe flashes short-lived windows while WoW runs. They
+-- open untitled, or titled "Agent" or with the exe path. Float them unfocused
+-- so they don't retile the workspace or pull focus from the game.
+hl.window_rule({
+    name = "battlenet-agent-popups",
+    match = { class = "^(steam_app_\\d+)$", title = "^(|Agent|.*\\\\Agent\\.exe)$" },
+    float = true,
+    no_initial_focus = true,
+})
 
 -- The Lua resize dispatcher accepts pixels, so calculate the existing
 -- 10% size steps from the focused window when the shortcut is pressed.
