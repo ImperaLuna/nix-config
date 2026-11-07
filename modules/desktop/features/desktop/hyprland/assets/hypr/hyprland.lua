@@ -245,8 +245,9 @@ hl.bind("SUPER + Space", hl.dsp.exec_cmd("nova toggle launcher"), { release = tr
 
 -- Window management
 hl.bind("SUPER + Q", hl.dsp.window.close())
-hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "maximized" }))
-hl.bind("SUPER + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
+-- dont_inhibit: Wine games grab the keyboard, which otherwise turns these off.
+hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "maximized" }), { dont_inhibit = true })
+hl.bind("SUPER + SHIFT + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), { dont_inhibit = true })
 hl.bind("SUPER + SHIFT + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + W", hl.dsp.group.toggle())
 hl.bind("SUPER + left", hl.dsp.focus({ direction = "left" }))
