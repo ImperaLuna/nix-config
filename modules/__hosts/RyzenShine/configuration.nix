@@ -62,10 +62,6 @@ in
     wantedBy = [ "multi-user.target" ];
     pathConfig.PathModified = "/run/nova-bench/drop";
   };
-  systemd.services.nova-drop-caches = {
-    serviceConfig.Type = "oneshot";
-    script = "sync; echo 3 > /proc/sys/vm/drop_caches";
-  };
 
   # Nova Files sets niri's FileChooser to "nova;gtk", and nixpkgs' niri module
   # sets "gtk" at the same priority because useNautilus is off (niri.nix).
@@ -111,6 +107,12 @@ in
     nixos-apply = "switch --flake /home/imperaluna/nix-config";
     nixos-rollback = "switch --rollback";
   } // {
+    # Started by systemd.paths.nova-drop-caches, next to programs.nova-bench.
+    nova-drop-caches = {
+      serviceConfig.Type = "oneshot";
+      script = "sync; echo 3 > /proc/sys/vm/drop_caches";
+    };
+
     # The boot splash runs on the firmware framebuffer (card0) until the
     # Nvidia driver loads and replaces it with card1. If SDDM starts in
     # between, the greeter loses its screen and restarts, asking for the
