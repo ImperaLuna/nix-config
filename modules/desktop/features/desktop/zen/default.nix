@@ -1,23 +1,28 @@
 { inputs, ... }:
 
 {
-  flake.modules.homeManager.desktop-feature-zen = { pkgs, ... }: {
-    home.packages = [
-      (inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-        # Open and Save dialogs (uploads, downloads) go through
-        # xdg-desktop-portal, which hands them to Nova Files. Unset, Zen
-        # only uses the portal inside Flatpak or Snap.
-        extraPolicies.Preferences."widget.use-xdg-desktop-portal.file-picker" = {
-          Value = 1;
-          Status = "default";
-        };
-      })
-    ];
+  flake.modules.homeManager.desktop-feature-zen = { pkgs, ... }:
+  let
+    zen = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+      # Open and Save dialogs (uploads, downloads) go through
+      # xdg-desktop-portal, which hands them to Nova Files. Unset, Zen
+      # only uses the portal inside Flatpak or Snap.
+      extraPolicies.Preferences."widget.use-xdg-desktop-portal.file-picker" = {
+        Value = 1;
+        Status = "default";
+      };
+    };
+  in
+  {
+    home.packages = [ zen ];
 
     xdg = {
       desktopEntries."zen-beta" = {
         name = "Zen Browser (Beta)";
-        exec = "zen-beta --name zen-beta %U";
+        # Absolute path, because some callers run xdg-open with a narrowed
+        # PATH that lacks /etc/profiles/per-user. Claude Desktop does this,
+        # so its links silently failed to open.
+        exec = "${zen}/bin/zen-beta --name zen-beta %U";
         icon = "zen-browser";
         categories = [ "Network" "WebBrowser" ];
         mimeType = [ "text/html" "text/xml" "application/xhtml+xml" "x-scheme-handler/http" "x-scheme-handler/https" ];
