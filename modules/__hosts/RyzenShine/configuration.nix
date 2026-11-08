@@ -54,6 +54,19 @@ in
     user = "imperaluna";
   };
 
+  # nova-bench's sudo helper fails where sudo is blocked (the Claude desktop
+  # app sets no-new-privileges). Touching /run/nova-bench/drop starts a root
+  # oneshot that drops the page cache instead.
+  systemd.tmpfiles.rules = [ "d /run/nova-bench 0755 imperaluna users -" ];
+  systemd.paths.nova-drop-caches = {
+    wantedBy = [ "multi-user.target" ];
+    pathConfig.PathModified = "/run/nova-bench/drop";
+  };
+  systemd.services.nova-drop-caches = {
+    serviceConfig.Type = "oneshot";
+    script = "sync; echo 3 > /proc/sys/vm/drop_caches";
+  };
+
   # Nova Files sets niri's FileChooser to "nova;gtk", and nixpkgs' niri module
   # sets "gtk" at the same priority because useNautilus is off (niri.nix).
   # Drop this once Nova sets its value with a higher priority.
