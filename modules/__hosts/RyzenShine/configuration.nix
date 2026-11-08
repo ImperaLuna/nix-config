@@ -108,7 +108,11 @@ in
     nixos-rollback = "switch --rollback";
   } // {
     # Started by systemd.paths.nova-drop-caches, next to programs.nova-bench.
+    # Benchmarks touch the trigger file often, sometimes from parallel runs.
+    # Turn off the start limit so systemd doesn't fail this unit (and its
+    # path unit) after 5 starts in 10 s.
     nova-drop-caches = {
+      unitConfig.StartLimitIntervalSec = 0;
       serviceConfig.Type = "oneshot";
       script = "sync; echo 3 > /proc/sys/vm/drop_caches";
     };
