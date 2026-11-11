@@ -130,6 +130,13 @@ hl.window_rule({
     suppress_event = "maximize",
     scrolling_width = 1.0,
 })
+-- Moving the cursor across a fullscreen window, such as on the way to the
+-- other monitor, focused it. Fullscreen windows take focus on click instead.
+hl.window_rule({
+    name = "fullscreen-click-to-focus",
+    match = { fullscreen = true },
+    no_follow_mouse = true,
+})
 -- Battle.net's Agent.exe flashes short-lived windows while WoW runs. They
 -- open untitled, or titled "Agent" or with the exe path. Float them unfocused
 -- so they don't retile the workspace or pull focus from the game.
