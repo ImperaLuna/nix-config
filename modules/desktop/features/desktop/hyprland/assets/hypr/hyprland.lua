@@ -118,6 +118,10 @@ hl.window_rule({ match = { class = "^(steam)$", title = "^(notificationtoasts)" 
 -- lives on the main monitor.
 hl.workspace_rule({ workspace = "1", monitor = "DP-1", default = true })
 hl.window_rule({ match = { class = "^(steam_app_\\d+)$" }, workspace = "1" })
+-- Keep games out of window groups. Battle.net once got grouped, WoW then
+-- opened as a tab in that group and skipped its fullscreen rule, and moving
+-- Battle.net off the game's workspace carried WoW along to the other monitor.
+hl.window_rule({ name = "games-no-group", match = { class = "^(steam_app_\\d+)$" }, group = "barred deny" })
 -- WoW asks to be maximized, which leaves it inside the gaps below Nova's
 -- bar. It still renders at 2560x1440 and gets squashed into the smaller
 -- window. Make it a real fullscreen, and ignore its maximize request, which
