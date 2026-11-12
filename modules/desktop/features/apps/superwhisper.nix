@@ -99,7 +99,16 @@
           --run '[ -e "$SUPERWHISPER_HYPR_BINDINGS" ] || { mkdir -p "''${SUPERWHISPER_HYPR_BINDINGS%/*}" && : > "$SUPERWHISPER_HYPR_BINDINGS"; }' \
           --prefix PATH : ${lib.makeBinPath runtimePath} \
           --prefix GI_TYPELIB_PATH : ${lib.makeSearchPath "lib/girepository-1.0" typelibs} \
-          --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.gtk4-layer-shell pkgs.vulkan-loader ]} \
+          --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
+            # The GPUI settings window loads these at runtime, not via NEEDED.
+            pkgs.wayland
+            pkgs.vulkan-loader
+            pkgs.libxkbcommon
+            pkgs.libGL
+            pkgs.fontconfig
+            pkgs.freetype
+            pkgs.gtk4-layer-shell
+          ]} \
           --set GDK_PIXBUF_MODULE_FILE ${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
         for png in $app/assets/app-icon/*.png; do
