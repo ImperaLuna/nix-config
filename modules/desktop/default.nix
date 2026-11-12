@@ -14,6 +14,7 @@
       config.flake.modules.homeManager.apps-feature-spotify
       config.flake.modules.homeManager.apps-feature-vscode
       config.flake.modules.homeManager.apps-feature-stremio
+      config.flake.modules.homeManager.apps-feature-superwhisper
       config.flake.modules.homeManager.desktop-feature-gtk
       config.flake.modules.homeManager.desktop-feature-cursor
       config.flake.modules.homeManager.desktop-feature-hyprland
