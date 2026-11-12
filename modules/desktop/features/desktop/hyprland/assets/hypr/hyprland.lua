@@ -387,3 +387,8 @@ hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("nova record"))
 hl.bind("SUPER + ALT + L", hl.dsp.exec_cmd("nova lock"))
 hl.bind("SUPER + SHIFT + E", hl.dsp.exit())
 hl.bind("SUPER + SHIFT + P", hl.dsp.dpms({ action = "toggle" }))
+
+-- Superwhisper dictation keys. The app writes its binds to this file from its
+-- settings (modules/desktop/features/apps/superwhisper.nix), because this
+-- directory is read-only.
+pcall(dofile, (os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")) .. "/superwhisper/hyprland-bindings.lua")

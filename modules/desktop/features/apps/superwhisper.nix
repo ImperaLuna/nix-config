@@ -91,8 +91,12 @@
         cp -a app/. $app/
         patchShebangs $app/run.sh $app/scripts
 
+        # ~/.config/hypr is a read-only store path, so the app writes its
+        # Hyprland binds to this file instead. hyprland.lua loads it.
         makeWrapper $app/run.sh $out/bin/superwhisper \
           --set SUPERWHISPER_UPDATE_DISABLED 1 \
+          --run 'export SUPERWHISPER_HYPR_BINDINGS="''${SUPERWHISPER_HYPR_BINDINGS:-''${XDG_CONFIG_HOME:-$HOME/.config}/superwhisper/hyprland-bindings.lua}"' \
+          --run '[ -e "$SUPERWHISPER_HYPR_BINDINGS" ] || { mkdir -p "''${SUPERWHISPER_HYPR_BINDINGS%/*}" && : > "$SUPERWHISPER_HYPR_BINDINGS"; }' \
           --prefix PATH : ${lib.makeBinPath runtimePath} \
           --prefix GI_TYPELIB_PATH : ${lib.makeSearchPath "lib/girepository-1.0" typelibs} \
           --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pkgs.gtk4-layer-shell pkgs.vulkan-loader ]} \
