@@ -13,17 +13,19 @@
           niri) [ "$1" = off ] && niri msg action power-off-monitors ;;
         esac
       '';
+      # ~/.config/hypr is one store symlink, so Home Manager can't add
+      # hypridle.conf inside it. Hand hypridle a store file instead.
+      config = pkgs.writeText "hypridle.conf" ''
+        listener {
+          timeout = 900
+          on-timeout = ${screens} off
+          on-resume = ${screens} on
+        }
+      '';
     in
     {
-      services.hypridle = {
-        enable = true;
-        settings.listener = [
-          {
-            timeout = 900;
-            on-timeout = "${screens} off";
-            on-resume = "${screens} on";
-          }
-        ];
-      };
+      services.hypridle.enable = true;
+      systemd.user.services.hypridle.Service.ExecStart =
+        pkgs.lib.mkForce "${pkgs.hypridle}/bin/hypridle -c ${config}";
     };
 }
