@@ -10,7 +10,7 @@ local dropcaps = "/run/current-system/sw/bin/setpriv --ambient-caps=-all --inh-c
 -- highres takes the largest mode, then the highest refresh, so both work.
 -- auto-right keeps DP-2 flush against it whatever width DP-1 has.
 hl.monitor({ output = "DP-1", mode = "highres", position = "1920x0", scale = 1, vrr = 0 })
-hl.monitor({ output = "DP-2", mode = "1920x1080@120.000", position = "auto-right", scale = 1, vrr = 0 })
+hl.monitor({ output = "DP-2", mode = "highres", position = "auto-right", scale = 1, vrr = 0 })
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
 -- Startup. UWSM normally starts nova.service through graphical-session.target.
