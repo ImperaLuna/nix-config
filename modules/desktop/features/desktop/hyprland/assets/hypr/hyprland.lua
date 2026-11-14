@@ -6,8 +6,11 @@ local browser = "zen-beta"
 local dropcaps = "/run/current-system/sw/bin/setpriv --ambient-caps=-all --inh-caps=-all "
 
 -- Monitors
-hl.monitor({ output = "DP-1", mode = "3840x2160@239.87", position = "1920x0", scale = 1, vrr = 0 })
-hl.monitor({ output = "DP-2", mode = "1920x1080@120.000", position = "5760x0", scale = 1, vrr = 0 })
+-- DP-1 is a dual-mode panel (4K 240 Hz or 1080p 480 Hz, switched in its OSD).
+-- highres takes the largest mode, then the highest refresh, so both work.
+-- auto-right keeps DP-2 flush against it whatever width DP-1 has.
+hl.monitor({ output = "DP-1", mode = "highres", position = "1920x0", scale = 1, vrr = 0 })
+hl.monitor({ output = "DP-2", mode = "1920x1080@120.000", position = "auto-right", scale = 1, vrr = 0 })
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
 -- Startup. UWSM normally starts nova.service through graphical-session.target.
