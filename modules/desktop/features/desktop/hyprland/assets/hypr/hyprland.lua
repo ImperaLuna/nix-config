@@ -9,7 +9,7 @@ local dropcaps = "/run/current-system/sw/bin/setpriv --ambient-caps=-all --inh-c
 -- DP-1 is a dual-mode panel (4K 240 Hz or 1080p 480 Hz, switched in its OSD).
 -- highres takes the largest mode, then the highest refresh, so both work.
 -- auto-right keeps DP-2 flush against it whatever width DP-1 has.
-hl.monitor({ output = "DP-1", mode = "highres", position = "1920x0", scale = 1, vrr = 0 })
+hl.monitor({ output = "DP-1", mode = "highres", position = "1920x0", scale = 1.25, vrr = 0 })
 hl.monitor({ output = "DP-2", mode = "highres", position = "auto-right", scale = 1, vrr = 0 })
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
@@ -82,6 +82,10 @@ hl.config({
     -- the app under the cursor, even with SUPER held. Take every tick and
     -- rate-limit in the wheel binds below instead.
     binds = { scroll_event_delay = 0 },
+    -- DP-1 runs at scale 1.25. Without this, X11 apps (Proton games, Steam)
+    -- render at 1x and get stretched, which blurs them. With it they draw at
+    -- native pixels instead.
+    xwayland = { force_zero_scaling = true },
     -- Auto HDR offered HDR to every fullscreen window. Apps accepted it, so
     -- SUPER + F made the SDR monitors blink while switching modes and warn
     -- about wide color without 10-bit.
