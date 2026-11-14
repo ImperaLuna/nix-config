@@ -6,8 +6,8 @@ local browser = "zen-beta"
 local dropcaps = "/run/current-system/sw/bin/setpriv --ambient-caps=-all --inh-caps=-all "
 
 -- Monitors
-hl.monitor({ output = "DP-1", mode = "2560x1440@144.000", position = "1920x0", scale = 1, vrr = 0 })
-hl.monitor({ output = "DP-2", mode = "1920x1080@120.000", position = "4480x0", scale = 1, vrr = 0 })
+hl.monitor({ output = "DP-1", mode = "3840x2160@239.87", position = "1920x0", scale = 1, vrr = 0 })
+hl.monitor({ output = "DP-2", mode = "1920x1080@120.000", position = "5760x0", scale = 1, vrr = 0 })
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
 -- Startup. UWSM normally starts nova.service through graphical-session.target.
