@@ -29,6 +29,9 @@ let
                        'property string uName:  model.name || ""'
     '';
   };
+
+  # The desktop's cursor, from the Home Manager cursor feature.
+  greeterCursor = config.home-manager.users.imperaluna.home.pointerCursor;
 in
 {
   imports = [
@@ -193,9 +196,11 @@ in
       # the GPU firmware offers, so 1440p still covers the times only the
       # 27-inch DP-2 is awake.
       gfxmodeEfi = "3840x2160,2560x1440,auto";
-      # Windows left, NixOS in the middle as the default, generations right.
+      # Windows and firmware settings left, NixOS in the middle as the
+      # default, generations right. The default is an index, so it moves
+      # when an extra entry is added.
       extraEntriesBeforeNixOS = true;
-      default = 1;
+      default = 2;
       extraEntries = ''
         # Windows EFI partition on the SK hynix SSD.
         menuentry "Windows 11" --class windows {
@@ -203,6 +208,10 @@ in
           insmod fat
           search --no-floppy --fs-uuid --set=root 32D4-82C0
           chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+        # Reboots into the BIOS setup, like Limine's firmware entry did.
+        menuentry "UEFI Firmware Settings" --class firmware {
+          fwsetup
         }
       '';
     };
@@ -239,8 +248,8 @@ in
     # The default weston kiosk shell stacks every greeter window on one
     # output, so the login box can land on a screen that is asleep. The
     # 27-inch DP-2 can also wake after the greeter starts, and that hotplug
-    # crashed kiosk-shell (SIGSEGV), leaving both screens black. KWin gives each screen its own greeter and
-    # handles outputs that appear later.
+    # crashed kiosk-shell (SIGSEGV), leaving both screens black. KWin gives
+    # each screen its own greeter and handles outputs that appear later.
     wayland.compositor = "kwin";
     theme = "${qylockSddmTheme}/share/sddm/themes/qylock";
     settings = {
@@ -250,6 +259,10 @@ in
       General.GreeterEnvironment = "QT_FFMPEG_DECODING_HW_DEVICE_TYPES=none,QT_DISABLE_HW_TEXTURES_CONVERSION=1";
       Wayland.SessionDir = "${sddmSessionDir}/share/wayland-sessions";
       X11.SessionDir = "${sddmSessionDir}/share/xsessions";
+      # Weston drew its own pointer. KWin needs a cursor theme, and without
+      # one the pointer is invisible. Use the desktop's Carbonfox cursor.
+      Theme.CursorTheme = greeterCursor.name;
+      Theme.CursorSize = greeterCursor.size;
     };
     extraPackages = with pkgs.qt6; [
       qt5compat
@@ -286,7 +299,9 @@ in
 
   # headsetcontrol sets the Nova 5X auto-off timer (headsetcontrol -i 0 = never).
   # Its udev rules give the logged-in user access to the dongle's hidraw device.
-  environment.systemPackages = [ pkgs.headsetcontrol ];
+  # The cursor theme goes under /run/current-system/sw/share/icons, where
+  # the greeter's KWin looks for it.
+  environment.systemPackages = [ pkgs.headsetcontrol greeterCursor.package ];
   services.udev.packages = [ pkgs.headsetcontrol ];
 
   services.pulseaudio.enable = false;
