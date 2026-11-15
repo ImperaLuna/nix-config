@@ -95,6 +95,11 @@ hl.config({
         disable_splash_rendering = true,
         animate_manual_resizes = false,
         animate_mouse_windowdragging = true,
+        -- Wake the screens on any key or mouse move. hypridle alone missed
+        -- it: an app toggling an idle inhibitor reset its idle state while
+        -- the screens were off, so on-resume never ran.
+        key_press_enables_dpms = true,
+        mouse_move_enables_dpms = true,
     },
 })
 
