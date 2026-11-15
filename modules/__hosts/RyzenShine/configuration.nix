@@ -178,7 +178,7 @@ in
   # BOOT
   # ===================================================================
   boot.loader = {
-    timeout = 60;
+    timeout = 5;
     systemd-boot.enable = false;
     # GRUB installs to /EFI/NixOS-boot and adds its own firmware boot entry.
     efi.canTouchEfiVariables = true;
