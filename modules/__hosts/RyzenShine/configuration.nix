@@ -188,7 +188,11 @@ in
       device = "nodev";
       caelestia.enable = true;
       configurationLimit = 5;
-      gfxmodeEfi = "2560x1440,auto";
+      # The main screen is the 4K OLED on DP-1. 2560x1440 on it came out
+      # scaled and odd, so ask for native 4K first. GRUB takes the first mode
+      # the GPU firmware offers, so 1440p still covers the times only the
+      # 27-inch DP-2 is awake.
+      gfxmodeEfi = "3840x2160,2560x1440,auto";
       # Windows left, NixOS in the middle as the default, generations right.
       extraEntriesBeforeNixOS = true;
       default = 1;
@@ -233,9 +237,9 @@ in
     enable = true;
     wayland.enable = true;
     # The default weston kiosk shell stacks every greeter window on one
-    # output, so the login box can land on a screen that is asleep. The OLED
-    # on DP-2 also wakes late, and its hotplug crashed kiosk-shell (SIGSEGV),
-    # leaving both screens black. KWin gives each screen its own greeter and
+    # output, so the login box can land on a screen that is asleep. The
+    # 27-inch DP-2 can also wake after the greeter starts, and that hotplug
+    # crashed kiosk-shell (SIGSEGV), leaving both screens black. KWin gives each screen its own greeter and
     # handles outputs that appear later.
     wayland.compositor = "kwin";
     theme = "${qylockSddmTheme}/share/sddm/themes/qylock";
