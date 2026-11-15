@@ -24,9 +24,14 @@
       # until the tree has been quiet for GIT_SYNC_DELAY seconds instead.
       debounced = pkgs.writeShellApplication {
         name = "git-sync-debounced";
-        runtimeInputs = [ pkgs.coreutils pkgs.git pkgs.inotify-tools ];
+        runtimeInputs = [ pkgs.coreutils pkgs.getent pkgs.git pkgs.inotify-tools ];
         text = ''
           cd "$GIT_SYNC_DIRECTORY"
+
+          # Linger starts this unit at boot, before the network is up. The
+          # first sync would fail to reach GitHub and stop the unit for the
+          # whole session, so wait until github.com resolves.
+          until getent hosts github.com >/dev/null; do sleep 5; done
 
           watch() {
             inotifywait "$GIT_SYNC_DIRECTORY" -r -e modify,move,create,delete \

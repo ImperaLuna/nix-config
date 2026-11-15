@@ -9,6 +9,9 @@
     enable = true;
     setSocketVariable = true;
   };
+  # The rootless docker unit is a global user unit, so it also started for
+  # the sddm greeter user, which has no subuid range, and failed every boot.
+  systemd.user.services.docker.unitConfig.ConditionUser = "!@system";
   programs.virt-manager.enable = true;
 
   system.activationScripts.usrbinsh = ''
