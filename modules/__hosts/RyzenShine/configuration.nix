@@ -195,7 +195,17 @@ in
       # scaled and odd, so ask for native 4K first. GRUB takes the first mode
       # the GPU firmware offers, so 1440p still covers the times only the
       # 27-inch DP-2 is awake.
-      gfxmodeEfi = "3840x2160,2560x1440,auto";
+      # On 2026-11-15 neither mode was offered with the OLED attached and
+      # GRUB fell back to 1024x768 (read from /sys/kernel/boot_params/data).
+      # 1920x1080 scales by exactly 2 on the 4K panel, so it is the next try.
+      gfxmodeEfi = "3840x2160,2560x1440,1920x1080,auto";
+      # TEMPORARY: print the GPU firmware's mode list for 20 s before the
+      # menu, so it can be read off the screen without a keyboard. Remove
+      # once gfxmodeEfi is settled.
+      extraConfig = ''
+        videoinfo
+        sleep 20
+      '';
       # Windows and firmware settings left, NixOS in the middle as the
       # default, generations right. The default is an index, so it moves
       # when an extra entry is added.
