@@ -232,6 +232,12 @@ in
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
+    # The default weston kiosk shell stacks every greeter window on one
+    # output, so the login box can land on a screen that is asleep. The OLED
+    # on DP-2 also wakes late, and its hotplug crashed kiosk-shell (SIGSEGV),
+    # leaving both screens black. KWin gives each screen its own greeter and
+    # handles outputs that appear later.
+    wayland.compositor = "kwin";
     theme = "${qylockSddmTheme}/share/sddm/themes/qylock";
     settings = {
       # The theme's video background goes blank when Qt hands VA-API frames
