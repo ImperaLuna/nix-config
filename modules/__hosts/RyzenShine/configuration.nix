@@ -42,6 +42,9 @@ in
     inputs.nova-rebuild.nixosModules.default
     # nova-bench's cache-dropping helper and its test folder root.
     inputs.nova-bench.nixosModules.default
+    # Nova Files (the standalone Rust app): installs it, its D-Bus services
+    # and its FileChooser portal backend.
+    inputs.nova-files.nixosModules.default
   ];
 
   programs.nova = {
@@ -50,6 +53,13 @@ in
     features.wallpaper-engine.enable = true;
     # Nova Files: the file manager, default for folders (adds udisks2).
     features.files.enable = true;
+  };
+
+  # Nova Files is the picker of other apps' Open and Save dialogs on niri.
+  programs.nova-files = {
+    enable = true;
+    filePicker.enable = true;
+    filePicker.desktops = [ "niri" ];
   };
 
   programs.nova-bench = {
@@ -66,10 +76,10 @@ in
     pathConfig.PathModified = "/run/nova-bench/drop";
   };
 
-  # Nova Files sets niri's FileChooser to "nova;gtk", and nixpkgs' niri module
-  # sets "gtk" at the same priority because useNautilus is off (niri.nix).
-  # Drop this once Nova sets its value with a higher priority.
-  xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce "nova;gtk";
+  # The picker is the standalone Nova Files backend ("novafiles"), with GTK as
+  # the fallback. Nova's features.files and nixpkgs' niri module (gtk, since
+  # useNautilus is off) set this at the same priority, so force it.
+  xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce "novafiles;gtk";
 
   programs.nh.flake = "/home/imperaluna/nix-config";
 

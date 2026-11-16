@@ -12,8 +12,7 @@
         # Trying COSMIC Files as a GUI file manager.
         pkgs.cosmic-files
 
-        # Trying Nova Files, the GPUI file manager.
-        inputs.nova-files.packages.${pkgs.stdenv.hostPlatform.system}.default
+        # Nova Files is installed system-wide by programs.nova-files on RyzenShine.
 
         # Trying Dolphin and Thunar for comparison.
         # pkgs.kdePackages.dolphin
