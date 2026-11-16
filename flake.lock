@@ -295,11 +295,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1794785973,
-        "narHash": "sha256-fdiHjLUgGBQWj0O2kftXn4kldv6eRWbZbMqCZ7GXS9s=",
+        "lastModified": 1794808658,
+        "narHash": "sha256-RbvK/ghvMuWWx/riUqtCZCxjZFji2n3onTo2Kg60T3s=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "65fbd44f87613692f36de20af002987b0e673ecb",
+        "rev": "733d5b0fa81d5aad7c623dca8d8170ce411fba1d",
         "type": "github"
       },
       "original": {
@@ -474,11 +474,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794783575,
-        "narHash": "sha256-Z0ed4bFy0jHdCCMInCHMDMCnNq3f6j7LFvmL7za3QB0=",
+        "lastModified": 1794856409,
+        "narHash": "sha256-dAfSKt2PVa6ycELjnfJpVUtDiyV7eGa7cJDmNL1MIt8=",
         "owner": "ImperaLuna",
         "repo": "Nova-Files",
-        "rev": "3881967e125099636d51c84999c6a2d85a684be8",
+        "rev": "75a5eb5806c7666410a0e0861299fc0afe684387",
         "type": "github"
       },
       "original": {
@@ -644,11 +644,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794641110,
-        "narHash": "sha256-uoTlmcxa6ewsctJ6/NPgMADN7317QohlUMGBjtQjQmY=",
+        "lastModified": 1794847538,
+        "narHash": "sha256-sl4+Aoy1jBAYd94B6pOgfYi9zGdALG5HIapKDe6KOs4=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "ad99018e37999e659ae43f9c6ac126161ca147bc",
+        "rev": "ba0680a6756ed68d51e1dab3cd5b41e0b868b0d1",
         "type": "github"
       },
       "original": {
