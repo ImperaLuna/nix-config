@@ -55,11 +55,11 @@ in
     features.files.enable = true;
   };
 
-  # Nova Files is the picker of other apps' Open and Save dialogs on niri.
+  # Nova Files is the picker of other apps' Open and Save dialogs.
   programs.nova-files = {
     enable = true;
     filePicker.enable = true;
-    filePicker.desktops = [ "niri" ];
+    filePicker.desktops = [ "niri" "hyprland" ];
   };
 
   programs.nova-bench = {
@@ -77,9 +77,12 @@ in
   };
 
   # The picker is the standalone Nova Files backend ("novafiles"), with GTK as
-  # the fallback. Nova's features.files and nixpkgs' niri module (gtk, since
-  # useNautilus is off) set this at the same priority, so force it.
-  xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce "novafiles;gtk";
+  # the fallback. Nova's features.files sets "nova;gtk" on both desktops and
+  # nixpkgs' niri module sets "gtk" (useNautilus is off), all at the same
+  # priority, so force it.
+  xdg.portal.config = lib.genAttrs [ "niri" "hyprland" ] (_: {
+    "org.freedesktop.impl.portal.FileChooser" = lib.mkForce "novafiles;gtk";
+  });
 
   programs.nh.flake = "/home/imperaluna/nix-config";
 
