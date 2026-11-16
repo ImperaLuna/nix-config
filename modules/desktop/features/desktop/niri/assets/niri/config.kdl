@@ -1,3 +1,18 @@
+// Same layout as Hyprland: the 32X3A OLED on the left, the Samsung to its
+// right. DP-2 has no position, so niri places it right after DP-1 whatever
+// width DP-1 has. In the OLED's 1080p dual mode the 4K mode is missing and
+// niri falls back to the preferred one.
+output "DP-1" {
+    mode "3840x2160@239.871"
+    scale 1
+    position x=0 y=0
+}
+
+output "DP-2" {
+    mode "2560x1440@164.999"
+    scale 1
+}
+
 input {
     keyboard {
         xkb {
