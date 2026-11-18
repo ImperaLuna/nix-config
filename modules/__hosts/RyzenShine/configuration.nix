@@ -84,6 +84,20 @@ in
     "org.freedesktop.impl.portal.FileChooser" = lib.mkForce "novafiles;gtk";
   });
 
+  # nova-rebuild and nova-bench are private repos. `upgrade` fetches them with
+  # gh's token, but `sudo nixos-rebuild` and nixos-apply evaluate as root,
+  # and Nix caches fetches per user, so root has to download them itself.
+  # Without a token GitHub answers 404. Root reads its token from a file
+  # kept out of the repo and the store. Users can't read it, and Nix skips
+  # an unreadable `!include`, so their own nix commands are unaffected.
+  # One-time setup: a fine-grained token with Contents: read on Nova and
+  # nova-benchmark, then:
+  #   echo 'access-tokens = github.com=<token>' |
+  #     sudo install -Dm600 /dev/stdin /var/lib/secrets/nix-access-tokens.conf
+  nix.extraOptions = ''
+    !include /var/lib/secrets/nix-access-tokens.conf
+  '';
+
   programs.nh.flake = "/home/imperaluna/nix-config";
 
   # Let agents apply this repo, roll back, clean the store and restart units
