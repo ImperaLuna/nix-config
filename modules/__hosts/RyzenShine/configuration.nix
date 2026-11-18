@@ -42,22 +42,23 @@ in
     inputs.nova-rebuild.nixosModules.default
     # nova-bench's cache-dropping helper and its test folder root.
     inputs.nova-bench.nixosModules.default
-    # Nova Files (the standalone Rust app): installs it, its D-Bus services
-    # and its FileChooser portal backend.
-    inputs.nova-files.nixosModules.default
   ];
 
   programs.nova = {
     enable = true;
     # Workshop wallpapers through linux-wallpaperengine, on this PC only.
     features.wallpaper-engine.enable = true;
-    # Nova Files: the file manager, default for folders (adds udisks2).
-    features.files.enable = true;
+    # Nova Files (the standalone app), default for folders. Nova's module
+    # imports Nova Files' own module and installs it in this mode; `full`
+    # adds what its extras need (video thumbnails, drives via udisks2).
+    features.nova-files = {
+      enable = true;
+      mode = "full";
+    };
   };
 
   # Nova Files is the picker of other apps' Open and Save dialogs.
   programs.nova-files = {
-    enable = true;
     filePicker.enable = true;
     filePicker.desktops = [ "niri" "hyprland" ];
   };
