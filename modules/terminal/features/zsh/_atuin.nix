@@ -30,8 +30,10 @@ in
 
   # zsh writes no history file (_history.nix), so autosuggestions read the
   # newest successful command from atuin that starts with the typed prefix.
-  programs.zsh.autosuggestion.strategy = [ "atuin" ];
+  # Set here because home-manager's strategy option only accepts built-ins;
+  # the plugin reads the variable on each keystroke, so overriding it works.
   programs.zsh.initContent = ''
+    ZSH_AUTOSUGGEST_STRATEGY=(atuin)
     _zsh_autosuggest_strategy_atuin() {
       typeset -g suggestion
       suggestion=$(${config.programs.atuin.package}/bin/atuin search \
