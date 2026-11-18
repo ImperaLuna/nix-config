@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   theme = import ../../../_lib/theme.nix;
@@ -27,6 +27,17 @@ in
     SyntaxComment = "${theme.fgDim}"
   '';
 
+
+  # zsh writes no history file (_history.nix), so autosuggestions read the
+  # newest successful command from atuin that starts with the typed prefix.
+  programs.zsh.autosuggestion.strategy = [ "atuin" ];
+  programs.zsh.initContent = ''
+    _zsh_autosuggest_strategy_atuin() {
+      typeset -g suggestion
+      suggestion=$(${config.programs.atuin.package}/bin/atuin search \
+        --cmd-only --limit 1 --search-mode prefix --exit 0 -- "$1" 2>/dev/null)
+    }
+  '';
 
   programs.atuin = {
     enable = true;
