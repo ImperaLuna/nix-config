@@ -138,6 +138,26 @@ herdr --remote workbox
 A remote attach connects to the remote host's Herdr state; it does not move or
 copy the local session to that machine.
 
+## Claude Code as a project workspace
+
+[`default.nix`](./default.nix) also sets Claude Code and Codex up to work like
+desktop app projects inside Herdr:
+
+| Piece | What it does |
+| --- | --- |
+| `herdr integration install claude/codex` | Runs on every switch so Herdr can tell working, blocked and done agents apart |
+| `~/.claude/skills/herdr/` | Generated from `herdr --skill` on every switch, so it matches the installed version |
+| `~/.claude/skills/orchestrate/` | Linked to [`orchestrate/`](./orchestrate/) in this checkout. Edits apply without a rebuild |
+| `claude-memory-pass` | [`memory-pass.sh`](./memory-pass.sh), run by the `SessionEnd` and `PreCompact` hooks. A background `claude -p` run saves what the thread learned into the project's memory folder |
+| Compaction env | `CLAUDE_CODE_AUTO_COMPACT_WINDOW=200000` and `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70`, in both the shell and `settings.json` |
+
+Daily use: `herdr`, one workspace per repo, `claude` in a pane, then
+`/orchestrate` to make that session the lead.
+
+The memory pass logs to `~/.claude/memory-pass.log` and skips threads with fewer
+than 3 prompts. Where the `sonnet` alias does not resolve (Vertex), set
+`modules.herdr.memoryPassModel` to a full model ID for that host.
+
 ## Upstream references
 
 - [Persistence and remote access](https://herdr.dev/docs/persistence-remote/)
