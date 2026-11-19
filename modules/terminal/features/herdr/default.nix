@@ -23,9 +23,12 @@
     {
       home.packages = [ pkgs.herdr ];
 
-      # Ahead of herdr's own copy, and before compinit runs.
+      # Ahead of herdr's own copy. /etc/zshrc has already run compinit, which
+      # bound _herdr to herdr's file, so drop that binding and autoload again.
       programs.zsh.initContent = lib.mkOrder 550 ''
         fpath=(${herdrCompletion}/share/zsh/site-functions $fpath)
+        unfunction _herdr 2>/dev/null
+        autoload -Uz _herdr
       '';
     };
 }
