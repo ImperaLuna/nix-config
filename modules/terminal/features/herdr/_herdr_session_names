@@ -1,0 +1,8 @@
+#autoload
+# Completes herdr session names from `herdr session list`, with each one's
+# state as the description. Installed next to the patched _herdr by default.nix.
+
+local -a names
+names=(${(f)"$(command herdr session list --json 2>/dev/null \
+  | @jq@ -r '.sessions[] | "\(.name):\(if .running then "running" else "stopped" end)"')"})
+_describe -t herdr-sessions 'herdr session' names
