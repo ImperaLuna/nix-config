@@ -7,7 +7,7 @@
 #define PARTICLES_ALPHA_MOD 0.9
 #define SMOKE_ALPHA_MOD 0.6
 #define BACKGROUND_BLEND 0.72
-#define LAYERS_COUNT 15
+#define LAYERS_COUNT 9
 
 #define VEC3_1 (vec3(1.0))
 
@@ -237,6 +237,11 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float mask = 1.0 - step(0.5, dot(terminalColor.rgb, VEC3_1));
     vec3 shaderColor = mix(terminalColor.rgb, col, BACKGROUND_BLEND);
     vec3 blendedColor = mix(terminalColor.rgb, max(shaderColor, terminalColor.rgb), mask);
+
+    // Dither by +-0.5/255 so the dim smoke gradient does not band on OLED,
+    // where near-black steps are visible.
+    float dither = (hash1_2(fragCoord + fract(iTime)) - 0.5) / 255.0;
+    blendedColor += dither * mask;
 
     fragColor = vec4(blendedColor, terminalColor.a);
 }

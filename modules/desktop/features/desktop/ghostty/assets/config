@@ -72,4 +72,4 @@ faint-opacity = 0.8
 # Shaders
 custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl
 custom-shader = ~/.config/ghostty/shaders/sparks-from-fire.glsl
-custom-shader-animation = always
+custom-shader-animation = true
