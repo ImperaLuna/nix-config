@@ -23,6 +23,22 @@
     {
       home.packages = [ pkgs.herdr ];
 
+      # Read-only once linked, so herdr's settings screen can't save changes.
+      # Edit here instead, then `herdr server reload-config`.
+      xdg.configFile."herdr/config.toml".text = ''
+        onboarding = false
+
+        [keys]
+        prefix = "ctrl+space"
+
+        [ui]
+        agent_panel_sort = "spaces"
+
+        [theme]
+        name = "vesper"
+        auto_switch = false
+      '';
+
       # Ahead of herdr's own copy. /etc/zshrc has already run compinit, which
       # bound _herdr to herdr's file, so drop that binding and autoload again.
       programs.zsh.initContent = lib.mkOrder 550 ''
