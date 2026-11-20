@@ -51,6 +51,17 @@ let
         {
           home.username = username;
           home.homeDirectory = homeDirectory;
+
+          # Standalone homes get no NixOS nh clean, so every switch used to stay
+          # in the store forever. Same retention as common.nix.
+          programs.nh = {
+            enable = true;
+            clean = {
+              enable = true;
+              dates = "weekly";
+              extraArgs = "--keep-since 7d --keep 3";
+            };
+          };
         }
         ../../modules/home.nix
       ] ++ extraModules;
