@@ -48,9 +48,15 @@ let
       modules = [
         self.modules.homeManager.terminal
         self.modules.homeManager.dev
-        {
+        ({ config, ... }: {
           home.username = username;
           home.homeDirectory = homeDirectory;
+
+          # Off NixOS, user services don't have nix on PATH, and nh fails with
+          # "No output from nix --version command".
+          systemd.user.services.nh-clean.Service.Environment = [
+            "PATH=${config.home.profileDirectory}/bin:/nix/var/nix/profiles/default/bin"
+          ];
 
           # Standalone homes get no NixOS nh clean, so every switch used to stay
           # in the store forever. Same retention as common.nix.
@@ -62,7 +68,7 @@ let
               extraArgs = "--keep-since 7d --keep 3";
             };
           };
-        }
+        })
         ../../modules/home.nix
       ] ++ extraModules;
     };
