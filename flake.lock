@@ -310,11 +310,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1795155813,
-        "narHash": "sha256-9dFqyDnQ8fKpkdv5pha+S7qR1HXIiJ8Ndkv+CXDzJu8=",
+        "lastModified": 1795187554,
+        "narHash": "sha256-5q5/viwCcXSA4S2cSaKdjdYrHhk64qFbjLhCMlJnyeM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b758f1622588b4d5ce019971748a68be80e5943c",
+        "rev": "9996594bd38077de6a018ec17453ba3d99182787",
         "type": "github"
       },
       "original": {
@@ -385,11 +385,11 @@
         "nova-files": "nova-files"
       },
       "locked": {
-        "lastModified": 1794206044,
-        "narHash": "sha256-wER4eBGvwu6Qxi/fWDZw5cJTElHdOetOaUrsJQQEZjo=",
+        "lastModified": 1795235629,
+        "narHash": "sha256-lrjPZP1nU55K3mxtR/G+VuqdiUAM9l+/+LM4IYDLrHQ=",
         "owner": "ImperaLuna",
         "repo": "nova-benchmark",
-        "rev": "9fd8e8c27e89aaaeb0604081d86e03a84ce9301f",
+        "rev": "449f089140f80eef893e107d97bb7a61ae1b0ec7",
         "type": "github"
       },
       "original": {
@@ -427,11 +427,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795077399,
-        "narHash": "sha256-POaCWosDPwkhFXYujjNcHuvnFIXcaFhBhm7VfPvPxW0=",
+        "lastModified": 1795230601,
+        "narHash": "sha256-Dxw05Xme0Vo3OdoW1q5KyO3gkH1ptGQ5BBk2JKe5sOE=",
         "owner": "ImperaLuna",
         "repo": "Nova-Files",
-        "rev": "1b358174303e9b4394c5e8b4e9c9219111d33ae4",
+        "rev": "29d82d9d566c71ab2982ce090530f4b2a71b5f3a",
         "type": "github"
       },
       "original": {
