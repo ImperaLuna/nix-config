@@ -37,8 +37,6 @@ in
   });
 
   # CI builds, including the NixOS VM tests (which use KVM), run inside the
-  # nix daemon, not the runner. Give them leftover CPU and disk time only, so
-  # the desktop and local testing stay responsive while CI runs.
-  nix.daemonCPUSchedPolicy = "batch";
-  nix.daemonIOSchedClass = "idle";
+  # nix daemon, not the runner. The daemon's CPU, IO and memory caps in
+  # __hosts/common.nix keep the desktop responsive while CI runs.
 }
