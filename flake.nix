@@ -35,6 +35,7 @@
     nova-rebuild = {
       url = "github:ImperaLuna/Nova";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nova-files.follows = "nova-files";
     };
 
     # nova-bench, the Nova Files benchmark (private repo, fetched like
