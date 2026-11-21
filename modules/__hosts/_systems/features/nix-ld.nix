@@ -1,7 +1,7 @@
 { ... }:
 {
-  # Claude Desktop downloads its own generic-linux claude-code binary and runs
-  # it from ~/.config, so it needs a real loader. It only links against glibc,
-  # which nix-ld provides by default.
+  # Provides /lib64/ld-linux-x86-64.so.2 so prebuilt binaries run: VS Code
+  # extensions (Claude Code, ruff, ty, pgsql) and uv-managed Pythons. Claude
+  # Desktop doesn't need it, since its FHS sandbox ships its own loader.
   programs.nix-ld.enable = true;
 }
