@@ -356,6 +356,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_5": {
+      "locked": {
+        "lastModified": 1793726008,
+        "narHash": "sha256-jQp1wKvbwWdLBASTXkSi/VYmDJ5AbBi1WvcMt9HWJC8=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1d060086d60cb76a40cf37109f979d88a5bd6396",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "flake-parts": "flake-parts_3",
@@ -422,16 +438,14 @@
       "inputs": {
         "advisory-db": "advisory-db_2",
         "crane": "crane_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1795306297,
-        "narHash": "sha256-+bIvg/ha6XCMrO8uwOi9Cj0QW//rjNVv8C+3w9dP1GU=",
+        "lastModified": 1795307631,
+        "narHash": "sha256-9hGHKD0iJZKy22N3eXotWrkMMv/nYz7Xhapdi2ksfA0=",
         "owner": "ImperaLuna",
         "repo": "Nova-Files",
-        "rev": "2019bb934406fc817e5e0fb7c01f884fa2386b4b",
+        "rev": "2fd2c1c560dfee725773aa3029eabcf032968983",
         "type": "github"
       },
       "original": {

@@ -46,10 +46,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Nova Files, a GPUI file manager, tried out in modules/_experimental.
+    # Nova Files, a GPUI file manager, installed through Nova's module.
+    # Keeps its own nixpkgs pin on purpose: Nova Files' release-build CI
+    # pushes `.#default` to the nova-de cache built against that pin. Making
+    # it follow our nixpkgs changed its hash, so every nixpkgs update
+    # compiled GPUI and Nova Files here from scratch.
     nova-files = {
       url = "github:ImperaLuna/Nova-Files";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Browser package consumed by modules/desktop/features/zen.
