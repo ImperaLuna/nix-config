@@ -34,6 +34,14 @@ in
     ephemeral = true;
     # CI calls `nix flake check` and `nix develop`; the rest comes from the flake.
     extraPackages = [ pkgs.nix ];
+    # The runner's own `nix` client evaluates the flake outside nix-daemon's
+    # caps, and reached 1.4 GB. Cap each instance.
+    serviceOverrides = {
+      MemoryHigh = "2G";
+      MemoryMax = "3G";
+      CPUWeight = 20;
+      IOWeight = 20;
+    };
   });
 
   # CI builds, including the NixOS VM tests (which use KVM), run inside the

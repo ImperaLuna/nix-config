@@ -25,11 +25,11 @@
       "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "nova-de.cachix.org-1:PSKB85+3Z9v+SpwEymGAclH5gYWjiqOWHFgXJicy4FQ="
     ];
-    # At most 4 builds at once, 4 threads each: 16 compiler threads on a
-    # 12-thread CPU. The old auto/0 allowed 12 builds x 12 threads, which
-    # filled RAM and swap during big upgrades.
-    max-jobs = 4;
-    cores = 4;
+    # At most 2 builds at once, 6 threads each, so 12 compiler threads on a
+    # 12-thread CPU. Nova CI's NixOS VM tests take up to 3 GB each, and 4 of
+    # them next to a 17 GB desktop pushed the machine into swap.
+    max-jobs = 2;
+    cores = 6;
     # Collect garbage during builds when free space runs low, between weekly cleans.
     min-free = 10 * 1024 * 1024 * 1024;
     max-free = 50 * 1024 * 1024 * 1024;
@@ -42,14 +42,23 @@
   nix.daemonCPUSchedPolicy = "idle";
   nix.daemonIOSchedClass = "idle";
   systemd.services.nix-daemon.serviceConfig = {
-    # Past 60% of RAM the kernel reclaims build memory and slows the builds
-    # down. At 75% the build gets OOM-killed instead of freezing the desktop.
-    MemoryHigh = "60%";
-    MemoryMax = "75%";
+    # Fixed sizes, not percentages: the desktop alone often holds 17 GB of
+    # the 31 GB. Past 10G the kernel reclaims build memory and slows the
+    # builds down. At 13G the build gets OOM-killed instead of freezing the
+    # desktop.
+    MemoryHigh = "10G";
+    MemoryMax = "13G";
     # Stop builds from pushing the desktop's memory out to swap.
     MemorySwapMax = "4G";
     CPUWeight = 20;
     IOWeight = 20;
+  };
+
+  # Compressed swap in RAM, used before the disk swap partition (higher
+  # priority), so swapping under memory pressure doesn't stall on the NVMe.
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
   };
 
   # nh clean also prunes per-user profiles under ~/.local/state/nix/profiles,
