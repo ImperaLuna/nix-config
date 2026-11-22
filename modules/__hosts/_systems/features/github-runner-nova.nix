@@ -41,7 +41,17 @@ in
       MemoryMax = "3G";
       CPUWeight = 20;
       IOWeight = 20;
+      # After a cancelled job, GitHub's late delete of the old ephemeral
+      # registration can hit the new one, and the listener exits 1. The
+      # module's on-success would then leave the unit failed and CI queued.
+      Restart = lib.mkForce "always";
+      RestartSec = 15;
     };
+  });
+
+  # Never park a runner for good after a burst of restarts.
+  systemd.services = lib.genAttrs (map (name: "github-runner-${name}") instances) (_: {
+    unitConfig.StartLimitIntervalSec = 0;
   });
 
   # CI builds, including the NixOS VM tests (which use KVM), run inside the
