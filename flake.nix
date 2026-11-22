@@ -29,12 +29,16 @@
 
     # The Nova rebuild (private repo; `upgrade` passes the gh token).
     # Its UI runs a patched Quickshell (Nova's packaging/nix/nova-ui.nix,
-    # IMP-262), built from source on this nixpkgs: expect a few minutes of
-    # Quickshell compiling after each nixpkgs update, until Nova drops the
-    # patch once a fixed Quickshell reaches nixpkgs.
+    # IMP-262), built from source on Nova's nixpkgs pin. Nova's CI builds
+    # it on this PC too, so it is usually in the store already.
+    #
+    # Keeps its own nixpkgs pin on purpose. Nova's CI runs on this PC and
+    # builds each PR against that pin, and main gets the same tree as the PR
+    # when it merges, so `upgrade` and nova-auto-update find Nova already
+    # built in the store. Following our nixpkgs changed every hash, so each
+    # update compiled Nova and all its Rust dependencies again.
     nova-rebuild = {
       url = "github:ImperaLuna/Nova";
-      inputs.nixpkgs.follows = "nixpkgs";
       inputs.nova-files.follows = "nova-files";
     };
 
