@@ -9,9 +9,6 @@
         # pkgs.alacritty
         # pkgs.google-chrome
 
-        # Trying COSMIC Files as a GUI file manager.
-        pkgs.cosmic-files
-
         # Nova Files is installed system-wide by programs.nova-files on RyzenShine.
 
         # Trying Dolphin and Thunar for comparison.
