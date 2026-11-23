@@ -113,6 +113,9 @@ hl.animation({ leaf = "border", enabled = true, speed = 3, bezier = "default" })
 
 -- Shell integration. Nova does not install this rule itself yet.
 hl.layer_rule({ match = { namespace = "^(nova-.*)$" }, no_anim = true })
+-- Nova's own Hyprland rules, shipped by its NixOS module (lets a restarted
+-- lock screen lock again). pcall keeps the config loading if the file is gone.
+pcall(require, "/etc/xdg/nova/hyprland.lua")
 
 -- Window rules
 -- Keep Steam's loading popup from showing wallpaper through its main window
