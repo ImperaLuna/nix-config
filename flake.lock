@@ -477,39 +477,20 @@
         "nixpkgs": "nixpkgs_6",
         "nova-files": [
           "nova-files"
-        ],
-        "quickshell-newest": "quickshell-newest"
+        ]
       },
       "locked": {
-        "lastModified": 1795463701,
-        "narHash": "sha256-MWMw3C6heRaxet5DqpBL5dMTu/UY9GLa2J66M13LLDs=",
+        "lastModified": 1795469267,
+        "narHash": "sha256-F75SVwMapvPHE7y7evGfAe9g1oWRNZ1IG99GMGlUN0Q=",
         "owner": "ImperaLuna",
         "repo": "Nova",
-        "rev": "3ac1be1612541092e68b691cd320d3598dad2ba5",
+        "rev": "bd69a6ca8cea0adc61bc90f33c5912b13610a2fc",
         "type": "github"
       },
       "original": {
         "owner": "ImperaLuna",
         "repo": "Nova",
         "type": "github"
-      }
-    },
-    "quickshell-newest": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1791448974,
-        "narHash": "sha256-lPbqsyAD5ZoGFMZ1eqAlTULfeP5Nwhy+XvOowF7BE+E=",
-        "ref": "refs/tags/v0.3.2",
-        "rev": "4f508be500dea6e5732cc3d50382a0048b17e7b1",
-        "shallow": true,
-        "type": "git",
-        "url": "https://github.com/quickshell-mirror/quickshell"
-      },
-      "original": {
-        "ref": "refs/tags/v0.3.2",
-        "shallow": true,
-        "type": "git",
-        "url": "https://github.com/quickshell-mirror/quickshell"
       }
     },
     "qylock": {
