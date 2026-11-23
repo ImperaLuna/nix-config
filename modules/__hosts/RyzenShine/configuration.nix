@@ -46,6 +46,8 @@ in
 
   programs.nova = {
     enable = true;
+    # nova-ui (GPUI) draws the shell instead of Quickshell.
+    ui = "gpui";
     # Workshop wallpapers through linux-wallpaperengine, on this PC only.
     features.wallpaper-engine.enable = true;
     # Nova Files (the standalone app), default for folders. Nova's module
