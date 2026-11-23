@@ -264,11 +264,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1795366837,
-        "narHash": "sha256-ma3B+5J/HvCIFTc60drm9AklCHJbIA2qPyzlPv2BFhg=",
+        "lastModified": 1795416666,
+        "narHash": "sha256-b1GmfrMPoZ2ANkR0we9Q9KQN6n1e+vNyDqt1p4CNEAY=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "0cde3970ab62414aaba209787c74b11b951ec7e8",
+        "rev": "5330ee115c06d2b43f49e902130125eab579b22f",
         "type": "github"
       },
       "original": {
@@ -457,11 +457,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1795382695,
-        "narHash": "sha256-wYIq0OOFExj8NI1dNSZDuuJhxiqJYGKDndovZE/pglk=",
+        "lastModified": 1795406761,
+        "narHash": "sha256-4iTkG/MzDMAR0iwgQKZaCle2ERvH88N6SzOiRFlk7pM=",
         "owner": "ImperaLuna",
         "repo": "Nova-Files",
-        "rev": "2d95d09b90a3b4cdcd38f7fb41710ec24fe56575",
+        "rev": "e2e45904419085a38e9afe663063ee1d633e51e3",
         "type": "github"
       },
       "original": {
@@ -481,11 +481,11 @@
         "quickshell-newest": "quickshell-newest"
       },
       "locked": {
-        "lastModified": 1795415107,
-        "narHash": "sha256-pFuRIpOAICu81sXQHqlwMaM0vkFbQ5SUtDOHbQcdeCU=",
+        "lastModified": 1795423811,
+        "narHash": "sha256-/FuJVGAt5b34VsI2Dw/fAXedvFsGwldG2lMkgofHML8=",
         "owner": "ImperaLuna",
         "repo": "Nova",
-        "rev": "d97a04af746feda3bd4b9c874ed2513fa31fa7e0",
+        "rev": "f57a209a10c4148676f701b58aa66e3a71a083d4",
         "type": "github"
       },
       "original": {
