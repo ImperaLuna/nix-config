@@ -21,7 +21,6 @@
       config.flake.modules.homeManager.desktop-feature-niri
       config.flake.modules.homeManager.desktop-feature-idle
       config.flake.modules.homeManager.desktop-feature-nova
-      config.flake.modules.homeManager.desktop-feature-qylock
       config.flake.modules.homeManager.desktop-feature-ghostty
       config.flake.modules.homeManager.desktop-feature-obsidian
       config.flake.modules.homeManager.desktop-feature-onlyoffice

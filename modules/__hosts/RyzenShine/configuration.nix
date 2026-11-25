@@ -11,7 +11,7 @@ let
       --replace-fail 'Name=Hyprland (uwsm-managed)' 'Name=Hyprland'
   '';
 
-  # Keep in sync with the lock screen theme in modules/desktop/features/desktop/qylock.
+  # The SDDM login screen's theme from qylock.
   qylockTheme = "pixel-dusk-city";
 
   qylockSddmTheme = pkgs.stdenvNoCC.mkDerivation {
@@ -46,8 +46,6 @@ in
 
   programs.nova = {
     enable = true;
-    # nova-ui (GPUI) draws the shell instead of Quickshell.
-    ui = "gpui";
     # Workshop wallpapers through linux-wallpaperengine, on this PC only.
     features.wallpaper-engine.enable = true;
     # Nova Files (the standalone app), default for folders. Nova's module
