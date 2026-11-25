@@ -457,15 +457,16 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1795618030,
-        "narHash": "sha256-4lzIk+jbh3JaMZ4VErkXIUNF5cG2Rykg7qLmNBFnYiY=",
+        "lastModified": 1795621349,
+        "narHash": "sha256-Sm3kCm3vKy/BrE/8WCozvQgI48QI0rON1ZzU6pG3pnk=",
         "owner": "ImperaLuna",
         "repo": "Nova-Files",
-        "rev": "f8451d300000e225be2f6dd2c4f6542bd6e0c54b",
+        "rev": "368736f358371822e4fa6ba6e0387cd652529557",
         "type": "github"
       },
       "original": {
         "owner": "ImperaLuna",
+        "ref": "cached",
         "repo": "Nova-Files",
         "type": "github"
       }

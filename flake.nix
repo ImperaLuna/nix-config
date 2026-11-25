@@ -54,8 +54,11 @@
     # pushes `.#default` to the nova-de cache built against that pin. Making
     # it follow our nixpkgs changed its hash, so every nixpkgs update
     # compiled GPUI and Nova Files here from scratch.
+    # Follows the `cached` branch, which that CI moves to each main commit
+    # once it is in the cache, so an update never pins a commit whose build
+    # is still running and this PC never compiles Nova Files itself.
     nova-files = {
-      url = "github:ImperaLuna/Nova-Files";
+      url = "github:ImperaLuna/Nova-Files/cached";
     };
 
     # Browser package consumed by modules/desktop/features/zen.
