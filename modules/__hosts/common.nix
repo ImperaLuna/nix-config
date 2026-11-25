@@ -93,7 +93,14 @@
   # ===================================================================
   # PROGRAMS
   # ===================================================================
-  programs.zsh.enable = true;
+  # Home Manager owns the interactive setup. The global compinit ran with a
+  # different fpath than Home Manager's, so the two rewrote ~/.zcompdump on
+  # every shell start (~800ms). The suse prompt is replaced by starship.
+  programs.zsh = {
+    enable = true;
+    enableGlobalCompInit = false;
+    promptInit = "";
+  };
   environment.systemPackages = with pkgs; [
     bind
     iputils

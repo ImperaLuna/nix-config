@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   # The WSL patch only touches a shell script, so apply it to a copy of the
@@ -27,6 +27,17 @@ in
 
   programs.zsh.enable = true;
   programs.zsh.enableCompletion = true;
+
+  # -C loads the dump without scanning fpath or auditing permissions.
+  # Activation deletes the dump, so the first shell after a switch rebuilds it.
+  programs.zsh.completionInit = ''
+    autoload -U compinit
+    compinit -C -d "${config.xdg.cacheHome}/zsh/zcompdump"
+  '';
+  home.activation.resetZshCompdump = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p "${config.xdg.cacheHome}/zsh"
+    run rm -f "${config.xdg.cacheHome}/zsh/zcompdump" "${config.xdg.cacheHome}/zsh/zcompdump.zwc"
+  '';
 
   # fzf-tab must load after compinit and before autosuggestions.
   programs.zsh.initContent = lib.mkOrder 650 ''
