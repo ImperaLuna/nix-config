@@ -10,7 +10,6 @@
       ./features/remote-access.nix
       ./features/syncthing.nix
       ./features/nix-ld.nix
-      ./features/claude-science.nix
       ./features/github-runner-nova.nix
       ./features/caelestia-grub.nix
       ./features/boot-splash.nix
