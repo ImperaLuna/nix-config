@@ -480,11 +480,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795514235,
-        "narHash": "sha256-OkusDS347myn3eNQqm9J4wpwKMEK/X2BUxxoZrUKj/k=",
+        "lastModified": 1795581956,
+        "narHash": "sha256-jX9aRMOTicDoYOYTbktolcvDwBVLiFYwbux6SNd9aOk=",
         "owner": "ImperaLuna",
         "repo": "Nova",
-        "rev": "2433d6081d0a79cd5a0c96c99b055c0b05f643c9",
+        "rev": "740de366c3787c045693b4051883c32b96656679",
         "type": "github"
       },
       "original": {
